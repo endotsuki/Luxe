@@ -2,13 +2,13 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { LogOut, Package, ShoppingBag, TrendingUp, Users } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { OrdersTable } from "@/components/orders-table"
 import { ProductsTable } from "@/components/products-table"
 import type { Order, Product } from "@/lib/types"
+import { IconLogout, IconPackage, IconShoppingBag, IconTrendingUp, IconUsers } from "@tabler/icons-react"
 
 interface AdminDashboardProps {
   orders: Order[]
@@ -43,7 +43,7 @@ export function AdminDashboard({ orders, products, totalOrders, totalProducts }:
             <span className="font-bold text-lg">Admin Dashboard</span>
           </div>
           <Button variant="outline" onClick={handleLogout} disabled={loading}>
-            <LogOut className="mr-2 h-4 w-4" />
+            <IconLogout className="mr-2 h-4 w-4" />
             Logout
           </Button>
         </div>
@@ -55,7 +55,7 @@ export function AdminDashboard({ orders, products, totalOrders, totalProducts }:
           <Card>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
-              <TrendingUp className="h-4 w-4 text-muted-foreground" />
+              <IconTrendingUp className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">${totalRevenue.toFixed(2)}</div>
@@ -66,7 +66,7 @@ export function AdminDashboard({ orders, products, totalOrders, totalProducts }:
           <Card>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium">Total Orders</CardTitle>
-              <ShoppingBag className="h-4 w-4 text-muted-foreground" />
+              <IconShoppingBag className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{totalOrders}</div>
@@ -77,7 +77,7 @@ export function AdminDashboard({ orders, products, totalOrders, totalProducts }:
           <Card>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium">Products</CardTitle>
-              <Package className="h-4 w-4 text-muted-foreground" />
+              <IconPackage className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{totalProducts}</div>
@@ -88,7 +88,7 @@ export function AdminDashboard({ orders, products, totalOrders, totalProducts }:
           <Card>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium">Customers</CardTitle>
-              <Users className="h-4 w-4 text-muted-foreground" />
+              <IconUsers className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{new Set(orders.map((o) => o.customer_email)).size}</div>

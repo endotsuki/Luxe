@@ -4,7 +4,6 @@ import type React from "react"
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { ShoppingBag, User, Phone, Mail, MessageSquare, Send } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -14,6 +13,7 @@ import { useToast } from "@/hooks/use-toast"
 import type { CartItem } from "@/lib/types"
 import Image from "next/image"
 import { SiteHeader } from "@/components/site-header"
+import { IconMail, IconMessage2, IconPhone, IconSend, IconShoppingBag, IconUser } from "@tabler/icons-react"
 
 export default function ContactPage() {
   const [cartItems, setCartItems] = useState<CartItem[]>([])
@@ -180,22 +180,22 @@ export default function ContactPage() {
                 {cartItems.length > 0 ? (
                   <>
                     <Button variant={orderMode ? "default" : "outline"} onClick={() => setOrderMode(true)}>
-                      <ShoppingBag className="w-4 h-4 mr-2" />
+                      <IconShoppingBag className="w-4 h-4 mr-2" />
                       Place Order ({cartItems.length} items)
                     </Button>
                     <Button variant={!orderMode ? "default" : "outline"} onClick={() => setOrderMode(false)}>
-                      <Send className="w-4 h-4 mr-2" />
+                      <IconSend className="w-4 h-4 mr-2" />
                       Send Message
                     </Button>
                   </>
                 ) : (
                   <>
                     <Button variant="outline" onClick={loadCartItems} disabled={loading}>
-                      <ShoppingBag className="w-4 h-4 mr-2" />
+                      <IconShoppingBag className="w-4 h-4 mr-2" />
                       {loading ? "Loading Cart..." : "Load Cart to Order"}
                     </Button>
                     <Button variant="default" onClick={() => setOrderMode(false)}>
-                      <Send className="w-4 h-4 mr-2" />
+                      <IconSend className="w-4 h-4 mr-2" />
                       Send Message
                     </Button>
                   </>
@@ -210,7 +210,7 @@ export default function ContactPage() {
                   <Card className="border-2 border-primary/20">
                     <CardContent className="p-6">
                       <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
-                        <ShoppingBag className="w-6 h-6 text-primary" />
+                        <IconShoppingBag className="w-6 h-6 text-primary" />
                         Order Summary
                       </h2>
 
@@ -294,7 +294,7 @@ export default function ContactPage() {
                       <form onSubmit={handleSubmit} className="space-y-4">
                         <div className="space-y-2">
                           <label htmlFor="name" className="text-sm font-medium flex items-center gap-2">
-                            <User className="w-4 h-4" />
+                            <IconUser className="w-4 h-4" />
                             Full Name *
                           </label>
                           <Input
@@ -309,7 +309,7 @@ export default function ContactPage() {
 
                         <div className="space-y-2">
                           <label htmlFor="contact" className="text-sm font-medium flex items-center gap-2">
-                            <Phone className="w-4 h-4" />
+                            <IconPhone className="w-4 h-4" />
                             Phone or Telegram *
                           </label>
                           <Input
@@ -324,7 +324,7 @@ export default function ContactPage() {
 
                         <div className="space-y-2">
                           <label htmlFor="email" className="text-sm font-medium flex items-center gap-2">
-                            <Mail className="w-4 h-4" />
+                            <IconMail className="w-4 h-4" />
                             Email (Optional)
                           </label>
                           <Input
@@ -339,7 +339,7 @@ export default function ContactPage() {
 
                         <div className="space-y-2">
                           <label htmlFor="message" className="text-sm font-medium flex items-center gap-2">
-                            <MessageSquare className="w-4 h-4" />
+                            <IconMessage2 className="w-4 h-4" />
                             Message (Optional)
                           </label>
                           <Textarea
@@ -372,7 +372,7 @@ export default function ContactPage() {
                     <form onSubmit={handleSubmit} className="space-y-6">
                       <div className="space-y-2">
                         <label htmlFor="name" className="text-sm font-medium flex items-center gap-2">
-                          <User className="w-4 h-4" />
+                          <IconUser className="w-4 h-4" />
                           Full Name *
                         </label>
                         <Input
@@ -387,7 +387,7 @@ export default function ContactPage() {
 
                       <div className="space-y-2">
                         <label htmlFor="contact" className="text-sm font-medium flex items-center gap-2">
-                          <Phone className="w-4 h-4" />
+                          <IconPhone className="w-4 h-4" />
                           Phone or Telegram *
                         </label>
                         <Input
@@ -402,7 +402,7 @@ export default function ContactPage() {
 
                       <div className="space-y-2">
                         <label htmlFor="email" className="text-sm font-medium flex items-center gap-2">
-                          <Mail className="w-4 h-4" />
+                          <IconMail className="w-4 h-4" />
                           Email (Optional)
                         </label>
                         <Input
@@ -417,7 +417,7 @@ export default function ContactPage() {
 
                       <div className="space-y-2">
                         <label htmlFor="message" className="text-sm font-medium flex items-center gap-2">
-                          <MessageSquare className="w-4 h-4" />
+                          <IconMessage2 className="w-4 h-4" />
                           Message *
                         </label>
                         <Textarea
@@ -442,21 +442,21 @@ export default function ContactPage() {
                 <div className="mt-8 grid md:grid-cols-3 gap-6">
                   <Card>
                     <CardContent className="p-6 text-center">
-                      <Mail className="w-8 h-8 mx-auto mb-3 text-primary" />
+                      <IconMail className="w-8 h-8 mx-auto mb-3 text-primary" />
                       <h3 className="font-semibold mb-2">Email</h3>
                       <p className="text-sm text-muted-foreground">contact@luxe.com</p>
                     </CardContent>
                   </Card>
                   <Card>
                     <CardContent className="p-6 text-center">
-                      <Phone className="w-8 h-8 mx-auto mb-3 text-primary" />
+                      <IconPhone className="w-8 h-8 mx-auto mb-3 text-primary" />
                       <h3 className="font-semibold mb-2">Phone</h3>
                       <p className="text-sm text-muted-foreground">+1 (555) 123-4567</p>
                     </CardContent>
                   </Card>
                   <Card>
                     <CardContent className="p-6 text-center">
-                      <MessageSquare className="w-8 h-8 mx-auto mb-3 text-primary" />
+                      <IconMessage2 className="w-8 h-8 mx-auto mb-3 text-primary" />
                       <h3 className="font-semibold mb-2">Telegram</h3>
                       <p className="text-sm text-muted-foreground">@LuxeAccessories</p>
                     </CardContent>

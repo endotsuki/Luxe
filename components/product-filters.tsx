@@ -19,9 +19,6 @@ export function ProductFilters() {
 
   return (
     <Card className="py-6">
-      <CardHeader>
-        <CardTitle className="text-lg">Filters</CardTitle>
-      </CardHeader>
       <CardContent className="space-y-6">
         <div>
           <h3 className="font-semibold mb-3">Sort By</h3>

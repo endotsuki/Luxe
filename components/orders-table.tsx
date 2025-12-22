@@ -3,13 +3,13 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { format } from "date-fns"
-import { ExternalLink } from "lucide-react"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useToast } from "@/hooks/use-toast"
 import type { Order } from "@/lib/types"
+import { IconExternalLink } from "@tabler/icons-react"
 
 interface OrdersTableProps {
   orders: Order[]
@@ -96,7 +96,7 @@ export function OrdersTable({ orders }: OrdersTableProps) {
                   onValueChange={(value) => updateOrderStatus(order.id, value)}
                   disabled={updating === order.id}
                 >
-                  <SelectTrigger className="w-[140px]">
+                  <SelectTrigger className="w-36">
                     <SelectValue>{getStatusBadge(order.status)}</SelectValue>
                   </SelectTrigger>
                   <SelectContent>
@@ -113,7 +113,7 @@ export function OrdersTable({ orders }: OrdersTableProps) {
               <TableCell>
                 <Button variant="ghost" size="sm" asChild>
                   <a href={`/admin/orders/${order.id}`}>
-                    <ExternalLink className="h-4 w-4" />
+                    <IconExternalLink className="h-4 w-4" />
                   </a>
                 </Button>
               </TableCell>

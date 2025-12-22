@@ -1,9 +1,9 @@
 import Link from "next/link"
 import Image from "next/image"
-import { Star } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import type { Product } from "@/lib/types"
+import { IconStar } from "@tabler/icons-react"
 
 interface ProductCardProps {
   product: Product
@@ -30,7 +30,7 @@ export function ProductCard({ product }: ProductCardProps) {
             <div className="flex items-center gap-2 mb-3">
               <div className="flex">
                 {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="h-4 w-4 fill-secondary text-secondary" />
+                  <IconStar key={i} className="h-4 w-4 fill-secondary text-secondary" />
                 ))}
               </div>
               <span className="text-sm text-muted-foreground">(4.8)</span>

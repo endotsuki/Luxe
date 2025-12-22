@@ -3,9 +3,9 @@
 import { useState, useEffect, useRef } from "react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { Search } from "lucide-react"
 import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
+import { IconSearch } from "@tabler/icons-react"
 
 interface Product {
   id: string
@@ -77,7 +77,7 @@ export function SearchBar() {
           className="p-2 rounded-lg bg-primary hover:bg-primary-dark text-white shadow-md transition-colors"
           aria-label="Search"
         >
-          <Search className="h-5 w-5" />
+          <IconSearch className="h-5 w-5" />
         </Button>
       </div>
 

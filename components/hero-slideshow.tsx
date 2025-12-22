@@ -5,8 +5,8 @@ import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { ChevronLeft, ChevronRight, ArrowRight } from "lucide-react"
 import type { Product } from "@/lib/types"
+import { IconArrowNarrowRight, IconChevronLeft, IconChevronRight } from "@tabler/icons-react"
 
 interface HeroSlideshowProps {
   products: Product[]
@@ -77,7 +77,7 @@ export function HeroSlideshow({ products }: HeroSlideshowProps) {
             </p>
             <Button size="lg" asChild>
               <Link href="/shop">
-                Shop Now <ArrowRight className="ml-2 h-4 w-4" />
+                Shop Now <IconArrowNarrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>
           </div>
@@ -129,7 +129,7 @@ export function HeroSlideshow({ products }: HeroSlideshowProps) {
                   <div className="flex flex-col sm:flex-row gap-4">
                     <Button size="lg" asChild className="bg-white text-black hover:bg-white/90">
                       <Link href={`/products/${product.slug}`}>
-                        View Details <ArrowRight className="ml-2 h-4 w-4" />
+                        View Details <IconArrowNarrowRight className="ml-2 h-4 w-4" />
                       </Link>
                     </Button>
                     <Button
@@ -154,14 +154,14 @@ export function HeroSlideshow({ products }: HeroSlideshowProps) {
         className="absolute left-4 top-1/2 -translate-y-1/2 z-10 bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white p-2 rounded-full transition-all"
         aria-label="Previous slide"
       >
-        <ChevronLeft className="h-6 w-6" />
+        <IconChevronLeft className="h-6 w-6" />
       </button>
       <button
         onClick={goToNext}
         className="absolute right-4 top-1/2 -translate-y-1/2 z-10 bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white p-2 rounded-full transition-all"
         aria-label="Next slide"
       >
-        <ChevronRight className="h-6 w-6" />
+        <IconChevronRight className="h-6 w-6" />
       </button>
 
       {/* Slide Indicators */}
