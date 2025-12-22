@@ -39,7 +39,7 @@ export function AdminLoginForm() {
         description: "Logged in successfully",
       })
 
-      router.push("/")
+      router.push("/admin/")
       router.refresh()
     } catch (err: any) {
       toast({
@@ -94,7 +94,7 @@ export function AdminLoginForm() {
         </form>
 
         <div className="mt-4 text-xs text-muted-foreground text-center">
-          Demo: admin@luxe.com / admin123
+          Demo: admin@gmail.com / 12345678
         </div>
       </CardContent>
     </Card>

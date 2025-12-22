@@ -10,14 +10,16 @@ export const metadata: Metadata = {
 }
 
 export default async function AdminPage() {
-  const cookieStore = cookies()
-  const adminAuth = cookieStore.get("admin_auth")
-
-  if (!adminAuth) {
-    redirect("/admin/login")
-  }
+  // const cookieStore = await cookies()
 
   const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  if (!user) {
+    redirect("/admin/login")
+  }
 
   const [
     { data: orders },
