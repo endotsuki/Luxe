@@ -22,7 +22,7 @@ export function ProductCard({ product }: ProductCardProps) {
               className="object-cover group-hover:scale-105 transition-transform duration-300"
             />
             {product.compare_at_price && (
-              <Badge className="absolute top-4 right-4 bg-secondary text-secondary-foreground">Sale</Badge>
+              <Badge className="absolute top-4 right-4 bg-transparent border border-primary text-primary">Sale</Badge>
             )}
           </div>
           <div className="p-6">
@@ -36,9 +36,9 @@ export function ProductCard({ product }: ProductCardProps) {
               <span className="text-sm text-muted-foreground">(4.8)</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-2xl font-bold">${product.price}</span>
+              <h6 className="text-2xl font-bold">${product.price}</h6>
               {product.compare_at_price && (
-                <span className="text-sm text-muted-foreground line-through">${product.compare_at_price}</span>
+                <h6 className="text-sm text-muted-foreground line-through">${product.compare_at_price}</h6>
               )}
             </div>
             {product.stock < 10 && product.stock > 0 && (

@@ -126,9 +126,9 @@ export function CartContent() {
                       <Link href={`/products/${item.product?.slug}`}>
                         <h3 className="font-semibold hover:text-primary transition-colors">{item.product?.name}</h3>
                       </Link>
-                      <p className="text-sm text-muted-foreground mt-1">${item.product?.price}</p>
+                      <h6 className="text-sm text-muted-foreground mt-1">${item.product?.price}</h6>
                     </div>
-                    <Button variant="ghost" size="icon" onClick={() => removeItem(item.id)}>
+                    <Button variant="outline" size="icon" onClick={() => removeItem(item.id)}>
                       <IconTrash className="h-4 w-4" />
                     </Button>
                   </div>
@@ -152,7 +152,7 @@ export function CartContent() {
                         <IconPlus className="h-4 w-4" />
                       </Button>
                     </div>
-                    <span className="font-semibold">${((item.product?.price || 0) * item.quantity).toFixed(2)}</span>
+                    <h6 className="font-semibold">${((item.product?.price || 0) * item.quantity).toFixed(2)}</h6>
                   </div>
                 </div>
               </div>
@@ -165,25 +165,31 @@ export function CartContent() {
         <Card className="sticky top-20">
           <CardContent className="p-6">
             <h2 className="text-xl font-bold mb-4">Order Summary</h2>
+
             <div className="space-y-2 mb-4">
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">Subtotal</span>
-                <span className="font-medium">${subtotal.toFixed(2)}</span>
+                <h6 className="font-medium">${subtotal.toFixed(2)}</h6>
               </div>
             </div>
             <Separator className="my-4" />
             <div className="flex justify-between text-lg font-bold mb-6">
               <span>Total</span>
-              <span>${subtotal.toFixed(2)}</span>
+              <h6>${subtotal.toFixed(2)}</h6>
             </div>
-            <Button className="w-full" size="lg" asChild>
-              <Link href="/contact">
-                Place Order <IconArrowNarrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
-            <Button variant="outline" className="w-full mt-2 bg-transparent" asChild>
-              <Link href="/shop">Continue Shopping</Link>
-            </Button>
+            <div className="flex gap-3">
+              <Button className="flex-1" size="lg" asChild>
+                <Link href="/contact" className="flex items-center justify-center">
+                  Place Order <IconArrowNarrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+
+              <Button variant="outline" className="flex-1" size="lg" asChild>
+                <Link href="/shop" className="flex items-center justify-center">
+                  Continue Shopping
+                </Link>
+              </Button>
+            </div>
             <p className="text-xs text-muted-foreground mt-4 text-center">
               You can remove items from your cart before placing an order
             </p>

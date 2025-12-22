@@ -56,7 +56,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
 
 function ProductGridSkeleton() {
   return (
-    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
       {[...Array(6)].map((_, i) => (
         <div key={i} className="space-y-4">
           <Skeleton className="aspect-square w-full" />

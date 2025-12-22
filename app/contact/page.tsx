@@ -174,7 +174,7 @@ export default function ContactPage() {
       {/* Contact/Order Form */}
       <section className="py-16">
         <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto">
+          <div className="max-w-6xl mx-auto">
             {showCartOption && (
               <div className="flex gap-4 mb-8 justify-center flex-wrap">
                 {cartItems.length > 0 ? (
@@ -218,7 +218,7 @@ export default function ContactPage() {
                       <div className="space-y-4">
                         {cartItems.map((item, index) => (
                           <div key={item.id} className="flex gap-4 pb-4 border-b last:border-0 last:pb-0">
-                            <div className="relative w-24 h-24 rounded-lg overflow-hidden bg-muted shrink-0 border">
+                            <div className="relative w-24 h-24 rounded-xl overflow-hidden bg-muted shrink-0 border">
                               <Image
                                 src={item.product?.image_url || "/placeholder.svg"}
                                 alt={item.product?.name || "Product"}
@@ -233,7 +233,7 @@ export default function ContactPage() {
                                 </h3>
                                 <div className="text-right shrink-0">
                                   <p className="text-xs text-muted-foreground">Unit Price</p>
-                                  <p className="font-semibold">${(item.product?.price || 0).toFixed(2)}</p>
+                                  <h6 className="font-semibold">${(item.product?.price || 0).toFixed(2)}</h6>
                                 </div>
                               </div>
                               <div className="flex justify-between items-center">
@@ -244,9 +244,9 @@ export default function ContactPage() {
                                 </div>
                                 <div className="text-right">
                                   <p className="text-xs text-muted-foreground">Subtotal</p>
-                                  <p className="text-xl font-bold text-primary">
+                                  <h6 className="text-xl font-bold text-primary">
                                     ${((item.product?.price || 0) * item.quantity).toFixed(2)}
-                                  </p>
+                                  </h6>
                                 </div>
                               </div>
                             </div>
@@ -260,16 +260,16 @@ export default function ContactPage() {
                       <div className="space-y-3 bg-muted/50 rounded-lg p-4">
                         <div className="flex justify-between text-sm">
                           <span className="text-muted-foreground">Items Total</span>
-                          <span className="font-medium">{cartItems.length} item(s)</span>
+                          <h6 className="font-medium">{cartItems.length} item(s)</h6>
                         </div>
                         <div className="flex justify-between text-sm">
                           <span className="text-muted-foreground">Subtotal</span>
-                          <span className="font-medium">${total.toFixed(2)}</span>
+                          <h6 className="font-medium">${total.toFixed(2)}</h6>
                         </div>
                         <Separator />
                         <div className="flex justify-between text-2xl font-bold">
-                          <span>Total Amount</span>
-                          <span className="text-primary">${total.toFixed(2)}</span>
+                          <h6>Total Amount</h6>
+                          <h6 className="text-primary">${total.toFixed(2)}</h6>
                         </div>
                       </div>
 
@@ -293,9 +293,9 @@ export default function ContactPage() {
                       <h2 className="text-2xl font-bold mb-6">Contact Information</h2>
                       <form onSubmit={handleSubmit} className="space-y-4">
                         <div className="space-y-2">
-                          <label htmlFor="name" className="text-sm font-medium flex items-center gap-2">
+                          <label htmlFor="name" className="text-sm font-semibold flex items-center gap-2">
                             <IconUser className="w-4 h-4" />
-                            Full Name *
+                            <h6>Full Name *</h6> 
                           </label>
                           <Input
                             id="name"
@@ -308,9 +308,9 @@ export default function ContactPage() {
                         </div>
 
                         <div className="space-y-2">
-                          <label htmlFor="contact" className="text-sm font-medium flex items-center gap-2">
+                          <label htmlFor="contact" className="text-sm font-semibold flex items-center gap-2">
                             <IconPhone className="w-4 h-4" />
-                            Phone or Telegram *
+                            <h6>Phone or Telegram *</h6>
                           </label>
                           <Input
                             id="contact"
@@ -323,9 +323,9 @@ export default function ContactPage() {
                         </div>
 
                         <div className="space-y-2">
-                          <label htmlFor="email" className="text-sm font-medium flex items-center gap-2">
+                          <label htmlFor="email" className="text-sm font-semibold flex items-center gap-2">
                             <IconMail className="w-4 h-4" />
-                            Email (Optional)
+                            <h6>Email (Optional)</h6>
                           </label>
                           <Input
                             id="email"
@@ -338,9 +338,9 @@ export default function ContactPage() {
                         </div>
 
                         <div className="space-y-2">
-                          <label htmlFor="message" className="text-sm font-medium flex items-center gap-2">
+                          <label htmlFor="message" className="text-sm font-semibold flex items-center gap-2">
                             <IconMessage2 className="w-4 h-4" />
-                            Message (Optional)
+                            <h6>Message (Optional)</h6>
                           </label>
                           <Textarea
                             id="message"
@@ -366,14 +366,14 @@ export default function ContactPage() {
               </div>
             ) : (
               // Regular contact form
-              <div className="max-w-2xl mx-auto">
+              <div className="max-w-3xl mx-auto">
                 <Card>
                   <CardContent className="p-8">
                     <form onSubmit={handleSubmit} className="space-y-6">
                       <div className="space-y-2">
-                        <label htmlFor="name" className="text-sm font-medium flex items-center gap-2">
+                        <label htmlFor="name" className="text-sm font-semibold flex items-center gap-2">
                           <IconUser className="w-4 h-4" />
-                          Full Name *
+                          <h6>Full Name *</h6>
                         </label>
                         <Input
                           id="name"
@@ -386,9 +386,9 @@ export default function ContactPage() {
                       </div>
 
                       <div className="space-y-2">
-                        <label htmlFor="contact" className="text-sm font-medium flex items-center gap-2">
+                        <label htmlFor="contact" className="text-sm font-semibold flex items-center gap-2">
                           <IconPhone className="w-4 h-4" />
-                          Phone or Telegram *
+                          <h6>Phone or Telegram *</h6>
                         </label>
                         <Input
                           id="contact"
@@ -401,9 +401,9 @@ export default function ContactPage() {
                       </div>
 
                       <div className="space-y-2">
-                        <label htmlFor="email" className="text-sm font-medium flex items-center gap-2">
+                        <label htmlFor="email" className="text-sm font-semibold flex items-center gap-2">
                           <IconMail className="w-4 h-4" />
-                          Email (Optional)
+                          <h6>Email (Optional)</h6>
                         </label>
                         <Input
                           id="email"
@@ -416,9 +416,9 @@ export default function ContactPage() {
                       </div>
 
                       <div className="space-y-2">
-                        <label htmlFor="message" className="text-sm font-medium flex items-center gap-2">
+                        <label htmlFor="message" className="text-sm font-semibold flex items-center gap-2">
                           <IconMessage2 className="w-4 h-4" />
-                          Message *
+                          <h6>Message *</h6>
                         </label>
                         <Textarea
                           id="message"
