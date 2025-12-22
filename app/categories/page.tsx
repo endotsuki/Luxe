@@ -5,8 +5,10 @@ import { SiteFooter } from "@/components/site-footer"
 import { Card, CardContent } from "@/components/ui/card"
 import { createClient } from "@/lib/supabase/server"
 import type { Category } from "@/lib/types"
+import { Metadata } from "next"
 
-export const metadata = {
+
+export const metadata: Metadata = {
   title: "Categories | LuxeAccessories",
   description: "Browse our product categories",
 }
@@ -25,19 +27,19 @@ export default async function CategoriesPage() {
             <p className="text-muted-foreground">Explore our curated collections</p>
           </div>
 
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {categories?.map((category: Category) => (
               <Link key={category.id} href={`/categories/${category.slug}`}>
                 <Card className="group overflow-hidden hover:shadow-lg transition-all duration-300 h-full">
                   <CardContent className="p-0">
-                    <div className="relative aspect-[4/3] overflow-hidden">
+                    <div className="relative aspect-4/3 overflow-hidden">
                       <Image
                         src={category.image_url || "/placeholder.svg?height=400&width=600"}
                         alt={category.name}
                         fill
                         className="object-cover group-hover:scale-105 transition-transform duration-300"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-6">
+                      <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent flex items-end p-6">
                         <div>
                           <h2 className="text-white text-2xl font-bold mb-2">{category.name}</h2>
                           <p className="text-white/90 text-sm">{category.description}</p>

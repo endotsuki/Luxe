@@ -2,7 +2,6 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { ShoppingCart, Menu, Moon, Sun, Search } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useTheme } from "next-themes"
 import { useState, useEffect } from "react"
@@ -10,6 +9,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { Badge } from "@/components/ui/badge"
 import { motion } from "framer-motion"
 import { SearchBar } from "./SearchBar"
+import { IconMenu, IconMoon, IconShoppingCart, IconSun, IconHome, IconCategory2, IconMessage } from "@tabler/icons-react"
 
 interface SiteHeaderProps {
   cartCount?: number
@@ -23,37 +23,36 @@ export function SiteHeader({ cartCount = 0 }: SiteHeaderProps) {
   useEffect(() => setMounted(true), [])
 
   const navigation = [
-    { name: "Home", href: "/" },
-    { name: "Shop", href: "/shop" },
-    { name: "Categories", href: "/categories" },
-    { name: "Contact", href: "/contact" },
+    { name: "Home", href: "/", icon: IconHome },
+    { name: "Shop", href: "/shop", icon: IconShoppingCart },
+    { name: "Categories", href: "/categories", icon: IconCategory2 },
+    { name: "Contact", href: "/contact", icon: IconMessage },
   ]
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-gray-200/50 bg-white/90 backdrop-blur-lg shadow-sm supports-filter:bg-white/70 dark:bg-gray-900/90 dark:border-gray-700/50">
       <div className="container mx-auto px-4">
-        <div className="flex h-16 items-center justify-between">
+        <div className="flex h-20 items-center justify-between">
 
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-foreground font-bold text-lg shadow">
-              LA
-            </div>
-            <span className="hidden font-bold text-xl sm:inline-block text-gray-800 dark:text-gray-100">
-              LuxeAccessories
-            </span>
+            <img src="/icon.svg" alt="LuxeAccessories Logo" className="h-7 w-7" />
+            <h6 className="hidden font-bold text-2xl sm:inline-block text-gray-800 dark:text-gray-100">
+              Luxe
+            </h6>
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-8 relative">
+          <nav className="hidden md:flex items-center gap-12 relative">
             {navigation.map((item) => {
               const isActive = pathname === item.href
               return (
                 <Link
                   key={item.name}
                   href={item.href}
-                  className="relative text-sm font-medium text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors"
+                  className="relative text-base font-medium text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors"
                 >
+                  {item.icon && <item.icon className="inline-block mr-1 mb-1 h-5 w-5" />}
                   {item.name}
                   {isActive && (
                     <motion.div
@@ -88,14 +87,14 @@ export function SiteHeader({ cartCount = 0 }: SiteHeaderProps) {
                 aria-label="Toggle theme"
                 className="rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
               >
-                {theme === "dark" ? <Sun className="h-5 w-5 text-yellow-400" /> : <Moon className="h-5 w-5 text-gray-700 dark:text-gray-300" />}
+                {theme === "dark" ? <IconSun className="h-5 w-5 text-yellow-400" /> : <IconMoon className="h-5 w-5 text-gray-700 dark:text-gray-300" />}
               </Button>
             )}
 
             {/* Cart */}
             <Link href="/cart">
               <Button variant="ghost" size="icon" className="relative rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-                <ShoppingCart className="h-5 w-5 text-gray-600 dark:text-gray-300" />
+                <IconShoppingCart className="h-5 w-5 text-gray-600 dark:text-gray-300" />
                 {cartCount > 0 && (
                   <Badge className="absolute -right-1 -top-1 h-5 w-5 rounded-full bg-red-500 text-white p-0 flex items-center justify-center text-xs animate-pulse">
                     {cartCount}
@@ -108,7 +107,7 @@ export function SiteHeader({ cartCount = 0 }: SiteHeaderProps) {
             <Sheet>
               <SheetTrigger asChild className="md:hidden">
                 <Button variant="ghost" size="icon" aria-label="Menu">
-                  <Menu className="h-5 w-5 text-gray-600 dark:text-gray-300" />
+                  <IconMenu className="h-5 w-5 text-gray-600 dark:text-gray-300" />
                 </Button>
               </SheetTrigger>
               <SheetContent side="right" className="w-70 sm:w-90 p-6">

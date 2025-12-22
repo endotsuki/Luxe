@@ -3,7 +3,6 @@
 import { useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { Star, Minus, Plus, ShoppingCart, Heart, Share2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
@@ -11,6 +10,7 @@ import { Separator } from "@/components/ui/separator"
 import type { Product } from "@/lib/types"
 import { useToast } from "@/hooks/use-toast"
 import { useRouter } from "next/navigation"
+import { IconHeart, IconMinus, IconPlus, IconShare, IconShoppingCart, IconStar } from "@tabler/icons-react"
 
 interface ProductDetailsProps {
   product: Product & { category?: { name: string; slug: string } }
@@ -126,7 +126,7 @@ export function ProductDetails({ product }: ProductDetailsProps) {
               <div className="flex items-center gap-2">
                 <div className="flex">
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="h-5 w-5 fill-secondary text-secondary" />
+                    <IconStar key={i} className="h-5 w-5 fill-secondary text-secondary" />
                   ))}
                 </div>
                 <span className="text-sm text-muted-foreground">(4.8 / 127 reviews)</span>
@@ -160,16 +160,16 @@ export function ProductDetails({ product }: ProductDetailsProps) {
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
                     disabled={quantity <= 1}
                   >
-                    <Minus className="h-4 w-4" />
+                    <IconMinus className="h-4 w-4" />
                   </Button>
-                  <span className="px-4 py-2 min-w-[3rem] text-center">{quantity}</span>
+                  <span className="px-4 py-2 min-w-12 text-center">{quantity}</span>
                   <Button
                     variant="ghost"
                     size="icon"
                     onClick={() => setQuantity(Math.min(product.stock, quantity + 1))}
                     disabled={quantity >= product.stock}
                   >
-                    <Plus className="h-4 w-4" />
+                    <IconPlus className="h-4 w-4" />
                   </Button>
                 </div>
                 <span className="text-sm text-muted-foreground">
@@ -180,14 +180,14 @@ export function ProductDetails({ product }: ProductDetailsProps) {
 
             <div className="flex gap-4">
               <Button size="lg" className="flex-1" onClick={handleAddToCart} disabled={product.stock === 0}>
-                <ShoppingCart className="mr-2 h-5 w-5" />
+                <IconShoppingCart className="mr-2 h-5 w-5" />
                 Add to Cart
               </Button>
               <Button size="lg" variant="outline">
-                <Heart className="h-5 w-5" />
+                <IconHeart className="h-5 w-5" />
               </Button>
               <Button size="lg" variant="outline">
-                <Share2 className="h-5 w-5" />
+                <IconShare className="h-5 w-5" />
               </Button>
             </div>
           </div>

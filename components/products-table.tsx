@@ -3,13 +3,13 @@
 import { useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { ExternalLink, Pencil, Plus, Trash2 } from "lucide-react"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { ProductDialog } from "@/components/product-dialog"
 import type { Product } from "@/lib/types"
 import { useRouter } from "next/navigation"
+import { IconEdit, IconExternalLink, IconPlus, IconTrash } from "@tabler/icons-react"
 
 interface ProductsTableProps {
   products: Product[]
@@ -65,7 +65,7 @@ export function ProductsTable({ products }: ProductsTableProps) {
     <div className="space-y-4">
       <div className="flex justify-end">
         <Button onClick={handleAddProduct}>
-          <Plus className="mr-2 h-4 w-4" />
+          <IconPlus className="mr-2 h-4 w-4" />
           Add Product
         </Button>
       </div>
@@ -127,11 +127,11 @@ export function ProductsTable({ products }: ProductsTableProps) {
                     <div className="flex items-center justify-end gap-2">
                       <Button variant="ghost" size="sm" asChild>
                         <Link href={`/products/${product.slug}`} target="_blank">
-                          <ExternalLink className="h-4 w-4" />
+                          <IconExternalLink className="h-4 w-4" />
                         </Link>
                       </Button>
                       <Button variant="ghost" size="sm" onClick={() => handleEditProduct(product)}>
-                        <Pencil className="h-4 w-4" />
+                        <IconEdit className="h-4 w-4" />
                       </Button>
                       <Button
                         variant="ghost"
@@ -139,7 +139,7 @@ export function ProductsTable({ products }: ProductsTableProps) {
                         onClick={() => handleDeleteProduct(product.id)}
                         disabled={isDeleting === product.id}
                       >
-                        <Trash2 className="h-4 w-4" />
+                        <IconTrash className="h-4 w-4" />
                       </Button>
                     </div>
                   </TableCell>

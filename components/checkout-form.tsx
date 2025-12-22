@@ -4,7 +4,6 @@ import type React from "react"
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { ArrowRight, CreditCard, Truck } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -13,6 +12,7 @@ import { Separator } from "@/components/ui/separator"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
 import type { CartItem } from "@/lib/types"
+import { IconArrowNarrowRight, IconCreditCard, IconTruckDelivery } from "@tabler/icons-react"
 
 export function CheckoutForm() {
   const [cartItems, setCartItems] = useState<CartItem[]>([])
@@ -151,7 +151,7 @@ export function CheckoutForm() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Truck className="h-5 w-5" />
+                <IconTruckDelivery className="h-5 w-5" />
                 Shipping Information
               </CardTitle>
             </CardHeader>
@@ -223,7 +223,7 @@ export function CheckoutForm() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <CreditCard className="h-5 w-5" />
+                <IconCreditCard className="h-5 w-5" />
                 Payment Method
               </CardTitle>
             </CardHeader>
@@ -277,7 +277,7 @@ export function CheckoutForm() {
 
               <Button type="submit" className="w-full" size="lg" disabled={submitting}>
                 {submitting ? "Processing..." : "Place Order"}
-                <ArrowRight className="ml-2 h-4 w-4" />
+                <IconArrowNarrowRight className="ml-2 h-4 w-4" />
               </Button>
             </CardContent>
           </Card>
