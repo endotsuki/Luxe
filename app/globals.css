@@ -18,18 +18,18 @@
   font-display: swap;
 }
 
-/* Roboto - Body text */
+/* Inter - Body text */
 @font-face {
-  font-family: 'Roboto';
-  src: url('/fonts/Roboto.woff2') format('woff2');
+  font-family: 'Inter';
+  src: url('/fonts/Inter.woff2') format('woff2');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Roboto';
-  src: url('/fonts/Roboto-Italic.woff2') format('woff2');
+  font-family: 'Inter';
+  src: url('/fonts/Inter-Italic.woff2') format('woff2');
   font-weight: 400;
   font-style: italic;
   font-display: swap;
@@ -120,8 +120,11 @@
 
   body {
     @apply bg-background text-foreground;
-    font-family: 'Roboto', sans-serif;
-    /* Body text */
+    font-family: 'Inter', sans-serif;
+  }
+
+  p, li {
+    font-family: 'Inter', sans-serif;
   }
 
   /* Headings use Montserrat */

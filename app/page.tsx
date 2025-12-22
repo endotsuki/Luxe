@@ -44,7 +44,7 @@ export default async function HomePage() {
                 <Link key={category.id} href={`/categories/${category.slug}`}>
                   <Card className="group overflow-hidden hover:shadow-lg transition-all duration-300">
                     <CardContent className="p-0">
-                      <div className="relative aspect-square overflow-hidden">
+                      <div className="relative aspect-4/3 overflow-hidden">
                         <Image
                           src={category.image_url || "/placeholder.svg?height=400&width=400"}
                           alt={category.name}
@@ -73,7 +73,7 @@ export default async function HomePage() {
               <h2 className="text-3xl md:text-4xl font-bold mb-4">Featured Products</h2>
               <p className="text-muted-foreground text-lg">Handpicked items just for you</p>
             </div>
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
               {featuredProducts?.map((product: Product) => (
                 <Link key={product.id} href={`/products/${product.slug}`}>
                   <Card className="group overflow-hidden hover:shadow-lg transition-all duration-300 h-full">
@@ -86,10 +86,10 @@ export default async function HomePage() {
                           className="object-cover group-hover:scale-105 transition-transform duration-300"
                         />
                         {product.compare_at_price && (
-                          <Badge className="absolute top-4 right-4 bg-secondary text-secondary-foreground">Sale</Badge>
+                          <Badge className="absolute top-4 right-4 bg-transparent border border-primary text-primary">Sale</Badge>
                         )}
                       </div>
-                      <div className="p-6">
+                      <div className="p-5">
                         <h3 className="font-semibold text-lg mb-2 group-hover:text-primary transition-colors">
                           {product.name}
                         </h3>
@@ -102,11 +102,11 @@ export default async function HomePage() {
                           <span className="text-sm text-muted-foreground">(4.8)</span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <span className="text-2xl font-bold">${product.price}</span>
+                          <h6 className="text-xl">${product.price}</h6>
                           {product.compare_at_price && (
-                            <span className="text-sm text-muted-foreground line-through">
+                            <h6 className="text-sm text-muted-foreground line-through">
                               ${product.compare_at_price}
-                            </span>
+                            </h6>
                           )}
                         </div>
                       </div>

@@ -121,9 +121,9 @@ export function HeroSlideshow({ products }: HeroSlideshowProps) {
                   <h2 className="text-4xl md:text-6xl font-bold mb-4 text-balance">{product.name}</h2>
                   <p className="text-lg md:text-xl mb-6 text-white/90 text-pretty max-w-xl">{product.description}</p>
                   <div className="flex items-baseline gap-3 mb-8">
-                    <span className="text-4xl md:text-5xl font-bold">${product.price}</span>
+                    <h6 className="text-4xl md:text-5xl font-bold">${product.price}</h6>
                     {product.compare_at_price && (
-                      <span className="text-xl text-white/60 line-through">${product.compare_at_price}</span>
+                      <h6 className="text-xl text-white/60 line-through">${product.compare_at_price}</h6>
                     )}
                   </div>
                   <div className="flex flex-col sm:flex-row gap-4">
