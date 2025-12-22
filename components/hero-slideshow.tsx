@@ -68,7 +68,7 @@ export function HeroSlideshow({ products }: HeroSlideshowProps) {
 
   if (displayProducts.length === 0) {
     return (
-      <section className="relative h-[600px] bg-gradient-to-br from-primary/10 via-background to-secondary/10">
+      <section className="relative h-[600px] bg-linear-to-br from-primary/10 via-background to-secondary/10">
         <div className="container mx-auto px-4 h-full flex items-center justify-center">
           <div className="text-center">
             <h1 className="text-4xl md:text-6xl font-bold mb-6">Welcome to LuxeAccessories</h1>
