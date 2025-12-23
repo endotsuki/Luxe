@@ -1,12 +1,15 @@
 "use client"
 
 import Link from "next/link"
-import { ShoppingCart, Menu, Moon, Sun, Search } from "lucide-react"
+import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { useTheme } from "next-themes"
 import { useState, useEffect } from "react"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { Badge } from "@/components/ui/badge"
+import { motion } from "framer-motion"
+import { SearchBar } from "./SearchBar"
+import { IconMenu, IconMoon, IconShoppingCart, IconSun, IconHome, IconCategory2, IconMessage } from "@tabler/icons-react"
 
 interface SiteHeaderProps {
   cartCount?: number
@@ -15,65 +18,85 @@ interface SiteHeaderProps {
 export function SiteHeader({ cartCount = 0 }: SiteHeaderProps) {
   const { theme, setTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
+  const pathname = usePathname()
 
-  useEffect(() => {
-    setMounted(true)
-  }, [])
+  useEffect(() => setMounted(true), [])
 
   const navigation = [
-    { name: "Home", href: "/" },
-    { name: "Shop", href: "/shop" },
-    { name: "Categories", href: "/categories" },
-    { name: "Contact", href: "/contact" },
+    { name: "Home", href: "/", icon: IconHome },
+    { name: "Shop", href: "/shop", icon: IconShoppingCart },
+    { name: "Categories", href: "/categories", icon: IconCategory2 },
+    { name: "Contact", href: "/contact", icon: IconMessage },
   ]
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-50 w-full border-b border-gray-200/50 bg-white/90 backdrop-blur-lg shadow-sm supports-filter:bg-white/70 dark:bg-gray-900/90 dark:border-gray-700/50">
       <div className="container mx-auto px-4">
-        <div className="flex h-16 items-center justify-between">
+        <div className="flex h-20 items-center justify-between">
+
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground font-bold text-sm">
-              LA
-            </div>
-            <span className="hidden font-bold text-lg sm:inline-block">LuxeAccessories</span>
+            <img src="/icon.svg" alt="LuxeAccessories Logo" className="h-7 w-7" />
+            <h6 className="hidden font-bold text-2xl sm:inline-block text-gray-800 dark:text-gray-100">
+              Luxe
+            </h6>
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-6">
-            {navigation.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-              >
-                {item.name}
-              </Link>
-            ))}
+          <nav className="hidden md:flex items-center gap-12 relative">
+            {navigation.map((item) => {
+              const isActive = pathname === item.href
+              return (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className="relative text-base font-medium text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors"
+                >
+                  {item.icon && <item.icon className="inline-block mr-1 mb-1 h-5 w-5" />}
+                  {item.name}
+                  {isActive && (
+                    <motion.div
+                      layoutId="active-nav"
+                      className="absolute -bottom-1 left-0 right-0 h-0.5 bg-primary rounded"
+                      transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                    />
+                  )}
+                </Link>
+              )
+            })}
           </nav>
 
           {/* Actions */}
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon" aria-label="Search">
-              <Search className="h-5 w-5" />
-            </Button>
+            {/* Search */}
+            {/* <Button variant="ghost" size="icon" aria-label="Search" className="rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+              <Search className="h-5 w-5 text-gray-600 dark:text-gray-300" />
+            </Button> */}
+            {/* Search */}
+            <div className="hidden md:block">
+              <SearchBar />
+            </div>
 
+
+            {/* Theme Toggle */}
             {mounted && (
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
                 aria-label="Toggle theme"
+                className="rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
               >
-                {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+                {theme === "dark" ? <IconSun className="h-5 w-5 text-yellow-400" /> : <IconMoon className="h-5 w-5 text-gray-700 dark:text-gray-300" />}
               </Button>
             )}
 
+            {/* Cart */}
             <Link href="/cart">
-              <Button variant="ghost" size="icon" className="relative">
-                <ShoppingCart className="h-5 w-5" />
+              <Button variant="ghost" size="icon" className="relative rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+                <IconShoppingCart className="h-5 w-5 text-gray-600 dark:text-gray-300" />
                 {cartCount > 0 && (
-                  <Badge className="absolute -right-1 -top-1 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs">
+                  <Badge className="absolute -right-1 -top-1 h-5 w-5 rounded-full bg-red-500 text-white p-0 flex items-center justify-center text-xs animate-pulse">
                     {cartCount}
                   </Badge>
                 )}
@@ -84,20 +107,23 @@ export function SiteHeader({ cartCount = 0 }: SiteHeaderProps) {
             <Sheet>
               <SheetTrigger asChild className="md:hidden">
                 <Button variant="ghost" size="icon" aria-label="Menu">
-                  <Menu className="h-5 w-5" />
+                  <IconMenu className="h-5 w-5 text-gray-600 dark:text-gray-300" />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="right" className="w-[300px] sm:w-[400px]">
-                <nav className="flex flex-col gap-4 mt-8">
-                  {navigation.map((item) => (
-                    <Link
-                      key={item.name}
-                      href={item.href}
-                      className="text-lg font-medium text-muted-foreground transition-colors hover:text-foreground"
-                    >
-                      {item.name}
-                    </Link>
-                  ))}
+              <SheetContent side="right" className="w-70 sm:w-90 p-6">
+                <nav className="flex flex-col gap-6 mt-4">
+                  {navigation.map((item) => {
+                    const isActive = pathname === item.href
+                    return (
+                      <Link
+                        key={item.name}
+                        href={item.href}
+                        className={`text-lg font-semibold transition-colors ${isActive ? "text-primary" : "text-gray-700 dark:text-gray-200 hover:text-primary"}`}
+                      >
+                        {item.name}
+                      </Link>
+                    )
+                  })}
                 </nav>
               </SheetContent>
             </Sheet>

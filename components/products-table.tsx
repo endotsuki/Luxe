@@ -72,7 +72,7 @@ export function ProductsTable({ products }: ProductsTableProps) {
     <div className="space-y-4">
       <div className="flex justify-end">
         <Button onClick={handleAddProduct}>
-          <Plus className="mr-2 h-4 w-4" />
+          <IconPlus className="mr-2 h-4 w-4" />
           Add Product
         </Button>
       </div>
@@ -171,7 +171,7 @@ export function ProductsTable({ products }: ProductsTableProps) {
                         onClick={() => handleDeleteProduct(product.id)}
                         disabled={isDeleting === product.id}
                       >
-                        <Trash2 className="h-4 w-4" />
+                        <IconTrash className="h-4 w-4" />
                       </Button>
                     </div>
                   </TableCell>

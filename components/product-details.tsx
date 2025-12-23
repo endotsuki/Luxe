@@ -1,16 +1,24 @@
-"use client";
+"use client"
 
-import { useState } from "react";
-import Image from "next/image";
-import Link from "next/link";
-import { Star, Minus, Plus, ShoppingCart, Heart, Share2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import type { Product } from "@/lib/types";
-import { useToast } from "@/hooks/use-toast";
-import { useRouter } from "next/navigation";
+import { useState } from "react"
+import Image from "next/image"
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { Card, CardContent } from "@/components/ui/card"
+import { Separator } from "@/components/ui/separator"
+import type { Product } from "@/lib/types"
+import { useToast } from "@/hooks/use-toast"
+import { useRouter } from "next/navigation"
+import {
+  IconHeart,
+  IconMinus,
+  IconPlus,
+  IconShare,
+  IconShoppingCart,
+  IconStar,
+} from "@tabler/icons-react"
+import { ShareModal } from "./ShareModal"
 
 interface ProductDetailsProps {
   product: Product & { category?: { name: string; slug: string } };
@@ -31,7 +39,7 @@ export function ProductDetails({ product }: ProductDetailsProps) {
         localStorage.getItem("cart_user_id") || crypto.randomUUID();
       localStorage.setItem("cart_user_id", userId);
 
-      const response = await fetch("/api/cart", {
+      const res = await fetch("/api/cart", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -52,23 +60,19 @@ export function ProductDetails({ product }: ProductDetailsProps) {
     } catch (error) {
       toast({
         title: "Error",
-        description: "Failed to add item to cart. Please try again.",
+        description: "Failed to add item to cart.",
         variant: "destructive",
       });
     }
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-10">
       {/* Breadcrumb */}
       <nav className="mb-8 text-sm text-muted-foreground">
-        <Link href="/" className="hover:text-foreground">
-          Home
-        </Link>
+        <Link href="/" className="hover:text-foreground">Home</Link>
         <span className="mx-2">/</span>
-        <Link href="/shop" className="hover:text-foreground">
-          Shop
-        </Link>
+        <Link href="/shop" className="hover:text-foreground">Shop</Link>
         {product.category && (
           <>
             <span className="mx-2">/</span>
@@ -84,12 +88,12 @@ export function ProductDetails({ product }: ProductDetailsProps) {
         <span className="text-foreground">{product.name}</span>
       </nav>
 
-      <div className="grid gap-8 md:grid-cols-2">
-        {/* Images */}
+      <div className="grid gap-12 lg:grid-cols-2">
+        {/* Image Gallery */}
         <div className="space-y-4">
-          <Card className="overflow-hidden">
+          <Card className="overflow-hidden shadow-lg">
             <CardContent className="p-0">
-              <div className="relative aspect-square">
+              <div className="relative aspect-square bg-muted">
                 <Image
                   src={
                     images[selectedImage]
@@ -98,6 +102,7 @@ export function ProductDetails({ product }: ProductDetailsProps) {
                   }
                   alt={product.name}
                   fill
+                  priority
                   className="object-cover"
                 />
               </div>
@@ -128,7 +133,7 @@ export function ProductDetails({ product }: ProductDetailsProps) {
         </div>
 
         {/* Details */}
-        <div className="space-y-6">
+        <div className="space-y-8 lg:sticky lg:top-24">
           <div>
             {product.compare_at_price && (
               <Badge className="mb-2 bg-secondary text-secondary-foreground">
@@ -152,8 +157,10 @@ export function ProductDetails({ product }: ProductDetailsProps) {
                   (4.8 / 127 reviews)
                 </span>
               </div>
+              <span className="text-muted-foreground">(4.8 · 127 reviews)</span>
             </div>
-            <div className="flex items-center gap-4">
+
+            <div className="flex items-end gap-4">
               <span className="text-4xl font-bold">${product.price}</span>
               {product.compare_at_price && (
                 <span className="text-xl text-muted-foreground line-through">
@@ -207,7 +214,11 @@ export function ProductDetails({ product }: ProductDetailsProps) {
                     : "Out of stock"}
                 </span>
               </div>
+              <span className="text-sm text-muted-foreground">
+                {product.stock > 0 ? `${product.stock} in stock` : "Out of stock"}
+              </span>
             </div>
+          </div>
 
             <div className="flex gap-4">
               <Button

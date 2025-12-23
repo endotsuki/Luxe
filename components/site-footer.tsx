@@ -1,5 +1,5 @@
+import { IconBrandFacebook, IconBrandInstagram, IconBrandX } from "@tabler/icons-react"
 import Link from "next/link"
-import { Facebook, Instagram, Twitter } from "lucide-react"
 
 export function SiteFooter() {
   return (
@@ -9,10 +9,12 @@ export function SiteFooter() {
           {/* Brand */}
           <div>
             <div className="flex items-center gap-2 mb-4">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground font-bold text-sm">
-                LA
+              <div className="flex items-center gap-2">
+                <img src="/icon.svg" alt="LuxeAccessories Logo" className="h-8 w-8" />
+                <h6 className="hidden font-bold text-2xl sm:inline-block text-gray-800 dark:text-gray-100">
+                  Luxe
+                </h6>
               </div>
-              <span className="font-bold text-lg">LuxeAccessories</span>
             </div>
             <p className="text-sm text-muted-foreground">
               Premium accessories for the modern lifestyle. Quality and style in every piece.
@@ -84,15 +86,15 @@ export function SiteFooter() {
             <h3 className="font-semibold mb-4">Connect</h3>
             <div className="flex gap-4">
               <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors">
-                <Facebook className="h-5 w-5" />
+                <IconBrandFacebook className="h-5 w-5" />
                 <span className="sr-only">Facebook</span>
               </Link>
               <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors">
-                <Instagram className="h-5 w-5" />
+                <IconBrandInstagram className="h-5 w-5" />
                 <span className="sr-only">Instagram</span>
               </Link>
               <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors">
-                <Twitter className="h-5 w-5" />
+                <IconBrandX className="h-5 w-5" />
                 <span className="sr-only">Twitter</span>
               </Link>
             </div>

@@ -1,13 +1,14 @@
 import Link from "next/link"
-import { CheckCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
+import { IconCircleCheck } from "@tabler/icons-react"
+import { Metadata } from "next"
 
-export const metadata = {
-  title: "Order Successful | LuxeAccessories",
-  description: "Your order has been placed successfully",
+export const metadata: Metadata = {
+  title: "Categories | LuxeAccessories",
+  description: "Browse our product categories",
 }
 
 export default async function SuccessPage({ searchParams }: { searchParams: Promise<{ orderId?: string }> }) {
@@ -20,7 +21,7 @@ export default async function SuccessPage({ searchParams }: { searchParams: Prom
         <div className="container mx-auto px-4 py-16">
           <div className="max-w-md mx-auto text-center">
             <div className="mb-6 inline-flex h-16 w-16 items-center justify-center rounded-full bg-green-100 text-green-600">
-              <CheckCircle className="h-8 w-8" />
+              <IconCircleCheck className="h-8 w-8" />
             </div>
 
             <Card>

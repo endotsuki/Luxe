@@ -4,7 +4,6 @@ import type React from "react"
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { ShoppingBag, User, Phone, Mail, MessageSquare, Send } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -13,6 +12,8 @@ import { Separator } from "@/components/ui/separator"
 import { useToast } from "@/hooks/use-toast"
 import type { CartItem } from "@/lib/types"
 import Image from "next/image"
+import { SiteHeader } from "@/components/site-header"
+import { IconMail, IconMessage2, IconPhone, IconSend, IconShoppingBag, IconUser } from "@tabler/icons-react"
 
 export default function ContactPage() {
   const [cartItems, setCartItems] = useState<CartItem[]>([])
@@ -151,7 +152,9 @@ export default function ContactPage() {
   }
 
   return (
+    // SiteHeader
     <main className="min-h-screen">
+      <SiteHeader cartCount={cartItems.length} />
       {/* Hero Section */}
       <section className="relative bg-linear-to-br from-primary/10 via-background to-accent/10 py-20">
         <div className="container mx-auto px-4">
@@ -171,28 +174,28 @@ export default function ContactPage() {
       {/* Contact/Order Form */}
       <section className="py-16">
         <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto">
+          <div className="max-w-6xl mx-auto">
             {showCartOption && (
               <div className="flex gap-4 mb-8 justify-center flex-wrap">
                 {cartItems.length > 0 ? (
                   <>
                     <Button variant={orderMode ? "default" : "outline"} onClick={() => setOrderMode(true)}>
-                      <ShoppingBag className="w-4 h-4 mr-2" />
+                      <IconShoppingBag className="w-4 h-4 mr-2" />
                       Place Order ({cartItems.length} items)
                     </Button>
                     <Button variant={!orderMode ? "default" : "outline"} onClick={() => setOrderMode(false)}>
-                      <Send className="w-4 h-4 mr-2" />
+                      <IconSend className="w-4 h-4 mr-2" />
                       Send Message
                     </Button>
                   </>
                 ) : (
                   <>
                     <Button variant="outline" onClick={loadCartItems} disabled={loading}>
-                      <ShoppingBag className="w-4 h-4 mr-2" />
+                      <IconShoppingBag className="w-4 h-4 mr-2" />
                       {loading ? "Loading Cart..." : "Load Cart to Order"}
                     </Button>
                     <Button variant="default" onClick={() => setOrderMode(false)}>
-                      <Send className="w-4 h-4 mr-2" />
+                      <IconSend className="w-4 h-4 mr-2" />
                       Send Message
                     </Button>
                   </>
@@ -207,7 +210,7 @@ export default function ContactPage() {
                   <Card className="border-2 border-primary/20">
                     <CardContent className="p-6">
                       <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
-                        <ShoppingBag className="w-6 h-6 text-primary" />
+                        <IconShoppingBag className="w-6 h-6 text-primary" />
                         Order Summary
                       </h2>
 
@@ -215,7 +218,7 @@ export default function ContactPage() {
                       <div className="space-y-4">
                         {cartItems.map((item, index) => (
                           <div key={item.id} className="flex gap-4 pb-4 border-b last:border-0 last:pb-0">
-                            <div className="relative w-24 h-24 rounded-lg overflow-hidden bg-muted flex-shrink-0 border">
+                            <div className="relative w-24 h-24 rounded-xl overflow-hidden bg-muted shrink-0 border">
                               <Image
                                 src={item.product?.image_url || "/placeholder.svg"}
                                 alt={item.product?.name || "Product"}
@@ -228,9 +231,9 @@ export default function ContactPage() {
                                 <h3 className="font-semibold text-lg">
                                   {index + 1}. {item.product?.name}
                                 </h3>
-                                <div className="text-right flex-shrink-0">
+                                <div className="text-right shrink-0">
                                   <p className="text-xs text-muted-foreground">Unit Price</p>
-                                  <p className="font-semibold">${(item.product?.price || 0).toFixed(2)}</p>
+                                  <h6 className="font-semibold">${(item.product?.price || 0).toFixed(2)}</h6>
                                 </div>
                               </div>
                               <div className="flex justify-between items-center">
@@ -241,9 +244,9 @@ export default function ContactPage() {
                                 </div>
                                 <div className="text-right">
                                   <p className="text-xs text-muted-foreground">Subtotal</p>
-                                  <p className="text-xl font-bold text-primary">
+                                  <h6 className="text-xl font-bold text-primary">
                                     ${((item.product?.price || 0) * item.quantity).toFixed(2)}
-                                  </p>
+                                  </h6>
                                 </div>
                               </div>
                             </div>
@@ -257,16 +260,16 @@ export default function ContactPage() {
                       <div className="space-y-3 bg-muted/50 rounded-lg p-4">
                         <div className="flex justify-between text-sm">
                           <span className="text-muted-foreground">Items Total</span>
-                          <span className="font-medium">{cartItems.length} item(s)</span>
+                          <h6 className="font-medium">{cartItems.length} item(s)</h6>
                         </div>
                         <div className="flex justify-between text-sm">
                           <span className="text-muted-foreground">Subtotal</span>
-                          <span className="font-medium">${total.toFixed(2)}</span>
+                          <h6 className="font-medium">${total.toFixed(2)}</h6>
                         </div>
                         <Separator />
                         <div className="flex justify-between text-2xl font-bold">
-                          <span>Total Amount</span>
-                          <span className="text-primary">${total.toFixed(2)}</span>
+                          <h6>Total Amount</h6>
+                          <h6 className="text-primary">${total.toFixed(2)}</h6>
                         </div>
                       </div>
 
@@ -290,9 +293,9 @@ export default function ContactPage() {
                       <h2 className="text-2xl font-bold mb-6">Contact Information</h2>
                       <form onSubmit={handleSubmit} className="space-y-4">
                         <div className="space-y-2">
-                          <label htmlFor="name" className="text-sm font-medium flex items-center gap-2">
-                            <User className="w-4 h-4" />
-                            Full Name *
+                          <label htmlFor="name" className="text-sm font-semibold flex items-center gap-2">
+                            <IconUser className="w-4 h-4" />
+                            <h6>Full Name *</h6> 
                           </label>
                           <Input
                             id="name"
@@ -305,9 +308,9 @@ export default function ContactPage() {
                         </div>
 
                         <div className="space-y-2">
-                          <label htmlFor="contact" className="text-sm font-medium flex items-center gap-2">
-                            <Phone className="w-4 h-4" />
-                            Phone or Telegram *
+                          <label htmlFor="contact" className="text-sm font-semibold flex items-center gap-2">
+                            <IconPhone className="w-4 h-4" />
+                            <h6>Phone or Telegram *</h6>
                           </label>
                           <Input
                             id="contact"
@@ -320,9 +323,9 @@ export default function ContactPage() {
                         </div>
 
                         <div className="space-y-2">
-                          <label htmlFor="email" className="text-sm font-medium flex items-center gap-2">
-                            <Mail className="w-4 h-4" />
-                            Email (Optional)
+                          <label htmlFor="email" className="text-sm font-semibold flex items-center gap-2">
+                            <IconMail className="w-4 h-4" />
+                            <h6>Email (Optional)</h6>
                           </label>
                           <Input
                             id="email"
@@ -335,9 +338,9 @@ export default function ContactPage() {
                         </div>
 
                         <div className="space-y-2">
-                          <label htmlFor="message" className="text-sm font-medium flex items-center gap-2">
-                            <MessageSquare className="w-4 h-4" />
-                            Message (Optional)
+                          <label htmlFor="message" className="text-sm font-semibold flex items-center gap-2">
+                            <IconMessage2 className="w-4 h-4" />
+                            <h6>Message (Optional)</h6>
                           </label>
                           <Textarea
                             id="message"
@@ -363,14 +366,14 @@ export default function ContactPage() {
               </div>
             ) : (
               // Regular contact form
-              <div className="max-w-2xl mx-auto">
+              <div className="max-w-3xl mx-auto">
                 <Card>
                   <CardContent className="p-8">
                     <form onSubmit={handleSubmit} className="space-y-6">
                       <div className="space-y-2">
-                        <label htmlFor="name" className="text-sm font-medium flex items-center gap-2">
-                          <User className="w-4 h-4" />
-                          Full Name *
+                        <label htmlFor="name" className="text-sm font-semibold flex items-center gap-2">
+                          <IconUser className="w-4 h-4" />
+                          <h6>Full Name *</h6>
                         </label>
                         <Input
                           id="name"
@@ -383,9 +386,9 @@ export default function ContactPage() {
                       </div>
 
                       <div className="space-y-2">
-                        <label htmlFor="contact" className="text-sm font-medium flex items-center gap-2">
-                          <Phone className="w-4 h-4" />
-                          Phone or Telegram *
+                        <label htmlFor="contact" className="text-sm font-semibold flex items-center gap-2">
+                          <IconPhone className="w-4 h-4" />
+                          <h6>Phone or Telegram *</h6>
                         </label>
                         <Input
                           id="contact"
@@ -398,9 +401,9 @@ export default function ContactPage() {
                       </div>
 
                       <div className="space-y-2">
-                        <label htmlFor="email" className="text-sm font-medium flex items-center gap-2">
-                          <Mail className="w-4 h-4" />
-                          Email (Optional)
+                        <label htmlFor="email" className="text-sm font-semibold flex items-center gap-2">
+                          <IconMail className="w-4 h-4" />
+                          <h6>Email (Optional)</h6>
                         </label>
                         <Input
                           id="email"
@@ -413,9 +416,9 @@ export default function ContactPage() {
                       </div>
 
                       <div className="space-y-2">
-                        <label htmlFor="message" className="text-sm font-medium flex items-center gap-2">
-                          <MessageSquare className="w-4 h-4" />
-                          Message *
+                        <label htmlFor="message" className="text-sm font-semibold flex items-center gap-2">
+                          <IconMessage2 className="w-4 h-4" />
+                          <h6>Message *</h6>
                         </label>
                         <Textarea
                           id="message"
@@ -439,21 +442,21 @@ export default function ContactPage() {
                 <div className="mt-8 grid md:grid-cols-3 gap-6">
                   <Card>
                     <CardContent className="p-6 text-center">
-                      <Mail className="w-8 h-8 mx-auto mb-3 text-primary" />
+                      <IconMail className="w-8 h-8 mx-auto mb-3 text-primary" />
                       <h3 className="font-semibold mb-2">Email</h3>
                       <p className="text-sm text-muted-foreground">contact@luxe.com</p>
                     </CardContent>
                   </Card>
                   <Card>
                     <CardContent className="p-6 text-center">
-                      <Phone className="w-8 h-8 mx-auto mb-3 text-primary" />
+                      <IconPhone className="w-8 h-8 mx-auto mb-3 text-primary" />
                       <h3 className="font-semibold mb-2">Phone</h3>
                       <p className="text-sm text-muted-foreground">+1 (555) 123-4567</p>
                     </CardContent>
                   </Card>
                   <Card>
                     <CardContent className="p-6 text-center">
-                      <MessageSquare className="w-8 h-8 mx-auto mb-3 text-primary" />
+                      <IconMessage2 className="w-8 h-8 mx-auto mb-3 text-primary" />
                       <h3 className="font-semibold mb-2">Telegram</h3>
                       <p className="text-sm text-muted-foreground">@LuxeAccessories</p>
                     </CardContent>

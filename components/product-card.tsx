@@ -1,9 +1,9 @@
-import Link from "next/link";
-import Image from "next/image";
-import { Star } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import type { Product } from "@/lib/types";
+import Link from "next/link"
+import Image from "next/image"
+import { Card, CardContent } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import type { Product } from "@/lib/types"
+import { IconStar } from "@tabler/icons-react"
 
 interface ProductCardProps {
   product: Product;
@@ -48,7 +48,7 @@ export function ProductCard({ product }: ProductCardProps) {
               <span className="text-sm text-muted-foreground">(4.8)</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-2xl font-bold">${product.price}</span>
+              <h6 className="text-2xl font-bold">${product.price}</h6>
               {product.compare_at_price && (
                 <span className="text-sm text-muted-foreground line-through">
                   ${product.compare_at_price}

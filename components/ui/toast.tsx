@@ -3,9 +3,9 @@
 import * as React from 'react'
 import * as ToastPrimitives from '@radix-ui/react-toast'
 import { cva, type VariantProps } from 'class-variance-authority'
-import { X } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
+import { IconX } from '@tabler/icons-react'
 
 const ToastProvider = ToastPrimitives.Provider
 
@@ -16,9 +16,10 @@ const ToastViewport = React.forwardRef<
   <ToastPrimitives.Viewport
     ref={ref}
     className={cn(
-      'fixed top-0 z-[100] flex max-h-screen w-full flex-col-reverse p-4 sm:bottom-0 sm:right-0 sm:top-auto sm:flex-col md:max-w-[420px]',
-      className,
+      'fixed top-4 right-4 z-50 flex flex-col-reverse gap-4 sm:bottom-4 sm:right-4 sm:top-auto sm:flex-col max-w-10/12 w-auto',
+      className
     )}
+
     {...props}
   />
 ))
@@ -43,7 +44,7 @@ const toastVariants = cva(
 const Toast = React.forwardRef<
   React.ElementRef<typeof ToastPrimitives.Root>,
   React.ComponentPropsWithoutRef<typeof ToastPrimitives.Root> &
-    VariantProps<typeof toastVariants>
+  VariantProps<typeof toastVariants>
 >(({ className, variant, ...props }, ref) => {
   return (
     <ToastPrimitives.Root
@@ -83,7 +84,7 @@ const ToastClose = React.forwardRef<
     toast-close=""
     {...props}
   >
-    <X className="h-4 w-4" />
+    <IconX className="h-4 w-4" />
   </ToastPrimitives.Close>
 ))
 ToastClose.displayName = ToastPrimitives.Close.displayName
