@@ -9,7 +9,9 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { Badge } from "@/components/ui/badge"
 import { motion } from "framer-motion"
 import { SearchBar } from "./SearchBar"
-import { IconMenu, IconMoon, IconShoppingCart, IconSun, IconHome, IconCategory2, IconMessage } from "@tabler/icons-react"
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
+import { SheetTitle } from "@/components/ui/sheet"
+import { IconMoon, IconShoppingCart, IconSun, IconHome, IconCategory2, IconMessage, IconMenu } from "@tabler/icons-react"
 
 interface SiteHeaderProps {
   cartCount?: number
@@ -47,36 +49,34 @@ export function SiteHeader({ cartCount = 0 }: SiteHeaderProps) {
             {navigation.map((item) => {
               const isActive = pathname === item.href
               return (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className="relative text-base font-medium text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors"
-                >
-                  {item.icon && <item.icon className="inline-block mr-1 mb-1 h-5 w-5" />}
-                  {item.name}
-                  {isActive && (
-                    <motion.div
-                      layoutId="active-nav"
-                      className="absolute -bottom-1 left-0 right-0 h-0.5 bg-primary rounded"
-                      transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                    />
-                  )}
-                </Link>
+                <h6 key={item.name}>
+                  <Link
+                    href={item.href}
+                    className="relative text-base font-medium text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors"
+                  >
+                    {item.icon && (
+                      <item.icon className="inline-block mr-1 mb-1 h-5 w-5" />
+                    )}
+                    {item.name}
+
+                    {isActive && (
+                      <motion.div
+                        layoutId="active-nav"
+                        className="absolute -bottom-1 left-0 right-0 h-0.5 bg-primary rounded"
+                        transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                      />
+                    )}
+                  </Link>
+                </h6>
               )
             })}
           </nav>
 
-          {/* Actions */}
           <div className="flex items-center gap-2">
-            {/* Search */}
-            {/* <Button variant="ghost" size="icon" aria-label="Search" className="rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-              <Search className="h-5 w-5 text-gray-600 dark:text-gray-300" />
-            </Button> */}
             {/* Search */}
             <div className="hidden md:block">
               <SearchBar />
             </div>
-
 
             {/* Theme Toggle */}
             {mounted && (
@@ -111,6 +111,10 @@ export function SiteHeader({ cartCount = 0 }: SiteHeaderProps) {
                 </Button>
               </SheetTrigger>
               <SheetContent side="right" className="w-70 sm:w-90 p-6">
+                <VisuallyHidden>
+                  <SheetTitle>Mobile Navigation</SheetTitle>
+                </VisuallyHidden>
+
                 <nav className="flex flex-col gap-6 mt-4">
                   {navigation.map((item) => {
                     const isActive = pathname === item.href
@@ -118,7 +122,10 @@ export function SiteHeader({ cartCount = 0 }: SiteHeaderProps) {
                       <Link
                         key={item.name}
                         href={item.href}
-                        className={`text-lg font-semibold transition-colors ${isActive ? "text-primary" : "text-gray-700 dark:text-gray-200 hover:text-primary"}`}
+                        className={`text-lg font-semibold transition-colors ${isActive
+                          ? "text-primary"
+                          : "text-gray-700 dark:text-gray-200 hover:text-primary"
+                          }`}
                       >
                         {item.name}
                       </Link>

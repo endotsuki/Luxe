@@ -39,7 +39,7 @@ export function ProductCard({ product }: ProductCardProps) {
             <div className="flex items-center gap-2 mb-3">
               <div className="flex">
                 {[...Array(5)].map((_, i) => (
-                  <Star
+                  <IconStar
                     key={i}
                     className="h-4 w-4 fill-secondary text-secondary"
                   />

@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ExternalLink, Pencil, Plus, Trash2 } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -17,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { ProductDialog } from "@/components/product-dialog";
 import type { Product } from "@/lib/types";
 import { useRouter } from "next/navigation";
+import { IconEdit, IconExternalLink, IconPlus, IconTrash } from "@tabler/icons-react";
 
 interface ProductsTableProps {
   products: Product[];
@@ -86,97 +86,99 @@ export function ProductsTable({ products }: ProductsTableProps) {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Product</TableHead>
-                <TableHead>Price</TableHead>
-                <TableHead>Stock</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+                <TableHead><h6>Product</h6></TableHead>
+                <TableHead><h6>Price</h6></TableHead>
+                <TableHead><h6>Stock</h6></TableHead>
+                <TableHead><h6>Status</h6></TableHead>
+                <TableHead className="text-right"><h6>Actions</h6></TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {products.map((product) => (
-                <TableRow key={product.id}>
-                  <TableCell>
-                    <div className="flex items-center gap-3">
-                      <div className="relative h-10 w-10 rounded-md overflow-hidden">
-                        <Image
-                          src={
-                            product.image_url
-                              ? `/images/${product.image_url}`
-                              : "/placeholder.svg"
-                          }
-                          alt={product.name}
-                          fill
-                          className="object-cover"
-                        />
+              {[...products]
+                .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+                .map((product) => (
+                  <TableRow key={product.id}>
+                    <TableCell>
+                      <div className="flex items-center gap-3">
+                        <div className="relative h-10 w-10 rounded-md overflow-hidden">
+                          <Image
+                            src={
+                              product.image_url
+                                ? `/images/${product.image_url}`
+                                : "/placeholder.svg"
+                            }
+                            alt={product.name}
+                            fill
+                            className="object-cover"
+                          />
+                        </div>
+                        <div>
+                          <h6 className="font-medium">{product.name}</h6>
+                          <div className="text-sm text-muted-foreground">
+                            {product.slug}
+                          </div>
+                        </div>
                       </div>
+                    </TableCell>
+                    <TableCell>
                       <div>
-                        <div className="font-medium">{product.name}</div>
-                        <div className="text-sm text-muted-foreground">
-                          {product.slug}
-                        </div>
+                        <div className="font-medium">${product.price}</div>
+                        {product.compare_at_price && (
+                          <h6 className="text-sm text-muted-foreground line-through">
+                            ${product.compare_at_price}
+                          </h6>
+                        )}
                       </div>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div>
-                      <div className="font-medium">${product.price}</div>
-                      {product.compare_at_price && (
-                        <div className="text-sm text-muted-foreground line-through">
-                          ${product.compare_at_price}
-                        </div>
-                      )}
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <Badge
-                      variant={
-                        product.stock > 10
-                          ? "outline"
-                          : product.stock > 0
-                          ? "secondary"
-                          : "destructive"
-                      }
-                    >
-                      {product.stock} units
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    <Badge
-                      variant={product.is_active ? "outline" : "secondary"}
-                    >
-                      {product.is_active ? "Active" : "Inactive"}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center justify-end gap-2">
-                      <Button variant="ghost" size="sm" asChild>
-                        <Link
-                          href={`/products/${product.slug}`}
-                          target="_blank"
+                    </TableCell>
+                    <TableCell>
+                      <Badge
+                        variant={
+                          product.stock > 10
+                            ? "outline"
+                            : product.stock > 0
+                              ? "secondary"
+                              : "destructive"
+                        }
+                      >
+                        {product.stock} units
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <Badge
+                        variant={product.is_active ? "outline" : "secondary"}
+                      >
+                        {product.is_active ? "Active" : "Inactive"}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center justify-end">
+                        <Button variant="ghost" size="sm" asChild>
+                          <Link
+                            href={`/products/${product.slug}`}
+                            target="_blank"
+                          >
+                            <IconExternalLink stroke={1.5} className="h-5 w-5" />
+                          </Link>
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleEditProduct(product)}
                         >
-                          <ExternalLink className="h-4 w-4" />
-                        </Link>
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleEditProduct(product)}
-                      >
-                        <Pencil className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleDeleteProduct(product.id)}
-                        disabled={isDeleting === product.id}
-                      >
-                        <IconTrash className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
+                          <IconEdit stroke={1.5} className="h-5 w-5" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleDeleteProduct(product.id)}
+                          disabled={isDeleting === product.id}
+                        >
+                          <IconTrash stroke={1.5} className="h-5 w-5" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
             </TableBody>
           </Table>
         </div>

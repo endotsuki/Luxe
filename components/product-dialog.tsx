@@ -196,6 +196,7 @@ export function ProductDialog({
               <Label>Slug</Label>
               <Input
                 value={formData.slug}
+                readOnly
                 onChange={(e) =>
                   setFormData({ ...formData, slug: e.target.value })
                 }

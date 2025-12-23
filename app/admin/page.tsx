@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { AdminDashboard } from "@/components/admin-dashboard";
-import { cookies } from "next/headers";
 
 export const metadata: Metadata = {
   title: "Admin Dashboard | LuxeAccessories",
