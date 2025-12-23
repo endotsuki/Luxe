@@ -11,6 +11,13 @@ import type { CartItem } from "@/lib/types"
 import { IconArrowNarrowRight, IconMinus, IconPlus, IconTrash } from "@tabler/icons-react"
 
 export function CartContent() {
+  const normalizeImageSrc = (url?: string) => {
+    if (!url) return "/placeholder.svg"
+    const path = url.split("?")[0]
+    if (path.startsWith("http://") || path.startsWith("https://") || path.startsWith("//")) return path
+    return path.startsWith("/") ? path : `/images/${path}`
+  }
+
   const [cartItems, setCartItems] = useState<CartItem[]>([])
   const [loading, setLoading] = useState(true)
   const { toast } = useToast()
@@ -114,7 +121,7 @@ export function CartContent() {
               <div className="flex gap-4">
                 <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-lg">
                   <Image
-                    src={item.product?.image_url || ""}
+                    src={normalizeImageSrc(item.product?.image_url)}
                     alt={item.product?.name || ""}
                     fill
                     className="object-cover"
