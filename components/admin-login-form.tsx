@@ -39,7 +39,7 @@ export function AdminLoginForm() {
         description: "Logged in successfully",
       })
 
-      router.push("/admin/")
+      router.push("/admin")
       router.refresh()
     } catch (err: any) {
       toast({
