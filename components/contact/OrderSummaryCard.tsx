@@ -1,13 +1,25 @@
-import Image from "next/image"
-import { Card, CardContent } from "@/components/ui/card"
-import { Separator } from "@/components/ui/separator"
-import { IconShoppingBag } from "@tabler/icons-react"
-import type { CartItem } from "@/lib/types"
+import Image from "next/image";
+import { Card, CardContent } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { IconShoppingBag } from "@tabler/icons-react";
+import type { CartItem } from "@/lib/types";
 
 interface OrderSummaryCardProps {
-  cartItems: CartItem[]
-  total: number
+  cartItems: CartItem[];
+  total: number;
 }
+
+const normalizeImageSrc = (url?: string) => {
+  if (!url) return "/placeholder.svg";
+  const path = url.split("?")[0];
+  if (
+    path.startsWith("http://") ||
+    path.startsWith("https://") ||
+    path.startsWith("//")
+  )
+    return path;
+  return path.startsWith("/") ? path : `/images/${path}`;
+};
 
 export function OrderSummaryCard({ cartItems, total }: OrderSummaryCardProps) {
   return (
@@ -20,10 +32,13 @@ export function OrderSummaryCard({ cartItems, total }: OrderSummaryCardProps) {
 
         <div className="space-y-4">
           {cartItems.map((item, index) => (
-            <div key={item.id} className="flex gap-4 pb-4 border-b last:border-0 last:pb-0">
+            <div
+              key={item.id}
+              className="flex gap-4 pb-4 border-b last:border-0 last:pb-0"
+            >
               <div className="relative w-24 h-24 rounded-xl overflow-hidden bg-muted shrink-0 border">
                 <Image
-                  src={item.product?.image_url || "/placeholder.svg"}
+                  src={normalizeImageSrc(item.product?.image_url)}
                   alt={item.product?.name || "Product"}
                   fill
                   className="object-cover"
@@ -36,13 +51,18 @@ export function OrderSummaryCard({ cartItems, total }: OrderSummaryCardProps) {
                   </h3>
                   <div className="text-right shrink-0">
                     <p className="text-xs text-muted-foreground">Unit Price</p>
-                    <h6 className="font-semibold">${(item.product?.price || 0).toFixed(2)}</h6>
+                    <h6 className="font-semibold">
+                      ${(item.product?.price || 0).toFixed(2)}
+                    </h6>
                   </div>
                 </div>
                 <div className="flex justify-between items-center">
                   <div>
                     <p className="text-sm text-muted-foreground">
-                      Quantity: <span className="font-medium text-foreground">{item.quantity}</span>
+                      Quantity:{" "}
+                      <span className="font-medium text-foreground">
+                        {item.quantity}
+                      </span>
                     </p>
                   </div>
                   <div className="text-right">
@@ -78,7 +98,10 @@ export function OrderSummaryCard({ cartItems, total }: OrderSummaryCardProps) {
         <div className="mt-6 p-4 bg-accent/10 rounded-lg">
           <p className="text-sm text-muted-foreground">
             <strong>Note:</strong> Need to make changes?{" "}
-            <a href="/cart" className="text-primary hover:underline font-medium">
+            <a
+              href="/cart"
+              className="text-primary hover:underline font-medium"
+            >
               Edit your cart
             </a>{" "}
             before placing your order.
@@ -86,5 +109,5 @@ export function OrderSummaryCard({ cartItems, total }: OrderSummaryCardProps) {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

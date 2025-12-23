@@ -1,31 +1,31 @@
-"use client"
+"use client";
 
-import { useRef } from "react"
-import Link from "next/link"
-import Image from "next/image"
-import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import type { Product } from "@/lib/types"
-import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react"
+import { useRef } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import type { Product } from "@/lib/types";
+import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
 
 interface ProductRowProps {
-  title: string
-  products: Product[] | null
+  title: string;
+  products: Product[] | null;
 }
 
 export function ProductRow({ title, products }: ProductRowProps) {
-  const scrollRef = useRef<HTMLDivElement>(null)
+  const scrollRef = useRef<HTMLDivElement>(null);
 
-  if (!products?.length) return null
+  if (!products?.length) return null;
 
   const scroll = (direction: "left" | "right") => {
-    if (!scrollRef.current) return
-    const scrollAmount = scrollRef.current.offsetWidth / 2
+    if (!scrollRef.current) return;
+    const scrollAmount = scrollRef.current.offsetWidth / 2;
     scrollRef.current.scrollBy({
       left: direction === "left" ? -scrollAmount : scrollAmount,
       behavior: "smooth",
-    })
-  }
+    });
+  };
 
   return (
     <section className="py-12 relative">
@@ -51,7 +51,7 @@ export function ProductRow({ title, products }: ProductRowProps) {
           ref={scrollRef}
           className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide"
         >
-          {products.map(product => (
+          {products.map((product) => (
             <Link
               key={product.id}
               href={`/products/${product.slug}`}
@@ -61,21 +61,49 @@ export function ProductRow({ title, products }: ProductRowProps) {
                 <CardContent className="p-0">
                   <div className="relative aspect-square overflow-hidden">
                     <Image
-                      src={product.image_url ? `/images/${encodeURIComponent(product.image_url)}` : "/placeholder.svg"}
+                      src={
+                        product.image_url
+                          ? `/images/${encodeURIComponent(product.image_url)}`
+                          : "/placeholder.svg"
+                      }
                       alt={product.name}
                       fill
                       className="object-cover group-hover:scale-105 transition-transform"
                     />
-                    {product.compare_at_price && (
-                      <Badge className="absolute top-3 right-3 bg-primary">
-                        Sale
-                      </Badge>
-                    )}
+                    {product.compare_at_price &&
+                      Number(product.compare_at_price) >
+                        Number(product.price) && (
+                        <Badge className="absolute top-3 right-3 bg-primary">
+                          -
+                          {Math.round(
+                            ((Number(product.compare_at_price) -
+                              Number(product.price)) /
+                              Number(product.compare_at_price)) *
+                              100
+                          )}
+                          %
+                        </Badge>
+                      )}
                   </div>
 
                   <div className="p-3">
                     <h3 className="font-medium truncate">{product.name}</h3>
-                    <p className="text-sm text-muted-foreground">${product.price}</p>
+
+                    {product.compare_at_price &&
+                    Number(product.compare_at_price) > Number(product.price) ? (
+                      <div className="flex items-center gap-3">
+                        <h6 className="text-sm font-semibold text-foreground">
+                          ${Number(product.price).toFixed(2)}
+                        </h6>
+                        <h6 className="text-sm text-muted-foreground line-through">
+                          ${Number(product.compare_at_price).toFixed(2)}
+                        </h6>
+                      </div>
+                    ) : (
+                      <h6 className="text-sm text-muted-foreground">
+                        ${Number(product.price).toFixed(2)}
+                      </h6>
+                    )}
                   </div>
                 </CardContent>
               </Card>
@@ -84,5 +112,5 @@ export function ProductRow({ title, products }: ProductRowProps) {
         </div>
       </div>
     </section>
-  )
+  );
 }
