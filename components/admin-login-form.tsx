@@ -53,7 +53,7 @@ export function AdminLoginForm() {
   }
 
   return (
-    <Card>
+    <Card className="py-5">
       <CardHeader>
         <CardTitle className="text-2xl">Admin Login</CardTitle>
         <CardDescription>

@@ -1,6 +1,7 @@
 import { AdminLoginForm } from "@/components/admin-login-form"
+import { Metadata } from "next"
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Admin Login | LuxeAccessories",
   description: "Sign in to the admin dashboard",
 }

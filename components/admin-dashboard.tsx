@@ -142,9 +142,9 @@ export function AdminDashboard({ orders, products, totalOrders, totalProducts }:
           </TabsList>
 
           <TabsContent value="orders" className="mt-6">
-            <Card>
+            <Card className="py-5">
               <CardHeader>
-                <CardTitle className="pt-6"><h6>Recent Orders</h6></CardTitle>
+                <CardTitle><h6>Recent Orders</h6></CardTitle>
               </CardHeader>
               <CardContent>
                 <OrdersTable orders={orders} />
@@ -153,9 +153,9 @@ export function AdminDashboard({ orders, products, totalOrders, totalProducts }:
           </TabsContent>
 
           <TabsContent value="products" className="mt-6">
-            <Card>
+            <Card className="py-5">
               <CardHeader>
-                <CardTitle className="pt-6"><h6>Products</h6></CardTitle>
+                <CardTitle><h6>Products</h6></CardTitle>
               </CardHeader>
               <CardContent>
                 <ProductsTable products={products} />
