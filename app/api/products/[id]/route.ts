@@ -1,17 +1,18 @@
-// app/api/products/[id]/route.ts
 import { NextResponse } from "next/server"
 import { createClient } from "@/lib/supabase/server"
 import fs from "fs"
 import path from "path"
 import { randomUUID } from "crypto"
+import sharp from "sharp"
 
 export async function PUT(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     // Check for valid product ID
-    if (!params.id) {
+    if (!id) {
       return NextResponse.json({ error: "Product ID is required" }, { status: 400 })
     }
 
@@ -39,12 +40,14 @@ export async function PUT(
     const image = formData.get("image") as File | null
     if (image) {
       const buffer = Buffer.from(await image.arrayBuffer())
+      // Convert to WebP
+      const webpBuffer = await sharp(buffer).webp({ quality: 80 }).toBuffer()
 
       const uploadDir = path.join(process.cwd(), "public", "images")
       if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true })
 
-      const imageName = `${randomUUID()}-${image.name}`
-      fs.writeFileSync(path.join(uploadDir, imageName), buffer)
+      const imageName = `${randomUUID()}.webp`
+      fs.writeFileSync(path.join(uploadDir, imageName), webpBuffer)
 
       updateData.image_url = imageName
     }
@@ -53,7 +56,7 @@ export async function PUT(
     const { error } = await supabase
       .from("products")
       .update(updateData)
-      .eq("id", params.id) // Must be a valid UUID
+      .eq("id", id) // Use awaited id
 
     if (error) {
       console.error("Error updating product:", error)
@@ -64,5 +67,35 @@ export async function PUT(
   } catch (err) {
     console.error("Failed to update product:", err)
     return NextResponse.json({ error: "Failed to update product" }, { status: 500 })
+  }
+}
+
+export async function DELETE(
+  req: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await params
+
+    if (!id) {
+      return NextResponse.json({ error: "Product ID is required" }, { status: 400 })
+    }
+
+    const supabase = await createClient()
+
+    const { error } = await supabase
+      .from("products")
+      .delete()
+      .eq("id", id)
+
+    if (error) {
+      console.error("Error deleting product:", error)
+      return NextResponse.json({ error: error.message }, { status: 400 })
+    }
+
+    return NextResponse.json({ success: true })
+  } catch (err) {
+    console.error("Failed to delete product:", err)
+    return NextResponse.json({ error: "Failed to delete product" }, { status: 500 })
   }
 }

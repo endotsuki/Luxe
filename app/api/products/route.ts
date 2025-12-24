@@ -3,6 +3,7 @@ import fs from "fs";
 import path from "path";
 import { randomUUID } from "crypto";
 import { createClient } from "@/lib/supabase/server";
+import sharp from "sharp";
 
 export async function POST(request: Request) {
   try {
@@ -15,11 +16,16 @@ export async function POST(request: Request) {
     if (image) {
       const bytes = await image.arrayBuffer();
       const buffer = Buffer.from(bytes);
+      
+      // Convert to WebP
+      const webpBuffer = await sharp(buffer).webp({ quality: 80 }).toBuffer();
+      
       const uploadDir = path.join(process.cwd(), "public", "images");
       if (!fs.existsSync(uploadDir))
         fs.mkdirSync(uploadDir, { recursive: true });
-      imageName = `${randomUUID()}-${image.name}`;
-      fs.writeFileSync(path.join(uploadDir, imageName), buffer);
+      
+      imageName = `${randomUUID()}.webp`;
+      fs.writeFileSync(path.join(uploadDir, imageName), webpBuffer);
     }
 
     const product = {

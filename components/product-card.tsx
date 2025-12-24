@@ -10,6 +10,13 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product }: ProductCardProps) {
+  const discountPercent = product.compare_at_price &&
+    Number(product.compare_at_price) > Number(product.price)
+    ? Math.round(
+      ((Number(product.compare_at_price) - Number(product.price)) /
+        Number(product.compare_at_price)) * 100
+    )
+    : 0;
   return (
     <Link href={`/products/${product.slug}`}>
       <Card className="group overflow-hidden hover:shadow-lg transition-all duration-300 h-full">
@@ -18,7 +25,7 @@ export function ProductCard({ product }: ProductCardProps) {
             <Image
               src={
                 product.image_url
-                  ? `/images/${product.image_url}`
+                  ? `/images/${encodeURIComponent(product.image_url)}`
                   : "/placeholder.svg"
               }
               alt={product.name}
@@ -26,9 +33,9 @@ export function ProductCard({ product }: ProductCardProps) {
               className="object-cover group-hover:scale-105 transition-transform duration-300"
             />
 
-            {product.compare_at_price && (
-              <Badge className="absolute top-4 right-4 bg-secondary text-secondary-foreground">
-                Sale
+            {discountPercent > 0 && (
+              <Badge className="absolute top-4 right-4 bg-primary">
+                -{discountPercent}%
               </Badge>
             )}
           </div>
@@ -48,10 +55,10 @@ export function ProductCard({ product }: ProductCardProps) {
               <span className="text-sm text-muted-foreground">(4.8)</span>
             </div>
             <div className="flex items-center gap-2">
-              <h6 className="text-2xl font-bold">${product.price}</h6>
-              {product.compare_at_price && (
+              <h6 className="text-2xl font-bold">${Number(product.price).toFixed(2)}</h6>
+              {product.compare_at_price && Number(product.compare_at_price) > Number(product.price) && (
                 <span className="text-sm text-muted-foreground line-through">
-                  ${product.compare_at_price}
+                  ${Number(product.compare_at_price).toFixed(2)}
                 </span>
               )}
             </div>
