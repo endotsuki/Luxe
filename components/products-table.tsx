@@ -13,6 +13,14 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { ProductDialog } from "@/components/product-dialog";
 import type { Product } from "@/lib/types";
 import { useRouter } from "next/navigation";
@@ -27,6 +35,8 @@ export function ProductsTable({ products }: ProductsTableProps) {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState<string | null>(null);
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+  const [productToDelete, setProductToDelete] = useState<Product | null>(null);
 
   const handleAddProduct = () => {
     setSelectedProduct(null);
@@ -39,11 +49,21 @@ export function ProductsTable({ products }: ProductsTableProps) {
   };
 
   const handleDeleteProduct = async (productId: string) => {
-    if (!confirm("Are you sure you want to delete this product?")) return;
+    const product = products.find(p => p.id === productId);
+    if (product) {
+      setProductToDelete(product);
+      setDeleteConfirmOpen(true);
+    }
+  };
 
-    setIsDeleting(productId);
+  const confirmDelete = async () => {
+    if (!productToDelete) return;
+
+    setIsDeleting(productToDelete.id);
+    setDeleteConfirmOpen(false);
+    
     try {
-      const response = await fetch(`/api/products/${productId}`, {
+      const response = await fetch(`/api/products/${productToDelete.id}`, {
         method: "DELETE",
       });
 
@@ -57,13 +77,14 @@ export function ProductsTable({ products }: ProductsTableProps) {
       alert("Failed to delete product");
     } finally {
       setIsDeleting(null);
+      setProductToDelete(null);
     }
   };
 
-  const handleDialogClose = (shouldRefresh: boolean) => {
-    setIsDialogOpen(false);
-    setSelectedProduct(null);
-    if (shouldRefresh) {
+  const handleDialogClose = (open: boolean) => {
+    setIsDialogOpen(open);
+    if (!open) {
+      setSelectedProduct(null);
       router.refresh();
     }
   };
@@ -189,6 +210,34 @@ export function ProductsTable({ products }: ProductsTableProps) {
         open={isDialogOpen}
         onOpenChange={handleDialogClose}
       />
+
+      <Dialog open={deleteConfirmOpen} onOpenChange={setDeleteConfirmOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete Product</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete <strong>{productToDelete?.name}</strong>? This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setDeleteConfirmOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="button"
+              variant="destructive"
+              onClick={confirmDelete}
+              disabled={isDeleting === productToDelete?.id}
+            >
+              {isDeleting === productToDelete?.id ? "Deleting..." : "Delete"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

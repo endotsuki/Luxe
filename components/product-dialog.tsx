@@ -144,23 +144,36 @@ export function ProductDialog({
         JSON.stringify(additional_images)
       )
 
-      const response = await fetch(
-        product ? `/api/products/${product?.id}` : "/api/products",
-        {
-          method: product ? "PUT" : "POST",
-          body: form, // ❌ no Content-Type
-        }
-      )
+      const url = product ? `/api/products/${product.id}` : "/api/products"
+      const method = product ? "PUT" : "POST"
+      
+      console.log("Submitting to:", url, "Method:", method)
+      console.log("Form data:", Object.fromEntries(form))
+
+      const response = await fetch(url, {
+        method: method,
+        body: form, // ❌ no Content-Type
+      })
+
+      const responseText = await response.text()
+      console.log("Response status:", response.status)
+      console.log("Response text:", responseText)
 
       if (!response.ok) {
-        const error = await response.json()
-        throw new Error(error?.error || "Failed to save product")
+        try {
+          const error = JSON.parse(responseText)
+          throw new Error(error?.error || `Server error: ${response.status}`)
+        } catch {
+          throw new Error(`Server error: ${response.status} - ${responseText}`)
+        }
       }
 
+      // Call parent's onOpenChange with true to trigger refresh
       onOpenChange(false)
     } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Failed to save product"
       console.error("Error saving product:", error)
-      alert("Failed to save product")
+      alert(errorMessage)
     } finally {
       setLoading(false)
     }
