@@ -50,11 +50,11 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col py-16">
       <SiteHeader />
       <main className="flex-1 container mx-auto px-4 py-8">
         <div className="mb-6">
-          <Button variant="ghost" asChild className="mb-4">
+          <Button variant="outline" asChild className="mb-4">
             <Link href="/admin">
               <IconArrowLeft className="mr-2 h-4 w-4" />
               Back to Dashboard
@@ -64,17 +64,17 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
 
         <div className="grid gap-6">
           {/* Order Header */}
-          <Card>
+          <Card className="py-4">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div>
                   <CardTitle>Order #{order.order_number}</CardTitle>
-                  <p className="text-sm text-muted-foreground mt-2">
+                  <p className="text-sm text-muted-foreground mt-4">
                     {format(new Date(order.created_at), "MMMM dd, yyyy 'at' hh:mm a")}
                   </p>
                 </div>
                 <div className="text-right">
-                  <div className="text-2xl font-bold">${order.total.toFixed(2)}</div>
+                  <h6 className="text-2xl font-bold">${order.total.toFixed(2)}</h6>
                   <div className="mt-2">{getStatusBadge(order.status)}</div>
                 </div>
               </div>
@@ -82,7 +82,7 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
           </Card>
 
           {/* Customer Information */}
-          <Card>
+          <Card className="py-4">
             <CardHeader>
               <CardTitle className="text-lg">Customer Information</CardTitle>
             </CardHeader>
@@ -115,7 +115,7 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
           </Card>
 
           {/* Order Items */}
-          <Card>
+          <Card className="py-4">
             <CardHeader>
               <CardTitle className="text-lg">Order Items</CardTitle>
             </CardHeader>
@@ -137,14 +137,14 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
                       {itemsList.map((item: any) => (
                         <TableRow key={item.id}>
                           <TableCell>
-                            <Link href={`/products/${item.product?.slug}`} className="text-primary hover:underline">
+                            <Link href={`/products/${item.product?.slug}`} className="text-primary text-base hover:underline">
                               {item.product?.name || "Unknown Product"}
                             </Link>
                           </TableCell>
                           <TableCell>{item.quantity}</TableCell>
-                          <TableCell>${item.price.toFixed(2)}</TableCell>
+                          <TableCell><h6>${item.price.toFixed(2)}</h6></TableCell>
                           <TableCell className="text-right font-medium">
-                            ${(item.price * item.quantity).toFixed(2)}
+                            <h6>${(item.price * item.quantity).toFixed(2)}</h6>
                           </TableCell>
                         </TableRow>
                       ))}
@@ -152,20 +152,14 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
                   </Table>
                 </div>
               )}
-            </CardContent>
-          </Card>
-
-          {/* Order Summary */}
-          <Card>
-            <CardContent className="pt-6">
-              <div className="space-y-2 ml-auto max-w-xs">
+              <div className="space-y-2 ml-auto max-w-xs py-4">
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Subtotal</span>
-                  <span className="font-medium">${order.total.toFixed(2)}</span>
+                  <h6 className="text-muted-foreground">Subtotal</h6>
+                  <h6 className="font-medium">${order.total.toFixed(2)}</h6>
                 </div>
                 <div className="border-t pt-2 flex justify-between text-lg font-bold">
-                  <span>Total</span>
-                  <span className="text-primary">${order.total.toFixed(2)}</span>
+                  <h6>Total</h6>
+                  <h6 className="text-primary">${order.total.toFixed(2)}</h6>
                 </div>
               </div>
             </CardContent>
