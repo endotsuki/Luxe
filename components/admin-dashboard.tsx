@@ -87,40 +87,40 @@ export function AdminDashboard({ orders, products, totalOrders, totalProducts }:
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 mb-8">
           <Card className="py-4">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium"><h6>Total Revenue</h6></CardTitle>
+              <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
               <IconTrendingUp className="h-6 w-6 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold"><h6>${totalRevenue.toFixed(2)}</h6></div>
+              <h6 className="text-2xl font-bold">${totalRevenue.toFixed(2)}</h6>
               <p className="text-xs text-muted-foreground">From {totalOrders} orders</p>
             </CardContent>
           </Card>
 
           <Card className="py-4">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium"><h6>Total Orders</h6></CardTitle>
+              <CardTitle className="text-sm font-medium">Total Orders</CardTitle>
               <IconShoppingBag className="h-6 w-6 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold"><h6>{totalOrders}</h6></div>
+              <h6 className="text-2xl font-bold">{totalOrders}</h6>
               <p className="text-xs text-muted-foreground">{pendingOrders} pending</p>
             </CardContent>
           </Card>
 
           <Card className="py-4">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium"><h6>Products</h6></CardTitle>
+              <CardTitle className="text-sm font-medium">Products</CardTitle>
               <IconPackage className="h-6 w-6 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold"><h6>{totalProducts}</h6></div>
+              <h6 className="text-2xl font-bold">{totalProducts}</h6>
               <p className="text-xs text-muted-foreground">Active listings</p>
             </CardContent>
           </Card>
 
           <Card className="py-4">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium"><h6>Customers</h6></CardTitle>
+              <CardTitle className="text-sm font-medium">Customers</CardTitle>
               <IconUsers className="h-6 w-6 text-muted-foreground" />
             </CardHeader>
             <CardContent>

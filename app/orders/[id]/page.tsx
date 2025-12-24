@@ -70,7 +70,7 @@ export default async function OrderTrackingPage({ params }: { params: Promise<{ 
 
         <div className="grid gap-6">
           {/* Order Header */}
-          <Card>
+          <Card className="py-4">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div>
@@ -80,17 +80,17 @@ export default async function OrderTrackingPage({ params }: { params: Promise<{ 
                   </p>
                 </div>
                 <div className="text-right">
-                  <div className="text-2xl font-bold">${order.total.toFixed(2)}</div>
+                  <h6 className="text-2xl font-bold">${order.total.toFixed(2)}</h6>
                   <div className="mt-2">{getStatusBadge(order.status)}</div>
                 </div>
               </div>
             </CardHeader>
           </Card>
 
-            <SetRecentOrder orderId={order.id} />
+          <SetRecentOrder orderId={order.id} />
 
           {/* Order Status Timeline */}
-          <Card>
+          <Card className="py-4">
             <CardHeader>
               <CardTitle className="text-lg">Order Status</CardTitle>
             </CardHeader>
@@ -99,11 +99,10 @@ export default async function OrderTrackingPage({ params }: { params: Promise<{ 
                 {statusSteps.map((step, index) => (
                   <div key={step} className="flex items-center gap-4">
                     <div
-                      className={`h-10 w-10 rounded-full flex items-center justify-center font-semibold ${
-                        index <= currentStepIndex
+                      className={`h-10 w-10 rounded-full flex items-center justify-center font-semibold ${index <= currentStepIndex
                           ? "bg-primary text-primary-foreground"
                           : "bg-muted text-muted-foreground"
-                      }`}
+                        }`}
                     >
                       {index + 1}
                     </div>
@@ -123,21 +122,8 @@ export default async function OrderTrackingPage({ params }: { params: Promise<{ 
             </CardContent>
           </Card>
 
-          {/* Telegram Notification */}
-          <div className="space-y-3 border-l-4 border-blue-500 bg-blue-50 p-4 rounded">
-            <div className="flex items-start gap-3">
-              <IconAlertCircle className="h-5 w-5 text-blue-600 mt-0.5 shrink-0" />
-              <div className="text-sm">
-                <p className="font-semibold text-blue-900">Telegram Updates</p>
-                <p className="text-blue-800 mt-1">
-                  We&apos;ll send you updates on Telegram as your order progresses. Make sure you have Telegram notifications enabled!
-                </p>
-              </div>
-            </div>
-          </div>
-
           {/* Customer Information */}
-          <Card>
+          <Card className="py-4">
             <CardHeader>
               <CardTitle className="text-lg">Delivery Information</CardTitle>
             </CardHeader>
@@ -164,7 +150,7 @@ export default async function OrderTrackingPage({ params }: { params: Promise<{ 
           </Card>
 
           {/* Order Items */}
-          <Card>
+          <Card className="py-4">
             <CardHeader>
               <CardTitle className="text-lg">Order Items</CardTitle>
             </CardHeader>
@@ -186,14 +172,14 @@ export default async function OrderTrackingPage({ params }: { params: Promise<{ 
                       {orderItems.map((item: any) => (
                         <TableRow key={item.id}>
                           <TableCell>
-                            <Link href={`/products/${item.product?.slug}`} className="text-primary hover:underline">
+                            <Link href={`/products/${item.product?.slug}`} className="text-primary text-base hover:underline">
                               {item.product?.name || "Unknown Product"}
                             </Link>
                           </TableCell>
                           <TableCell>{item.quantity}</TableCell>
-                          <TableCell>${item.price.toFixed(2)}</TableCell>
+                          <TableCell><h6>${item.price.toFixed(2)}</h6></TableCell>
                           <TableCell className="text-right font-medium">
-                            ${(item.price * item.quantity).toFixed(2)}
+                            <h6>${(item.price * item.quantity).toFixed(2)}</h6>
                           </TableCell>
                         </TableRow>
                       ))}
@@ -201,20 +187,14 @@ export default async function OrderTrackingPage({ params }: { params: Promise<{ 
                   </Table>
                 </div>
               )}
-            </CardContent>
-          </Card>
-
-          {/* Order Summary */}
-          <Card>
-            <CardContent className="pt-6">
-              <div className="space-y-2 ml-auto max-w-xs">
+              <div className="space-y-2 ml-auto max-w-xs py-4">
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Subtotal</span>
-                  <span className="font-medium">${order.total.toFixed(2)}</span>
+                  <h6 className="text-muted-foreground">Subtotal</h6>
+                  <h6 className="font-medium">${order.total.toFixed(2)}</h6>
                 </div>
                 <div className="border-t pt-2 flex justify-between text-lg font-bold">
-                  <span>Total</span>
-                  <span className="text-primary">${order.total.toFixed(2)}</span>
+                  <h6>Total</h6>
+                  <h6 className="text-primary">${order.total.toFixed(2)}</h6>
                 </div>
               </div>
             </CardContent>
