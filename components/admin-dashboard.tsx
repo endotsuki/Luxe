@@ -2,13 +2,14 @@
 
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
+import { useTheme } from "next-themes"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { OrdersTable } from "@/components/orders-table"
 import { ProductsTable } from "@/components/products-table"
 import type { Order, Product } from "@/lib/types"
-import { IconBuildingStore, IconLogout, IconPackage, IconShoppingBag, IconTrendingUp, IconUsers } from "@tabler/icons-react"
+import { IconBuildingStore, IconLogout, IconPackage, IconShoppingBag, IconTrendingUp, IconUsers, IconSun, IconMoon } from "@tabler/icons-react"
 
 interface AdminDashboardProps {
   orders: Order[]
@@ -19,7 +20,13 @@ interface AdminDashboardProps {
 
 export function AdminDashboard({ orders, products, totalOrders, totalProducts }: AdminDashboardProps) {
   const router = useRouter()
+  const { theme, setTheme } = useTheme()
   const [loading, setLoading] = useState(false)
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const handleLogout = async () => {
     setLoading(true)
@@ -77,8 +84,18 @@ export function AdminDashboard({ orders, products, totalOrders, totalProducts }:
               <IconLogout className="h-4 w-4 sm:mr-1" />
               <span className="hidden sm:inline">Logout</span>
             </Button>
+            {mounted && (
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                aria-label="Toggle theme"
+                className="rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              >
+                {theme === "dark" ? <IconSun className="h-5 w-5 text-yellow-400" /> : <IconMoon className="h-5 w-5 text-gray-700 dark:text-gray-300" />}
+              </Button>
+            )}
           </div>
-
         </div>
       </header>
 
@@ -132,11 +149,21 @@ export function AdminDashboard({ orders, products, totalOrders, totalProducts }:
 
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
-          <TabsList>
-            <TabsTrigger value="orders" id="tab-orders" aria-controls="tab-orders-content">
+          <TabsList className="bg-muted/50">
+            <TabsTrigger
+              value="orders"
+              id="tab-orders"
+              aria-controls="tab-orders-content"
+              className="data-[state=active]:bg-background data-[state=active]:shadow-sm"
+            >
               Orders
             </TabsTrigger>
-            <TabsTrigger value="products" id="tab-products" aria-controls="tab-products-content">
+            <TabsTrigger
+              value="products"
+              id="tab-products"
+              aria-controls="tab-products-content"
+              className="data-[state=active]:bg-background data-[state=active]:shadow-sm"
+            >
               Products
             </TabsTrigger>
           </TabsList>
@@ -144,7 +171,7 @@ export function AdminDashboard({ orders, products, totalOrders, totalProducts }:
           <TabsContent value="orders" className="mt-6">
             <Card className="py-5">
               <CardHeader>
-                <CardTitle><h6>Recent Orders</h6></CardTitle>
+                <CardTitle>Recent Orders</CardTitle>
               </CardHeader>
               <CardContent>
                 <OrdersTable orders={orders} />
@@ -155,7 +182,7 @@ export function AdminDashboard({ orders, products, totalOrders, totalProducts }:
           <TabsContent value="products" className="mt-6">
             <Card className="py-5">
               <CardHeader>
-                <CardTitle><h6>Products</h6></CardTitle>
+                <CardTitle>Products</CardTitle>
               </CardHeader>
               <CardContent>
                 <ProductsTable products={products} />

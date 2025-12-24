@@ -48,26 +48,20 @@ export function OrdersTable({ orders }: OrdersTableProps) {
     }
   }
 
-  const getStatusBadge = (status: string) => {
-    const variants: Record<string, { variant: "default" | "secondary" | "destructive" | "outline"; color: string }> = {
-      requested: { variant: "secondary", color: "bg-yellow-500" },
-      approved: { variant: "default", color: "bg-green-500" },
-      preparing: { variant: "default", color: "bg-blue-500" },
-      delivery: { variant: "outline", color: "bg-purple-500" },
-      completed: { variant: "outline", color: "bg-green-600" },
-      cancelled: { variant: "destructive", color: "bg-red-500" },
-    }
-
-    const config = variants[status] || { variant: "default" as const, color: "" }
-    return <Badge variant={config.variant}>{status.charAt(0).toUpperCase() + status.slice(1)}</Badge>
+  const statusBg: Record<string, string> = {
+    requested: "bg-gray-100 dark:bg-linear-to-tl from-gray-500/10 to-gray-500/50",
+    approved: "bg-green-100 dark:bg-linear-to-tl from-green-500/10 to-green-500/50",
+    preparing: "bg-yellow-100 dark:bg-linear-to-tl from-yellow-500/10 to-yellow-500/50",
+    delivery: "bg-blue-100 dark:bg-linear-to-tl from-blue-500/10 to-blue-500/50",
+    completed: "bg-emerald-100 dark:bg-linear-to-tl from-emerald-500/10 to-emerald-500/50",
+    cancelled: "bg-red-100 dark:bg-linear-to-tl from-red-500/10 to-red-500/50",
   }
-
   if (orders.length === 0) {
     return <div className="text-center py-8 text-muted-foreground">No orders yet</div>
   }
 
   return (
-    <div className="rounded-md border">
+    <div className="rounded-md border p-5">
       <Table>
         <TableHeader>
           <TableRow>
@@ -89,15 +83,17 @@ export function OrdersTable({ orders }: OrdersTableProps) {
                   <div className="text-muted-foreground">{order.customer_phone}</div>
                 </div>
               </TableCell>
-              <TableCell>${order.total.toFixed(2)}</TableCell>
+              <TableCell><h6>${order.total.toFixed(2)}</h6></TableCell>
               <TableCell>
                 <Select
                   value={order.status}
                   onValueChange={(value) => updateOrderStatus(order.id, value)}
                   disabled={updating === order.id}
                 >
-                  <SelectTrigger className="w-36">
-                    <SelectValue>{getStatusBadge(order.status)}</SelectValue>
+                  <SelectTrigger
+                    className={`w-36 capitalize transition-colors text-white hover:text-secondary border border-primary/50 ${statusBg[order.status]}`}
+                  >
+                    <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="requested">📋 Requested</SelectItem>
@@ -109,7 +105,9 @@ export function OrdersTable({ orders }: OrdersTableProps) {
                   </SelectContent>
                 </Select>
               </TableCell>
-              <TableCell>{format(new Date(order.created_at), "MMM dd, yyyy")}</TableCell>
+              <TableCell>
+                {format(new Date(order.created_at), "MMM dd, yyyy • hh:mm a").toUpperCase()}
+              </TableCell>
               <TableCell>
                 <Button variant="ghost" size="sm" asChild>
                   <a href={`/admin/orders/${order.id}`}>

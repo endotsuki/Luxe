@@ -103,7 +103,7 @@ export function ProductsTable({ products }: ProductsTableProps) {
           No products yet. Click "Add Product" to create your first product.
         </div>
       ) : (
-        <div className="rounded-md border">
+        <div className="rounded-md border p-5">
           <Table>
             <TableHeader>
               <TableRow>
