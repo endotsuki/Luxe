@@ -34,6 +34,7 @@ export function useContactForm() {
       if (orderMode && cartItems.length > 0) {
         const total = cartItems.reduce((sum, item) => sum + (item.product?.price || 0) * item.quantity, 0)
 
+        const cartUserId = localStorage.getItem("cart_user_id")
         const response = await fetch("/api/contact-order", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -48,20 +49,30 @@ export function useContactForm() {
               image_url: item.product?.image_url || "",
             })),
             isOrder: true,
+            cart_user_id: cartUserId,
           }),
         })
 
         if (!response.ok) throw new Error("Failed to send order")
 
-        toast({
-          title: "Order sent successfully!",
-          description: "We'll contact you shortly to confirm your order.",
-        })
+        const data = await response.json()
 
-        localStorage.removeItem("cart_user_id")
+        toast({
+          title: "Order placed successfully!",
+          description: "Redirecting to your order details...",
+        })
+        // keep cart_user_id so users can reload or reuse the cart; order page offers "Load to Cart"
+        try {
+          if (data?.orderId) {
+            localStorage.setItem("recent_order_id", data.orderId)
+          }
+        } catch (e) {
+          // ignore
+        }
         setFormData({ name: "", contact: "", email: "", message: "" })
         onSuccess()
-        router.push("/")
+        // Redirect to order tracking page
+        router.push(`/orders/${data.orderId}`)
       } else {
         const response = await fetch("/api/contact-order", {
           method: "POST",

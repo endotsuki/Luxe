@@ -33,7 +33,7 @@ export function OrdersTable({ orders }: OrdersTableProps) {
 
       toast({
         title: "Success",
-        description: "Order status updated and customer notified via Telegram",
+        description: "Order status updated. Customer will be notified via Telegram.",
       })
 
       router.refresh()

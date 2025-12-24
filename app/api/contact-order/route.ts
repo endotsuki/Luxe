@@ -63,7 +63,7 @@ export async function POST(request: NextRequest) {
         console.error("[v0] Telegram notification failed:", telegramError)
       }
 
-      return NextResponse.json({ success: true, orderNumber })
+      return NextResponse.json({ success: true, orderId: order.id, orderNumber })
     } else {
       // Send contact message to Telegram
       try {

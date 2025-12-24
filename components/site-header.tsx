@@ -11,7 +11,8 @@ import { motion } from "framer-motion"
 import { SearchBar } from "./SearchBar"
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
 import { SheetTitle } from "@/components/ui/sheet"
-import { IconMoon, IconShoppingCart, IconSun, IconHome, IconCategory2, IconMessage, IconMenuDeep } from "@tabler/icons-react"
+import { IconMoon, IconShoppingCart, IconSun, IconHome, IconCategory2, IconMessage, IconMenuDeep, IconPackage } from "@tabler/icons-react"
+import { useRouter } from "next/navigation"
 
 interface SiteHeaderProps {
   cartCount?: number
@@ -21,8 +22,17 @@ export function SiteHeader({ cartCount = 0 }: SiteHeaderProps) {
   const { theme, setTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
   const pathname = usePathname()
+  const router = useRouter()
+  const [recentOrderId, setRecentOrderId] = useState<string | null>(null)
 
   useEffect(() => setMounted(true), [])
+
+  useEffect(() => {
+    try {
+      const rid = localStorage.getItem("recent_order_id")
+      if (rid) setRecentOrderId(rid)
+    } catch (e) {}
+  }, [])
 
   const navigation = [
     { name: "Home", href: "/", icon: IconHome },
@@ -104,6 +114,22 @@ export function SiteHeader({ cartCount = 0 }: SiteHeaderProps) {
                 className="rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
               >
                 {theme === "dark" ? <IconSun className="h-5 w-5 text-yellow-400" /> : <IconMoon className="h-5 w-5 text-gray-700 dark:text-gray-300" />}
+              </Button>
+            )}
+
+            {/* View Order */}
+            {mounted && recentOrderId && (
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => router.push(`/orders/${recentOrderId}`)}
+                className="relative rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                title="View your recent order"
+              >
+                <IconPackage className="h-5 w-5 text-gray-600 dark:text-gray-300" />
+                <Badge className="absolute -right-1 -top-1 h-5 w-5 rounded-full bg-blue-500 text-white p-0 flex items-center justify-center text-xs">
+                  •
+                </Badge>
               </Button>
             )}
 
