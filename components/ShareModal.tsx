@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from "@/components/ui/dialog"
 import { IconCopy, IconBrandTelegram, IconBrandX } from "@tabler/icons-react"
 import { useToast } from "@/hooks/use-toast"
-
+import { Icon } from "iconza"
 interface ShareModalProps {
     url: string
     open: boolean
@@ -37,19 +37,6 @@ export function ShareModal({ url, open, onOpenChange }: ShareModalProps) {
                 </DialogHeader>
 
                 <div className="space-y-4">
-                    {/* URL + Copy */}
-                    <div className="flex items-center space-x-2 border rounded-xl px-3 py-2">
-                        <input
-                            readOnly
-                            className="flex-1 bg-transparent outline-none truncate"
-                            value={url}
-                            onFocus={e => e.target.select()}
-                        />
-                        <Button variant="ghost" size="icon" onClick={handleCopy} title="Copy link">
-                            <IconCopy className="w-5 h-5" />
-                        </Button>
-                    </div>
-
                     {/* Share buttons */}
                     <div className="flex space-x-4">
                         <a
@@ -72,6 +59,18 @@ export function ShareModal({ url, open, onOpenChange }: ShareModalProps) {
                             X
                         </a>
 
+                    </div>
+                    {/* URL + Copy */}
+                    <div className="flex items-center space-x-2 border-b px-3 py-2">
+                        <input
+                            readOnly
+                            className="flex-1 bg-transparent outline-none truncate"
+                            value={url}
+                            onFocus={e => e.target.select()}
+                        />
+                        <Button variant="outline" size="icon" onClick={handleCopy} title="Copy link">
+                            <IconCopy className="w-5 h-5" />
+                        </Button>
                     </div>
                 </div>
 

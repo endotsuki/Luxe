@@ -4,12 +4,19 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { format } from "date-fns"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination"
 import { useToast } from "@/hooks/use-toast"
 import type { Order } from "@/lib/types"
-import { IconExternalLink } from "@tabler/icons-react"
+import { IconArrowUpRight } from "@tabler/icons-react"
 
 interface OrdersTableProps {
   orders: Order[]
@@ -19,6 +26,14 @@ export function OrdersTable({ orders }: OrdersTableProps) {
   const router = useRouter()
   const { toast } = useToast()
   const [updating, setUpdating] = useState<string | null>(null)
+  const [currentPage, setCurrentPage] = useState(1)
+
+  const itemsPerPage = 10
+  const totalPages = Math.ceil(orders.length / itemsPerPage)
+  const paginatedOrders = orders.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  )
 
   const updateOrderStatus = async (orderId: string, status: string) => {
     setUpdating(orderId)
@@ -74,7 +89,7 @@ export function OrdersTable({ orders }: OrdersTableProps) {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {orders.map((order) => (
+          {paginatedOrders.map((order) => (
             <TableRow key={order.id}>
               <TableCell className="font-medium">{order.order_number}</TableCell>
               <TableCell>
@@ -109,9 +124,9 @@ export function OrdersTable({ orders }: OrdersTableProps) {
                 {format(new Date(order.created_at), "MMM dd, yyyy • hh:mm a").toUpperCase()}
               </TableCell>
               <TableCell>
-                <Button variant="ghost" size="sm" asChild>
+                <Button variant="outline" size="sm" className="h-9 w-9">
                   <a href={`/admin/orders/${order.id}`}>
-                    <IconExternalLink className="h-4 w-4" />
+                    <IconArrowUpRight className="h-4 w-4" />
                   </a>
                 </Button>
               </TableCell>
@@ -119,6 +134,52 @@ export function OrdersTable({ orders }: OrdersTableProps) {
           ))}
         </TableBody>
       </Table>
+      <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <p className="text-sm text-muted-foreground">
+          Showing {(currentPage - 1) * itemsPerPage + 1} to {Math.min(currentPage * itemsPerPage, orders.length)} of {orders.length} orders
+        </p>
+        {totalPages > 1 && (
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    if (currentPage > 1) setCurrentPage(currentPage - 1);
+                  }}
+                  className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                />
+              </PaginationItem>
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                <PaginationItem key={page}>
+                  <PaginationLink
+                    href="#"
+                    isActive={page === currentPage}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setCurrentPage(page);
+                    }}
+                    className="cursor-pointer"
+                  >
+                    {page}
+                  </PaginationLink>
+                </PaginationItem>
+              ))}
+              <PaginationItem>
+                <PaginationNext
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+                  }}
+                  className={currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        )}
+      </div>
     </div>
   )
 }

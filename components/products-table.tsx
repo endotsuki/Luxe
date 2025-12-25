@@ -21,10 +21,18 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 import { ProductDialog } from "@/components/product-dialog";
 import type { Product } from "@/lib/types";
 import { useRouter } from "next/navigation";
-import { IconEdit, IconExternalLink, IconPlus, IconTrash } from "@tabler/icons-react";
+import { IconArrowUpRight, IconPencil, IconPlus, IconTrash } from "@tabler/icons-react";
 
 interface ProductsTableProps {
   products: Product[];
@@ -37,6 +45,17 @@ export function ProductsTable({ products }: ProductsTableProps) {
   const [isDeleting, setIsDeleting] = useState<string | null>(null);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [productToDelete, setProductToDelete] = useState<Product | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const itemsPerPage = 10;
+  const sortedProducts = [...products].sort(
+    (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+  );
+  const totalPages = Math.ceil(sortedProducts.length / itemsPerPage);
+  const paginatedProducts = sortedProducts.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
   const handleAddProduct = () => {
     setSelectedProduct(null);
@@ -115,13 +134,11 @@ export function ProductsTable({ products }: ProductsTableProps) {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {[...products]
-                .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
-                .map((product) => (
+              {paginatedProducts.map((product) => (
                   <TableRow key={product.id}>
                     <TableCell>
                       <div className="flex items-center gap-3">
-                        <div className="relative h-10 w-10 rounded-md overflow-hidden bg-muted">
+                        <div className="relative h-12 w-12 rounded-md overflow-hidden bg-muted">
                           <Image
                             src={
                               product.image_url
@@ -148,7 +165,7 @@ export function ProductsTable({ products }: ProductsTableProps) {
                     </TableCell>
                     <TableCell>
                       <div>
-                        <div className="font-medium">${product.price}</div>
+                        <h6 className="font-medium">${product.price}</h6>
                         {product.compare_at_price && (
                           <h6 className="text-sm text-muted-foreground line-through">
                             ${product.compare_at_price}
@@ -177,27 +194,29 @@ export function ProductsTable({ products }: ProductsTableProps) {
                       </Badge>
                     </TableCell>
                     <TableCell>
-                      <div className="flex items-center justify-end">
-                        <Button variant="ghost" size="sm" asChild>
+                      <div className="flex items-center justify-end gap-2">
+                        <Button variant="outline" size="sm" className="w-9 h-9">
                           <Link
                             href={`/products/${product.slug}`}
                             target="_blank"
                           >
-                            <IconExternalLink stroke={1.5} className="h-5 w-5" />
+                            <IconArrowUpRight stroke={1.5} className="h-5 w-5" />
                           </Link>
                         </Button>
                         <Button
-                          variant="ghost"
+                          variant="outline"
                           size="sm"
                           onClick={() => handleEditProduct(product)}
+                          className="w-9 h-9"
                         >
-                          <IconEdit stroke={1.5} className="h-5 w-5" />
+                          <IconPencil stroke={1.5} className="h-5 w-5" />
                         </Button>
                         <Button
-                          variant="ghost"
+                          variant="destructive"
                           size="sm"
                           onClick={() => handleDeleteProduct(product.id)}
                           disabled={isDeleting === product.id}
+                          className="w-9 h-9"
                         >
                           <IconTrash stroke={1.5} className="h-5 w-5" />
                         </Button>
@@ -207,6 +226,52 @@ export function ProductsTable({ products }: ProductsTableProps) {
                 ))}
             </TableBody>
           </Table>
+          <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-sm text-muted-foreground">
+              Showing {(currentPage - 1) * itemsPerPage + 1} to {Math.min(currentPage * itemsPerPage, sortedProducts.length)} of {sortedProducts.length} products
+            </p>
+            {totalPages > 1 && (
+              <Pagination>
+                <PaginationContent>
+                  <PaginationItem>
+                    <PaginationPrevious
+                      href="#"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        if (currentPage > 1) setCurrentPage(currentPage - 1);
+                      }}
+                      className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                    />
+                  </PaginationItem>
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                    <PaginationItem key={page}>
+                      <PaginationLink
+                        href="#"
+                        isActive={page === currentPage}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setCurrentPage(page);
+                        }}
+                        className="cursor-pointer"
+                      >
+                        {page}
+                      </PaginationLink>
+                    </PaginationItem>
+                  ))}
+                  <PaginationItem>
+                    <PaginationNext
+                      href="#"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+                      }}
+                      className={currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                    />
+                  </PaginationItem>
+                </PaginationContent>
+              </Pagination>
+            )}
+          </div>
         </div>
       )}
 

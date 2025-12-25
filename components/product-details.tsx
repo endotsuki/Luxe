@@ -185,9 +185,9 @@ export function ProductDetails({ product }: ProductDetailsProps) {
           </div>
 
           <div className="flex gap-4">
-            <Button size="lg" className="flex-1" onClick={handleAddToCart} disabled={product.stock === 0}><IconShoppingCart className="mr-2 h-5 w-5" />Add to Cart</Button>
-            <Button size="lg" variant="outline"><IconHeart className="h-5 w-5" /></Button>
-            <Button variant="outline" size="lg" onClick={() => setShareOpen(true)}><IconShare className="h-5 w-5" /></Button>
+            <Button size="lg" className="h-11 w-auto" onClick={handleAddToCart} disabled={product.stock === 0}><IconShoppingCart className="h-5 w-5" />Add to Cart</Button>
+            <Button size="lg" className="h-11 w-11" variant="outline"><IconHeart className="h-5 w-5" /></Button>
+            <Button variant="outline" className="h-11 w-11" size="lg" onClick={() => setShareOpen(true)}><IconShare className="h-5 w-5" /></Button>
             <ShareModal url={currentUrl} open={shareOpen} onOpenChange={setShareOpen} />
           </div>
         </div>
