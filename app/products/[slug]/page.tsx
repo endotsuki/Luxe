@@ -17,7 +17,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   }
 
   let productImageUrl = `${process.env.NEXT_PUBLIC_SITE_URL || "https://luxe-roan-three.vercel.app"}/icon.svg`
-  
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://luxe-roan-three.vercel.app"
+
   if (product.image_url && !product.image_url.includes("placeholder")) {
     // Images uploaded to Supabase Storage use this format
     if (product.image_url.startsWith("http")) {
@@ -38,12 +39,12 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       type: "website",
       images: [
         {
-          url: productImageUrl,
-          width: 800,
-          height: 800,
-          alt: product.name,
+          url: `${siteUrl}/icon.png`,
+          width: 1200,
+          height: 630,
+          alt: "LuxeAccessories Logo",
         },
-      ],
+      ]
     },
     twitter: {
       card: "summary",
