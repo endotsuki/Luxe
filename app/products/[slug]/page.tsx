@@ -16,9 +16,27 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     }
   }
 
+  const productImageUrl = product.image_url
+    ? `${process.env.NEXT_PUBLIC_SITE_URL || "https://luxe-roan-three.vercel.app"}/images/${product.image_url}`
+    : `${process.env.NEXT_PUBLIC_SITE_URL || "https://luxe-roan-three.vercel.app"}/icon.svg`
+
   return {
     title: `${product.name} | LuxeAccessories`,
     description: product.description || `Shop ${product.name} at LuxeAccessories`,
+    openGraph: {
+      title: product.name,
+      description: product.description || `Shop ${product.name} at LuxeAccessories`,
+      url: `${process.env.NEXT_PUBLIC_SITE_URL || "https://luxe-roan-three.vercel.app"}/products/${slug}`,
+      type: "website",
+      images: [
+        {
+          url: productImageUrl,
+          width: 800,
+          height: 800,
+          alt: product.name,
+        },
+      ],
+    },
   }
 }
 

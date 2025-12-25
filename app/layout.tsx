@@ -28,6 +28,21 @@ export const metadata: Metadata = {
     ],
     apple: "/apple-icon.png",
   },
+  openGraph: {
+    title: "LuxeAccessories - Premium Watches, Jewelry & More",
+    description: "Discover our curated collection of premium accessories including watches, jewelry, bags, and sunglasses.",
+    url: process.env.NEXT_PUBLIC_SITE_URL || "https://luxe-roan-three.vercel.app",
+    siteName: "LuxeAccessories",
+    type: "website",
+    images: [
+      {
+        url: "/icon.svg",
+        width: 200,
+        height: 200,
+        alt: "LuxeAccessories Logo",
+      },
+    ],
+  },
 }
 
 export const viewport: Viewport = {

@@ -135,8 +135,8 @@ export function CartContent() {
                       </Link>
                       <h6 className="text-sm text-muted-foreground mt-1">${item.product?.price}</h6>
                     </div>
-                    <Button variant="outline" size="icon" onClick={() => removeItem(item.id)}>
-                      <IconTrash className="h-4 w-4" />
+                    <Button variant="destructive" size="icon" onClick={() => removeItem(item.id)}>
+                      <IconTrash className="h-5 w-5" />
                     </Button>
                   </div>
                   <div className="flex items-center gap-4 mt-4">
