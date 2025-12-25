@@ -29,6 +29,11 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     }
   }
 
+  const imageExt = productImageUrl.split("?")[0].split(".").pop()?.toLowerCase() || ""
+  const imageType = imageExt === "webp" ? "image/webp" : imageExt === "png" ? "image/png" : imageExt === "jpg" || imageExt === "jpeg" ? "image/jpeg" : "image/*"
+
+  const fallbackImage = `${siteUrl}/icon.png`
+
   return {
     title: `${product.name} | LuxeAccessories`,
     description: product.description || `Shop ${product.name} at LuxeAccessories`,
@@ -39,18 +44,23 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       type: "website",
       images: [
         {
-          url: `${siteUrl}/icon.png`,
+          url: productImageUrl,
+          alt: product.name,
+          type: imageType,
+        },
+        {
+          url: fallbackImage,
           width: 1200,
           height: 630,
           alt: "LuxeAccessories Logo",
         },
-      ]
+      ],
     },
     twitter: {
-      card: "summary",
+      card: "summary_large_image",
       title: product.name,
       description: product.description || `Shop ${product.name} at LuxeAccessories`,
-      images: [productImageUrl],
+      images: [productImageUrl, fallbackImage],
     },
   }
 }
