@@ -125,62 +125,37 @@ export function ProductDialog({
     setLoading(true)
 
     try {
-      // Decide whether to send JSON (no files) or multipart FormData (with files)
-      const hasFiles = formData.image_files.length > 0
+      const form = new FormData()
 
-      const url = product ? `/api/products/${product.id}` : "/api/products"
-      const method = product ? "PUT" : "POST"
+      form.append("name", formData.name)
+      form.append("slug", formData.slug)
+      form.append("description", formData.description)
+      form.append("price", formData.price)
+      form.append("compare_at_price", formData.compare_at_price)
+      form.append("category_id", formData.category_id)
+      form.append("stock", formData.stock)
+      form.append("is_active", String(formData.is_active))
 
-      console.log("Submitting to:", url, "Method:", method, "hasFiles:", hasFiles)
-
-      let response: Response
-
-      if (hasFiles) {
-        const form = new FormData()
-        form.append("name", formData.name)
-        form.append("slug", formData.slug)
-        form.append("description", formData.description)
-        form.append("price", formData.price)
-        form.append("compare_at_price", formData.compare_at_price)
-        form.append("category_id", formData.category_id)
-        form.append("stock", formData.stock)
-        form.append("is_active", String(formData.is_active))
-
-        // Append files
+      // Handle multiple images
+      if (formData.image_files.length > 0) {
+        // User uploaded new images
         formData.image_files.forEach((file) => {
           form.append("images", file)
         })
-
-        response = await fetch(url, {
-          method,
-          body: form,
-        })
-      } else {
-        // Send compact JSON for requests without images to avoid multipart overhead
-        const payload: any = {
-          name: formData.name,
-          slug: formData.slug,
-          description: formData.description,
-          price: Number(formData.price),
-          compare_at_price: formData.compare_at_price
-            ? Number(formData.compare_at_price)
-            : null,
-          category_id: formData.category_id || null,
-          stock: Number(formData.stock),
-          is_active: formData.is_active,
-        }
-
-        // Preserve existing images when editing and no new files were uploaded
-        if (existingImages.length > 0 && product) {
-          payload.existingImages = existingImages
-        }
-
-        response = await fetch(url, {
-          method,
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        })
+      } else if (existingImages.length > 0 && product) {
+        // User didn't upload new images, preserve existing ones
+        form.append("existingImages", JSON.stringify(existingImages))
       }
+
+      const url = product ? `/api/products/${product.id}` : "/api/products"
+      const method = product ? "PUT" : "POST"
+      
+      console.log("Submitting to:", url, "Method:", method)
+
+      const response = await fetch(url, {
+        method: method,
+        body: form,
+      })
 
       const responseText = await response.text()
       console.log("Response status:", response.status)
