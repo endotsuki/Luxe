@@ -16,9 +16,17 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     }
   }
 
-  const productImageUrl = product.image_url && !product.image_url.includes("placeholder")
-    ? `${process.env.NEXT_PUBLIC_SITE_URL || "https://luxe-roan-three.vercel.app"}/images/${product.image_url}`
-    : `${process.env.NEXT_PUBLIC_SITE_URL || "https://luxe-roan-three.vercel.app"}/icon.svg`
+  let productImageUrl = `${process.env.NEXT_PUBLIC_SITE_URL || "https://luxe-roan-three.vercel.app"}/icon.svg`
+  
+  if (product.image_url && !product.image_url.includes("placeholder")) {
+    // Images uploaded to Supabase Storage use this format
+    if (product.image_url.startsWith("http")) {
+      productImageUrl = product.image_url
+    } else {
+      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ""
+      productImageUrl = `${supabaseUrl}/storage/v1/object/public/images/${product.image_url}`
+    }
+  }
 
   return {
     title: `${product.name} | LuxeAccessories`,
