@@ -56,7 +56,7 @@ export function AdminDashboard({ orders, products, totalOrders, totalProducts }:
   return (
     <div className="flex min-h-screen flex-col">
       {/* Header */}
-      <header className="sticky top-0 z-50 w-full border-b border-border bg-background">
+      <header className="sticky top-0 z-50 py-2 w-full border-b border-border bg-background/70 backdrop-blur-sm">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground font-bold text-sm">

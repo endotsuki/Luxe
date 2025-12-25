@@ -54,7 +54,7 @@ export function SiteHeader({ cartCount = 0 }: SiteHeaderProps) {
 
   return (
     <header
-      className={`fixed top-2 inset-x-16 rounded-2xl z-50 w-auto transition-all duration-300 backdrop-blur-lg ${scrolled
+      className={`fixed top-2 inset-x-60 rounded-2xl z-50 w-auto transition-all duration-300 backdrop-blur-lg ${scrolled
           ? "bg-white/70 dark:bg-gray-900/70 border-b border-gray-200/50 dark:border-gray-700/50 shadow-sm"
           : "bg-transparent top-4 border-none shadow-none"
         }`}
@@ -65,7 +65,7 @@ export function SiteHeader({ cartCount = 0 }: SiteHeaderProps) {
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2">
             <img src="/icon.svg" alt="LuxeAccessories Logo" className="h-7 w-7" />
-            <h6 className="hidden font-bold text-2xl sm:inline-block text-gray-800 dark:text-gray-100">
+            <h6 className="hidden font-bold text-2xl sm:inline-block">
               Luxe
             </h6>
           </Link>
