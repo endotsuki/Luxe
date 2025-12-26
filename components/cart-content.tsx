@@ -8,16 +8,10 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { useToast } from "@/hooks/use-toast"
 import type { CartItem } from "@/lib/types"
+import { sizedImage } from "@/lib/utils"
 import { IconArrowNarrowRight, IconMinus, IconPlus, IconTrash } from "@tabler/icons-react"
 
 export function CartContent() {
-  const normalizeImageSrc = (url?: string) => {
-    if (!url) return "/placeholder.svg"
-    const path = url.split("?")[0]
-    if (path.startsWith("http://") || path.startsWith("https://") || path.startsWith("//")) return path
-    return path.startsWith("/") ? path : `/images/${path}`
-  }
-
   const [cartItems, setCartItems] = useState<CartItem[]>([])
   const [loading, setLoading] = useState(true)
   const { toast } = useToast()
@@ -121,10 +115,14 @@ export function CartContent() {
               <div className="flex gap-4">
                 <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-lg">
                   <Image
-                    src={normalizeImageSrc(item.product?.image_url)}
+                    src={
+                      item.product?.image_url
+                        ? sizedImage(item.product.image_url, 400)
+                        : "/placeholder.svg"
+                    }
                     alt={item.product?.name || ""}
                     fill
-                    objectFit="cover"
+                    style={{ objectFit: "cover" }}
                   />
                 </div>
                 <div className="flex-1">

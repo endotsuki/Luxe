@@ -10,18 +10,6 @@ interface OrderSummaryCardProps {
   total: number;
 }
 
-const normalizeImageSrc = (url?: string) => {
-  if (!url) return "/placeholder.svg";
-  const path = url.split("?")[0];
-  if (
-    path.startsWith("http://") ||
-    path.startsWith("https://") ||
-    path.startsWith("//")
-  )
-    return path;
-  return path.startsWith("/") ? path : `/images/${path}`;
-};
-
 export function OrderSummaryCard({ cartItems, total }: OrderSummaryCardProps) {
   return (
     <Card className="border-2 border-primary/20">
@@ -46,7 +34,7 @@ export function OrderSummaryCard({ cartItems, total }: OrderSummaryCardProps) {
                   }
                   alt={item.product?.name || "Product"}
                   fill
-                  objectFit="cover"
+                  style={{ objectFit: "cover" }}
                 />
               </div>
               <div className="flex-1 min-w-0">
