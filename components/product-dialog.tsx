@@ -330,7 +330,7 @@ export function ProductDialog({
                           const newImages = existingImages.filter((_, i) => i !== index)
                           setExistingImages(newImages)
                         }}
-                        className="text-white text-xs bg-red-500 px-2 py-1 rounded"
+                        className="text-white text-xs bg-red-500 px-2 py-1 rounded-sm"
                       >
                         Remove
                       </button>
