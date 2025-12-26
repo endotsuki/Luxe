@@ -37,7 +37,8 @@ export default async function CategoriesPage() {
                         src={category.image_url || "/placeholder.svg?height=400&width=600"}
                         alt={category.name}
                         fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-300"
+                        objectFit="cover"
+                        className="group-hover:scale-105 transition-transform duration-300"
                       />
                       <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent flex items-end p-6">
                         <div>

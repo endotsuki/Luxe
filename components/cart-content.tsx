@@ -124,7 +124,7 @@ export function CartContent() {
                     src={normalizeImageSrc(item.product?.image_url)}
                     alt={item.product?.name || ""}
                     fill
-                    className="object-cover"
+                    objectFit="cover"
                   />
                 </div>
                 <div className="flex-1">

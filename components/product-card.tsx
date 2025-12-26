@@ -30,7 +30,8 @@ export function ProductCard({ product }: ProductCardProps) {
               }
               alt={product.name}
               fill
-              className="object-cover group-hover:scale-105 transition-transform duration-300"
+              objectFit="cover"
+              className="group-hover:scale-105 transition-transform duration-300"
             />
 
             {discountPercent > 0 && (

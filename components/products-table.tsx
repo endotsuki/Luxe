@@ -147,7 +147,8 @@ export function ProductsTable({ products }: ProductsTableProps) {
                             }
                             alt={product.name}
                             fill
-                            className="object-cover"
+                            sizes="32"
+                            objectFit="cover"
                           />
                         </div>
                         <div className="flex-1">

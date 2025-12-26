@@ -68,7 +68,8 @@ export function ProductRow({ title, products }: ProductRowProps) {
                       }
                       alt={product.name}
                       fill
-                      className="object-cover group-hover:scale-105 transition-transform"
+                      objectFit="cover"
+                      className="group-hover:scale-105 transition-transform"
                     />
                     {product.compare_at_price &&
                       Number(product.compare_at_price) >

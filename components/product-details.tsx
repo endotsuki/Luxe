@@ -92,7 +92,8 @@ export function ProductDetails({ product }: ProductDetailsProps) {
                   alt={product.name}
                   fill
                   priority
-                  className="object-cover rounded-4xl"
+                  objectFit="cover"
+                  className="rounded-4xl"
                 />
               </div>
             </CardContent>
@@ -126,7 +127,8 @@ export function ProductDetails({ product }: ProductDetailsProps) {
                       src={img ? `/images/${encodeURIComponent(img)}` : "/placeholder.svg"}
                       alt={product.name}
                       fill
-                      className="object-cover rounded-xl"
+                      objectFit="cover"
+                      className="rounded-xl"
                     />
                   </button>
                 ))}

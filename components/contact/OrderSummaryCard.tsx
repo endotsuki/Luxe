@@ -41,7 +41,7 @@ export function OrderSummaryCard({ cartItems, total }: OrderSummaryCardProps) {
                   src={normalizeImageSrc(item.product?.image_url)}
                   alt={item.product?.name || "Product"}
                   fill
-                  className="object-cover"
+                  objectFit="cover"
                 />
               </div>
               <div className="flex-1 min-w-0">

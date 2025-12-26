@@ -74,7 +74,7 @@ export default function OrderInline({ orderId }: { orderId: string }) {
                 <li key={it.id} className="flex items-center gap-4 p-3">
                   <div className="h-16 w-16 relative rounded overflow-hidden bg-muted">
                     {it.product?.image_url ? (
-                      <Image src={it.product.image_url} alt={it.product?.name} fill className="object-cover" />
+                      <Image src={it.product.image_url} alt={it.product?.name} fill objectFit="cover" />
                     ) : null}
                   </div>
                   <div className="flex-1">
