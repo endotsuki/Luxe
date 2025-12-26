@@ -5,12 +5,11 @@ import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { useTheme } from "next-themes"
 import { useState, useEffect } from "react"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet"
 import { Badge } from "@/components/ui/badge"
 import { motion } from "framer-motion"
 import { SearchBar } from "./SearchBar"
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
-import { SheetTitle } from "@/components/ui/sheet"
 import { IconMoon, IconShoppingCart, IconSun, IconHome, IconCategory2, IconMessage, IconMenuDeep, IconPackage } from "@tabler/icons-react"
 import { useRouter } from "next/navigation"
 
@@ -21,17 +20,23 @@ interface SiteHeaderProps {
 export function SiteHeader({ cartCount = 0 }: SiteHeaderProps) {
   const { theme, setTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
   const pathname = usePathname()
   const router = useRouter()
   const [recentOrderId, setRecentOrderId] = useState<string | null>(null)
 
-  useEffect(() => setMounted(true), [])
+  useEffect(() => {
+    setMounted(true)
+    const handleScroll = () => setScrolled(window.scrollY > 10)
+    window.addEventListener("scroll", handleScroll)
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [])
 
   useEffect(() => {
     try {
       const rid = localStorage.getItem("recent_order_id")
       if (rid) setRecentOrderId(rid)
-    } catch (e) {}
+    } catch {}
   }, [])
 
   const navigation = [
@@ -40,67 +45,51 @@ export function SiteHeader({ cartCount = 0 }: SiteHeaderProps) {
     { name: "Categories", href: "/categories", icon: IconCategory2 },
     { name: "Contact", href: "/contact", icon: IconMessage },
   ]
-  const [scrolled, setScrolled] = useState(false)
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 10)
-    }
-
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
-
 
   return (
     <header
-      className={`fixed top-2 inset-x-60 rounded-2xl z-50 w-auto transition-all duration-300 backdrop-blur-lg ${scrolled
-          ? "bg-white/70 dark:bg-gray-900/70 border-b border-gray-200/50 dark:border-gray-700/50 shadow-sm"
-          : "bg-transparent top-4 border-none shadow-none"
-        }`}
+      className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
+        scrolled
+          ? "bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl shadow-lg shadow-black/5"
+          : "bg-white/60 dark:bg-transparent backdrop-blur-md"
+      } md:top-4 md:inset-x-4 lg:inset-x-20 xl:inset-x-40 md:rounded-2xl`}
     >
-      <div className="container mx-auto px-4">
-        <div className="flex h-20 items-center justify-between">
-
+      <div className="container mx-auto px-4 sm:px-6">
+        <div className="flex h-16 md:h-20 items-center justify-between gap-4">
+          
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2">
-            <img src="/icon.svg" alt="LuxeAccessories Logo" className="h-7 w-7" />
-            <h6 className="hidden font-bold text-2xl sm:inline-block">
-              Luxe
-            </h6>
+            <img src="/icon.svg" alt="Luxe Logo" className="h-8 w-8" />
+            <span className="hidden sm:block font-bold text-xl lg:text-2xl">Luxe</span>
           </Link>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-12 relative">
-            {navigation.map((item) => {
-              const isActive = pathname === item.href
-              return (
-                <h6 key={item.name}>
-                  <Link
-                    href={item.href}
-                    className="relative text-base font-medium text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors"
-                  >
-                    {item.icon && (
-                      <item.icon className="inline-block mr-1 mb-1 h-5 w-5" />
-                    )}
-                    {item.name}
-
-                    {isActive && (
-                      <motion.div
-                        layoutId="active-nav"
-                        className="absolute -bottom-1 left-0 right-0 h-0.5 bg-primary rounded"
-                        transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                      />
-                    )}
-                  </Link>
-                </h6>
-              )
-            })}
+          {/* Desktop Nav */}
+          <nav className="hidden lg:flex items-center gap-8 xl:gap-12">
+            {navigation.map((item) => (
+              <Link
+                key={item.name}
+                href={item.href}
+                className="relative text-sm font-medium text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors group"
+              >
+                <span className="flex items-center gap-1.5">
+                  <item.icon className="h-4 w-4" />
+                  {item.name}
+                </span>
+                {pathname === item.href && (
+                  <motion.div
+                    layoutId="active-nav"
+                    className="absolute -bottom-1 inset-x-0 h-0.5 bg-primary rounded-full"
+                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                  />
+                )}
+              </Link>
+            ))}
           </nav>
 
-          <div className="flex items-center gap-2">
-            {/* Search */}
-            <div className="hidden md:block">
+          {/* Actions */}
+          <div className="flex items-center gap-1 sm:gap-2">
+            {/* Search - Hidden on mobile */}
+            <div className="hidden lg:block">
               <SearchBar />
             </div>
 
@@ -110,36 +99,35 @@ export function SiteHeader({ cartCount = 0 }: SiteHeaderProps) {
                 variant="ghost"
                 size="icon"
                 onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                aria-label="Toggle theme"
-                className="rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                className="rounded-full h-9 w-9"
               >
-                {theme === "dark" ? <IconSun className="h-5 w-5 text-yellow-400" /> : <IconMoon className="h-5 w-5 text-gray-700 dark:text-gray-300" />}
+                {theme === "dark" ? 
+                  <IconSun className="h-5 w-5 text-yellow-400" /> : 
+                  <IconMoon className="h-5 w-5" />
+                }
               </Button>
             )}
 
-            {/* View Order */}
+            {/* Recent Order */}
             {mounted && recentOrderId && (
               <Button
-                variant="outline"
+                variant="ghost"
                 size="icon"
                 onClick={() => router.push(`/orders/${recentOrderId}`)}
-                className="relative rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-                title="View your recent order"
+                className="relative rounded-full h-9 w-9 hidden sm:flex"
               >
-                <IconPackage className="h-5 w-5 text-gray-600 dark:text-gray-300" />
-                <Badge className="absolute -right-1 -top-1 h-5 w-5 rounded-full bg-blue-500 text-white p-0 flex items-center justify-center text-xs">
-                  •
-                </Badge>
+                <IconPackage className="h-5 w-5" />
+                <span className="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full bg-blue-500" />
               </Button>
             )}
 
             {/* Cart */}
             <Link href="/cart">
-              <Button variant="ghost" size="icon" className="relative rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-                <IconShoppingCart className="h-5 w-5 text-gray-600 dark:text-gray-300" />
+              <Button variant="ghost" size="icon" className="relative rounded-full h-9 w-9">
+                <IconShoppingCart className="h-5 w-5" />
                 {cartCount > 0 && (
-                  <Badge className="absolute -right-1 -top-1 h-5 w-5 rounded-full bg-red-500 text-white p-0 flex items-center justify-center text-xs animate-pulse">
-                    {cartCount}
+                  <Badge className="absolute -right-1 -top-1 h-5 w-5 rounded-full bg-red-500 p-0 flex items-center justify-center text-xs border-2 border-white dark:border-gray-900">
+                    {cartCount > 9 ? "9+" : cartCount}
                   </Badge>
                 )}
               </Button>
@@ -147,32 +135,47 @@ export function SiteHeader({ cartCount = 0 }: SiteHeaderProps) {
 
             {/* Mobile Menu */}
             <Sheet>
-              <SheetTrigger asChild className="md:hidden">
-                <Button variant="ghost" size="icon" aria-label="Menu">
-                  <IconMenuDeep className="h-5 w-5 text-gray-600 dark:text-gray-300" />
+              <SheetTrigger asChild className="lg:hidden">
+                <Button variant="ghost" size="icon" className="rounded-full h-9 w-9">
+                  <IconMenuDeep className="h-5 w-5" />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="right" className="w-70 sm:w-90 p-6">
+              <SheetContent side="right" className="w-72 sm:w-[320px]">
                 <VisuallyHidden>
-                  <SheetTitle>Mobile Navigation</SheetTitle>
+                  <SheetTitle>Menu</SheetTitle>
                 </VisuallyHidden>
+                
+                {/* Mobile Search */}
+                <div className="lg:hidden mt-6 mb-8">
+                  <SearchBar />
+                </div>
 
-                <nav className="flex flex-col gap-6 mt-4">
-                  {navigation.map((item) => {
-                    const isActive = pathname === item.href
-                    return (
-                      <Link
-                        key={item.name}
-                        href={item.href}
-                        className={`text-lg font-semibold transition-colors ${isActive
+                <nav className="flex flex-col gap-4">
+                  {navigation.map((item) => (
+                    <Link
+                      key={item.name}
+                      href={item.href}
+                      className={`flex items-center gap-3 text-base font-medium py-2 transition-colors ${
+                        pathname === item.href
                           ? "text-primary"
                           : "text-gray-700 dark:text-gray-200 hover:text-primary"
-                          }`}
-                      >
-                        {item.name}
-                      </Link>
-                    )
-                  })}
+                      }`}
+                    >
+                      <item.icon className="h-5 w-5" />
+                      {item.name}
+                    </Link>
+                  ))}
+                  
+                  {/* Mobile Recent Order Link */}
+                  {recentOrderId && (
+                    <Link
+                      href={`/orders/${recentOrderId}`}
+                      className="flex items-center gap-3 text-base font-medium py-2 text-gray-700 dark:text-gray-200 hover:text-primary transition-colors sm:hidden"
+                    >
+                      <IconPackage className="h-5 w-5" />
+                      Recent Order
+                    </Link>
+                  )}
                 </nav>
               </SheetContent>
             </Sheet>
