@@ -32,7 +32,8 @@ import {
 import { ProductDialog } from "@/components/product-dialog";
 import type { Product } from "@/lib/types";
 import { useRouter } from "next/navigation";
-import { IconArrowUpRight, IconPencil, IconPlus, IconTrash } from "@tabler/icons-react";
+import { sizedImage } from "@/lib/utils";
+import { IconArrowUpRight, IconPencil, IconCategoryPlus, IconTrash } from "@tabler/icons-react";
 
 interface ProductsTableProps {
   products: Product[];
@@ -112,7 +113,7 @@ export function ProductsTable({ products }: ProductsTableProps) {
     <div className="space-y-4">
       <div className="flex justify-end">
         <Button onClick={handleAddProduct}>
-          <IconPlus className="mr-2 h-4 w-4" />
+          <IconCategoryPlus className="h-4 w-4" />
           Add Product
         </Button>
       </div>
@@ -142,13 +143,13 @@ export function ProductsTable({ products }: ProductsTableProps) {
                           <Image
                             src={
                               product.image_url
-                                ? `/images/${product.image_url}`
+                                ? sizedImage(product.image_url, 48)
                                 : "/placeholder.svg"
                             }
                             alt={product.name}
                             fill
                             sizes="32"
-                            objectFit="cover"
+                            style={{ objectFit: "cover" }}
                           />
                         </div>
                         <div className="flex-1">

@@ -3,6 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { IconShoppingBag } from "@tabler/icons-react";
 import type { CartItem } from "@/lib/types";
+import { sizedImage } from "@/lib/utils";
 
 interface OrderSummaryCardProps {
   cartItems: CartItem[];
@@ -38,7 +39,11 @@ export function OrderSummaryCard({ cartItems, total }: OrderSummaryCardProps) {
             >
               <div className="relative w-24 h-24 rounded-xl overflow-hidden bg-muted shrink-0 border">
                 <Image
-                  src={normalizeImageSrc(item.product?.image_url)}
+                  src={
+                    item.product?.image_url
+                      ? sizedImage(item.product.image_url, 400)
+                      : "/placeholder.svg"
+                  }
                   alt={item.product?.name || "Product"}
                   fill
                   objectFit="cover"

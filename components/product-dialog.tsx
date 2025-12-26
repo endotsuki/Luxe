@@ -25,6 +25,8 @@ import {
 import { Switch } from "@/components/ui/switch"
 
 import type { Product } from "@/lib/types"
+import Image from "next/image"
+import { sizedImage } from "@/lib/utils"
 
 interface ProductDialogProps {
   product: Product | null
@@ -149,7 +151,6 @@ export function ProductDialog({
 
       const url = product ? `/api/products/${product.id}` : "/api/products"
       const method = product ? "PUT" : "POST"
-      
       console.log("Submitting to:", url, "Method:", method)
 
       const response = await fetch(url, {
@@ -232,54 +233,63 @@ export function ProductDialog({
           </div>
 
           <div className="grid grid-cols-3 gap-4">
-            <Input
-              type="number"
-              placeholder="Price"
-              value={formData.price}
-              onChange={(e) =>
-                setFormData({ ...formData, price: e.target.value })
-              }
-              required
-            />
-            <Input
-              type="number"
-              placeholder="Compare Price"
-              value={formData.compare_at_price}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  compare_at_price: e.target.value,
-                })
-              }
-            />
-            <Input
-              type="number"
-              placeholder="Stock"
-              value={formData.stock}
-              onChange={(e) =>
-                setFormData({ ...formData, stock: e.target.value })
-              }
-              required
-            />
+            <div className="space-y-2">
+              <Label>Price</Label>
+              <Input
+                type="number"
+                value={formData.price}
+                onChange={(e) =>
+                  setFormData({ ...formData, price: e.target.value })
+                }
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Compare At Price</Label>
+              <Input
+                type="number"
+                value={formData.compare_at_price}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    compare_at_price: e.target.value,
+                  })
+                }
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Stock</Label>
+              <Input
+                type="number"
+                value={formData.stock}
+                onChange={(e) =>
+                  setFormData({ ...formData, stock: e.target.value })
+                }
+                required
+              />
+            </div>
           </div>
 
-          <Select
-            value={formData.category_id}
-            onValueChange={(value) =>
-              setFormData({ ...formData, category_id: value })
-            }
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Select category" />
-            </SelectTrigger>
-            <SelectContent>
-              {categories.map((c) => (
-                <SelectItem key={c.id} value={c.id}>
-                  {c.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <div className="space-y-2">
+            <Label>Category</Label>
+            <Select
+              value={formData.category_id}
+              onValueChange={(value) =>
+                setFormData({ ...formData, category_id: value })
+              }
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select category" />
+              </SelectTrigger>
+              <SelectContent>
+                {categories.map((c) => (
+                  <SelectItem key={c.id} value={c.id}>
+                    {c.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
 
           {/* ✅ MULTIPLE IMAGE INPUT */}
           <div className="space-y-2">
@@ -309,7 +319,7 @@ export function ProductDialog({
                 {existingImages.map((imgUrl, index) => (
                   <div key={index} className="relative group">
                     <img
-                      src={`/images/${imgUrl}`}
+                      src={sizedImage(imgUrl, 400)}
                       alt={`Existing ${index}`}
                       className="w-full h-20 object-cover rounded-md border"
                     />
@@ -326,7 +336,7 @@ export function ProductDialog({
                       </button>
                     </div>
                     {index === 0 && (
-                      <div className="absolute top-1 left-1 bg-blue-500 text-white text-xs px-2 py-1 rounded">
+                      <div className="absolute top-1 left-1 bg-blue-500 text-white text-xs px-2 py-1 rounded-sm">
                         Main
                       </div>
                     )}
@@ -345,11 +355,13 @@ export function ProductDialog({
               <Label>New Images to Upload</Label>
               <div className="grid grid-cols-4 gap-2">
                 {formData.image_files.map((file, index) => (
-                  <div key={index} className="relative group">
-                    <img
+                  <div key={index} className="relative group w-full h-20 overflow-hidden rounded-md border">
+                    <Image
                       src={URL.createObjectURL(file)}
                       alt={`Preview ${index}`}
-                      className="w-full h-20 object-cover rounded-md border"
+                      fill
+                      style={{ objectFit: "cover" }}
+                      className="rounded-md"
                     />
                     <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 rounded-md flex items-center justify-center transition-opacity">
                       <button
@@ -396,8 +408,8 @@ export function ProductDialog({
               {loading
                 ? "Saving..."
                 : product
-                ? "Update Product"
-                : "Create Product"}
+                  ? "Update Product"
+                  : "Create Product"}
             </Button>
           </DialogFooter>
         </form>

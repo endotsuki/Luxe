@@ -74,7 +74,7 @@ export function SearchBar() {
           className="flex-1 rounded-lg border-gray-300 dark:border-gray-500/50 focus:ring-2  transition-all"
         />
         <Button
-          className="p-2 rounded-lg bg-primary hover:bg-primary-dark text-white shadow-md transition-colors"
+          variant={"outline"}
           aria-label="Search"
         >
           <IconSearch className="h-5 w-5" />

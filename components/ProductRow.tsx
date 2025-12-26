@@ -7,6 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import type { Product } from "@/lib/types";
 import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
+import { sizedImage } from "@/lib/utils";
 
 interface ProductRowProps {
   title: string;
@@ -63,7 +64,7 @@ export function ProductRow({ title, products }: ProductRowProps) {
                     <Image
                       src={
                         product.image_url
-                          ? `/images/${encodeURIComponent(product.image_url)}`
+                          ? sizedImage(product.image_url, 400)
                           : "/placeholder.svg"
                       }
                       alt={product.name}
