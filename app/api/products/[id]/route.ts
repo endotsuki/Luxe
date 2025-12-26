@@ -45,21 +45,41 @@ export async function PUT(
       const uploadDir = path.join(process.cwd(), "public", "images")
       if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true })
 
-      // Process all images
+      // Process all images and create resized versions
       for (let i = 0; i < images.length; i++) {
         const image = images[i];
         const buffer = Buffer.from(await image.arrayBuffer())
-        // Convert to WebP
-        const webpBuffer = await sharp(buffer).webp({ quality: 80 }).toBuffer()
 
-        const fileName = `${randomUUID()}.webp`
-        fs.writeFileSync(path.join(uploadDir, fileName), webpBuffer)
+        const id = randomUUID()
+        const originalName = `${id}.webp`
+        const name1080 = `${id}_1080.webp`
+        const name400 = `${id}_400.webp`
+        const name48 = `${id}_48.webp`
 
-        // First image is main image
+        // Save original as WebP
+        await sharp(buffer).webp({ quality: 80 }).toFile(path.join(uploadDir, originalName))
+
+        // Create resized square versions
+        await sharp(buffer)
+          .resize(1080, 1080, { fit: "cover", position: "centre", withoutEnlargement: true })
+          .webp({ quality: 80 })
+          .toFile(path.join(uploadDir, name1080))
+
+        await sharp(buffer)
+          .resize(400, 400, { fit: "cover", position: "centre", withoutEnlargement: true })
+          .webp({ quality: 80 })
+          .toFile(path.join(uploadDir, name400))
+
+        await sharp(buffer)
+          .resize(48, 48, { fit: "cover", position: "centre", withoutEnlargement: true })
+          .webp({ quality: 80 })
+          .toFile(path.join(uploadDir, name48))
+
+        // Use 1080 version for DB references
         if (i === 0) {
-          updateData.image_url = fileName
+          updateData.image_url = name1080
         } else {
-          additionalImages.push(fileName)
+          additionalImages.push(name1080)
         }
       }
 

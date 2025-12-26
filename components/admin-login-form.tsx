@@ -16,6 +16,7 @@ export function AdminLoginForm() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [loading, setLoading] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
 
   const router = useRouter()
   const { toast } = useToast()
@@ -78,13 +79,25 @@ export function AdminLoginForm() {
 
             <div className="grid gap-2">
               <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
+              <div className="relative">
+                <Input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="pr-10"
+                />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-0 top-1/2 -translate-y-1/2 h-full px-3"
+                >
+                  {showPassword ? "Hide" : "Show"}
+                </Button>
+              </div>
             </div>
 
             <Button type="submit" className="w-full" disabled={loading}>
@@ -94,7 +107,7 @@ export function AdminLoginForm() {
         </form>
 
         <div className="mt-4 text-xs text-muted-foreground text-center">
-          Demo: admin@gmail.com / 12345678
+          This admin panel is protected. Only authorized personnel are allowed to access.
         </div>
       </CardContent>
     </Card>

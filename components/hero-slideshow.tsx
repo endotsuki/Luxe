@@ -105,7 +105,7 @@ export function HeroSlideshow({ products }: HeroSlideshowProps) {
                 src={product.image_url || "/placeholder.svg?height=700&width=1920"}
                 alt={product.name}
                 fill
-                className="object-cover"
+                style={{ objectFit: "cover" }}
                 priority={index === 0}
               />
               <div className="absolute inset-0 bg-linear-to-r from-black/70 via-black/50 to-transparent" />

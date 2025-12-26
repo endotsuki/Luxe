@@ -6,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { createClient } from "@/lib/supabase/server"
 import type { Category } from "@/lib/types"
 import { Metadata } from "next"
+import { sizedImage } from "@/lib/utils"
 
 
 export const metadata: Metadata = {
@@ -34,10 +35,13 @@ export default async function CategoriesPage() {
                   <CardContent className="p-0">
                     <div className="relative aspect-4/3 overflow-hidden">
                       <Image
-                        src={category.image_url || "/placeholder.svg?height=400&width=600"}
+                        src={category.image_url ? sizedImage(category.image_url, 400) : "/placeholder.svg"}
                         alt={category.name}
                         fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-300"
+                        priority
+                        loading="eager"
+                        style={{ objectFit: "cover" }}
+                        className="group-hover:scale-105 transition-transform duration-300"
                       />
                       <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent flex items-end p-6">
                         <div>

@@ -3,23 +3,12 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { IconShoppingBag } from "@tabler/icons-react";
 import type { CartItem } from "@/lib/types";
+import { sizedImage } from "@/lib/utils";
 
 interface OrderSummaryCardProps {
   cartItems: CartItem[];
   total: number;
 }
-
-const normalizeImageSrc = (url?: string) => {
-  if (!url) return "/placeholder.svg";
-  const path = url.split("?")[0];
-  if (
-    path.startsWith("http://") ||
-    path.startsWith("https://") ||
-    path.startsWith("//")
-  )
-    return path;
-  return path.startsWith("/") ? path : `/images/${path}`;
-};
 
 export function OrderSummaryCard({ cartItems, total }: OrderSummaryCardProps) {
   return (
@@ -38,10 +27,14 @@ export function OrderSummaryCard({ cartItems, total }: OrderSummaryCardProps) {
             >
               <div className="relative w-24 h-24 rounded-xl overflow-hidden bg-muted shrink-0 border">
                 <Image
-                  src={normalizeImageSrc(item.product?.image_url)}
+                  src={
+                    item.product?.image_url
+                      ? sizedImage(item.product.image_url, 400)
+                      : "/placeholder.svg"
+                  }
                   alt={item.product?.name || "Product"}
                   fill
-                  className="object-cover"
+                  style={{ objectFit: "cover" }}
                 />
               </div>
               <div className="flex-1 min-w-0">

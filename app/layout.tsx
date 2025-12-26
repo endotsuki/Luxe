@@ -10,6 +10,7 @@ const _geist = Geist({ subsets: ["latin"] })
 const _geistMono = Geist_Mono({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://luxe-roan-three.vercel.app"),
   title: "LuxeAccessories - Premium Watches, Jewelry & More",
   description:
     "Discover our curated collection of premium accessories including watches, jewelry, bags, and sunglasses. Shop the finest quality products with style.",

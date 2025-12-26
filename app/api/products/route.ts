@@ -19,23 +19,42 @@ export async function POST(request: Request) {
       if (!fs.existsSync(uploadDir))
         fs.mkdirSync(uploadDir, { recursive: true });
 
-      // Process all images
+      // Process all images and create resized versions
       for (let i = 0; i < images.length; i++) {
         const image = images[i];
         const bytes = await image.arrayBuffer();
         const buffer = Buffer.from(bytes);
-        
-        // Convert to WebP
-        const webpBuffer = await sharp(buffer).webp({ quality: 80 }).toBuffer();
-        
-        const fileName = `${randomUUID()}.webp`;
-        fs.writeFileSync(path.join(uploadDir, fileName), webpBuffer);
 
-        // First image is main image
+        const id = randomUUID();
+        const originalName = `${id}.webp`;
+        const name1080 = `${id}_1080.webp`;
+        const name400 = `${id}_400.webp`;
+        const name48 = `${id}_48.webp`;
+
+        // Save original as WebP
+        await sharp(buffer).webp({ quality: 80 }).toFile(path.join(uploadDir, originalName));
+
+        // Create square resized versions (center-crop)
+        await sharp(buffer)
+          .resize(1080, 1080, { fit: "cover", position: "centre", withoutEnlargement: true })
+          .webp({ quality: 80 })
+          .toFile(path.join(uploadDir, name1080));
+
+        await sharp(buffer)
+          .resize(400, 400, { fit: "cover", position: "centre", withoutEnlargement: true })
+          .webp({ quality: 80 })
+          .toFile(path.join(uploadDir, name400));
+
+        await sharp(buffer)
+          .resize(48, 48, { fit: "cover", position: "centre", withoutEnlargement: true })
+          .webp({ quality: 80 })
+          .toFile(path.join(uploadDir, name48));
+
+        // Store the 1080 version filename in DB references (main and additional)
         if (i === 0) {
-          imageName = fileName;
+          imageName = name1080;
         } else {
-          additionalImages.push(fileName);
+          additionalImages.push(name1080);
         }
       }
     }

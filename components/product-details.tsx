@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation"
 import { IconHeart, IconMinus, IconPlus, IconShare, IconShoppingCart, IconStar, IconChevronLeft, IconChevronRight } from "@tabler/icons-react"
 import { ShareModal } from "./ShareModal"
 import { ProductRow } from "@/components/ProductRow"
+import { sizedImage } from "@/lib/utils"
 
 interface ProductDetailsProps {
   product: Product & { category?: { name: string; id: string; slug: string } }
@@ -86,13 +87,14 @@ export function ProductDetails({ product }: ProductDetailsProps) {
         <div className="space-y-4">
           <Card className="overflow-hidden h-2xl w-2xl shadow-lg rounded-4xl">
             <CardContent className="p-0">
-              <div className="relative aspect-square bg-muted">
+                <div className="relative aspect-square bg-muted">
                 <Image
-                  src={images[selectedImage] ? `/images/${encodeURIComponent(images[selectedImage])}` : "/placeholder.svg"}
+                  src={images[selectedImage] ? sizedImage(images[selectedImage], 1080) : "/placeholder.svg"}
                   alt={product.name}
                   fill
                   priority
-                  className="object-cover rounded-4xl"
+                  style={{ objectFit: "cover" }}
+                  className="rounded-4xl"
                 />
               </div>
             </CardContent>
@@ -123,10 +125,11 @@ export function ProductDetails({ product }: ProductDetailsProps) {
                     className={`relative min-w-28 w-16 aspect-square rounded-3xl overflow-hidden border-2 transition-colors ${selectedImage === i ? 'border-primary' : 'border-transparent hover:border-border'}`}
                   >
                     <Image
-                      src={img ? `/images/${encodeURIComponent(img)}` : "/placeholder.svg"}
+                      src={img ? sizedImage(img, 400) : "/placeholder.svg"}
                       alt={product.name}
                       fill
-                      className="object-cover rounded-xl"
+                      style={{ objectFit: "cover" }}
+                      className="rounded-xl"
                     />
                   </button>
                 ))}

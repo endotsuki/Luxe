@@ -5,6 +5,7 @@ import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { useToast } from "@/hooks/use-toast"
+import { sizedImage } from "@/lib/utils"
 
 export default function OrderInline({ orderId }: { orderId: string }) {
   const [order, setOrder] = useState<any>(null)
@@ -74,7 +75,7 @@ export default function OrderInline({ orderId }: { orderId: string }) {
                 <li key={it.id} className="flex items-center gap-4 p-3">
                   <div className="h-16 w-16 relative rounded overflow-hidden bg-muted">
                     {it.product?.image_url ? (
-                      <Image src={it.product.image_url} alt={it.product?.name} fill className="object-cover" />
+                      <Image src={sizedImage(it.product.image_url, 48)} alt={it.product?.name} fill style={{ objectFit: "cover" }} />
                     ) : null}
                   </div>
                   <div className="flex-1">
