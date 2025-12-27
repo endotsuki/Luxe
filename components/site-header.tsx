@@ -140,7 +140,7 @@ export function SiteHeader({ cartCount = 0 }: SiteHeaderProps) {
                   <IconMenuDeep className="h-5 w-5" />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="right" className="w-72 sm:w-[320px]">
+              <SheetContent side="right" className="w-72 sm:w-[320px] p-6">
                 <VisuallyHidden>
                   <SheetTitle>Menu</SheetTitle>
                 </VisuallyHidden>

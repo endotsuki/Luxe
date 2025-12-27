@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
-import { IconSearch } from "@tabler/icons-react"
+import { IconSearch, IconShoppingCartOff } from "@tabler/icons-react"
 
 interface Product {
   id: string
@@ -89,7 +89,7 @@ export function SearchBar() {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="absolute z-50 mt-1 w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg rounded-md overflow-hidden"
+            className="absolute z-50 mt-2 w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg rounded-md overflow-hidden"
           >
             {loading && (
               <div className="p-2 text-gray-500 dark:text-gray-400 text-sm">
@@ -123,8 +123,9 @@ export function SearchBar() {
             )}
 
             {!loading && results.length === 0 && (
-              <div className="p-2 text-gray-500 dark:text-gray-400 text-sm">
-                No products found
+              <div className="flex flex-col items-center justify-center p-2 text-center text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
+                <IconShoppingCartOff className="h-12 w-12 mb-4 text-gray-400 dark:text-gray-500" />
+                <h3 className="text-lg font-semibold mb-1">No products found</h3>
               </div>
             )}
           </motion.div>

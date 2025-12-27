@@ -43,6 +43,7 @@ export function ProductsTable({ products }: ProductsTableProps) {
   const router = useRouter();
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isPreviewMode, setIsPreviewMode] = useState(false);
   const [isDeleting, setIsDeleting] = useState<string | null>(null);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [productToDelete, setProductToDelete] = useState<Product | null>(null);
@@ -60,11 +61,19 @@ export function ProductsTable({ products }: ProductsTableProps) {
 
   const handleAddProduct = () => {
     setSelectedProduct(null);
+    setIsPreviewMode(false);
     setIsDialogOpen(true);
   };
 
   const handleEditProduct = (product: Product) => {
     setSelectedProduct(product);
+    setIsPreviewMode(false);
+    setIsDialogOpen(true);
+  };
+
+  const handlePreviewProduct = (product: Product) => {
+    setSelectedProduct(product);
+    setIsPreviewMode(true);
     setIsDialogOpen(true);
   };
 
@@ -138,7 +147,10 @@ export function ProductsTable({ products }: ProductsTableProps) {
               {paginatedProducts.map((product) => (
                   <TableRow key={product.id}>
                     <TableCell>
-                      <div className="flex items-center gap-3">
+                      <div 
+                        className="flex items-center gap-3 cursor-pointer hover:opacity-75 transition-opacity"
+                        onClick={() => handlePreviewProduct(product)}
+                      >
                         <div className="relative h-12 w-12 rounded-md overflow-hidden bg-muted">
                           <Image
                             src={
@@ -281,6 +293,7 @@ export function ProductsTable({ products }: ProductsTableProps) {
         product={selectedProduct}
         open={isDialogOpen}
         onOpenChange={handleDialogClose}
+        isPreviewMode={isPreviewMode}
       />
 
       <Dialog open={deleteConfirmOpen} onOpenChange={setDeleteConfirmOpen}>

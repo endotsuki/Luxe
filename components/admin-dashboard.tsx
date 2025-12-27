@@ -9,7 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { OrdersTable } from "@/components/orders-table"
 import { ProductsTable } from "@/components/products-table"
 import type { Order, Product } from "@/lib/types"
-import { IconBuildingStore, IconLogout, IconPackage, IconShoppingBag, IconTrendingUp, IconUsers, IconSun, IconMoon } from "@tabler/icons-react"
+import { IconShoppingCart, IconLogout, IconPackage, IconShoppingBag, IconTrendingUp, IconUsers, IconSun, IconMoon } from "@tabler/icons-react"
 
 interface AdminDashboardProps {
   orders: Order[]
@@ -71,7 +71,7 @@ export function AdminDashboard({ orders, products, totalOrders, totalProducts }:
               onClick={() => router.push("/")}
               disabled={loading}
             >
-              <IconBuildingStore className="h-4 w-4 sm:mr-1" />
+              <IconShoppingCart className="h-4 w-4 sm:mr-1" />
               <span className="hidden sm:inline">Store</span>
             </Button>
 

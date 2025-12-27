@@ -32,12 +32,14 @@ interface ProductDialogProps {
   product: Product | null
   open: boolean
   onOpenChange: (open: boolean) => void
+  isPreviewMode?: boolean
 }
 
 export function ProductDialog({
   product,
   open,
   onOpenChange,
+  isPreviewMode = false,
 }: ProductDialogProps) {
   const [loading, setLoading] = useState(false)
   const [categories, setCategories] = useState<
@@ -204,6 +206,7 @@ export function ProductDialog({
               <Input
                 value={formData.name}
                 onChange={(e) => handleNameChange(e.target.value)}
+                disabled={isPreviewMode}
                 required
               />
             </div>
@@ -212,6 +215,7 @@ export function ProductDialog({
               <Label>Slug</Label>
               <Input
                 value={formData.slug}
+                disabled={isPreviewMode}
                 readOnly
                 onChange={(e) =>
                   setFormData({ ...formData, slug: e.target.value })
@@ -228,6 +232,7 @@ export function ProductDialog({
               onChange={(e) =>
                 setFormData({ ...formData, description: e.target.value })
               }
+              disabled={isPreviewMode}
               rows={3}
             />
           </div>
@@ -241,6 +246,7 @@ export function ProductDialog({
                 onChange={(e) =>
                   setFormData({ ...formData, price: e.target.value })
                 }
+                disabled={isPreviewMode}
                 required
               />
             </div>
@@ -255,6 +261,7 @@ export function ProductDialog({
                     compare_at_price: e.target.value,
                   })
                 }
+                disabled={isPreviewMode}
               />
             </div>
             <div className="space-y-2">
@@ -265,6 +272,7 @@ export function ProductDialog({
                 onChange={(e) =>
                   setFormData({ ...formData, stock: e.target.value })
                 }
+                disabled={isPreviewMode}
                 required
               />
             </div>
@@ -277,6 +285,7 @@ export function ProductDialog({
               onValueChange={(value) =>
                 setFormData({ ...formData, category_id: value })
               }
+              disabled={isPreviewMode}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Select category" />
@@ -298,6 +307,7 @@ export function ProductDialog({
               type="file"
               accept="image/*"
               multiple
+              disabled={isPreviewMode}
               onChange={(e) => {
                 const files = Array.from(e.target.files || [])
                 setFormData({
@@ -392,6 +402,7 @@ export function ProductDialog({
               onCheckedChange={(checked) =>
                 setFormData({ ...formData, is_active: checked })
               }
+              disabled={isPreviewMode}
             />
             <Label>Active</Label>
           </div>
@@ -402,15 +413,17 @@ export function ProductDialog({
               variant="outline"
               onClick={() => onOpenChange(false)}
             >
-              Cancel
+              {isPreviewMode ? "Close" : "Cancel"}
             </Button>
-            <Button type="submit" disabled={loading}>
-              {loading
-                ? "Saving..."
-                : product
-                  ? "Update Product"
-                  : "Create Product"}
-            </Button>
+            {!isPreviewMode && (
+              <Button type="submit" disabled={loading}>
+                {loading
+                  ? "Saving..."
+                  : product
+                    ? "Update Product"
+                    : "Create Product"}
+              </Button>
+            )}
           </DialogFooter>
         </form>
       </DialogContent>
