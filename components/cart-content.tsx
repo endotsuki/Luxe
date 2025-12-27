@@ -46,25 +46,27 @@ export function CartContent() {
   }
 
   const updateQuantity = async (id: string, quantity: number) => {
+    // Update state immediately
+    setCartItems((prev) =>
+      prev.map((item) =>
+        item.id === id ? { ...item, quantity } : item
+      )
+    );
+
+    // Then update server in background
     try {
       const response = await fetch("/api/cart", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id, quantity }),
-      })
-
-      if (!response.ok) throw new Error("Failed to update quantity")
-
-      fetchCart()
+      });
+      if (!response.ok) throw new Error("Failed to update quantity");
     } catch (error) {
-      console.error("Failed to update quantity:", error)
-      toast({
-        title: "Error",
-        description: "Failed to update quantity",
-        variant: "destructive",
-      })
+      console.error(error);
+      // optionally revert or show toast
     }
-  }
+  };
+
 
   const removeItem = async (id: string) => {
     try {
@@ -142,23 +144,51 @@ export function CartContent() {
                       <Button
                         variant="ghost"
                         size="icon"
-                        onClick={() => updateQuantity(item.id, Math.max(1, item.quantity - 1))}
+                        onClick={() => {
+                          // Optimistically update quantity
+                          setCartItems((prev) =>
+                            prev.map((i) =>
+                              i.id === item.id
+                                ? { ...i, quantity: Math.max(1, i.quantity - 1) }
+                                : i
+                            )
+                          );
+                          // Then update server in background
+                          updateQuantity(item.id, Math.max(1, item.quantity - 1));
+                        }}
                         disabled={item.quantity <= 1}
                       >
                         <IconMinus className="h-4 w-4" />
                       </Button>
+
                       <span className="px-4 py-2 min-w-12 text-center">{item.quantity}</span>
+
                       <Button
                         variant="ghost"
                         size="icon"
-                        onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                        onClick={() => {
+                          // Optimistically update quantity
+                          setCartItems((prev) =>
+                            prev.map((i) =>
+                              i.id === item.id
+                                ? { ...i, quantity: i.quantity + 1 }
+                                : i
+                            )
+                          );
+                          // Then update server in background
+                          updateQuantity(item.id, item.quantity + 1);
+                        }}
                         disabled={item.quantity >= (item.product?.stock || 0)}
                       >
                         <IconPlus className="h-4 w-4" />
                       </Button>
                     </div>
-                    <h6 className="font-semibold">${((item.product?.price || 0) * item.quantity).toFixed(2)}</h6>
+
+                    <h6 className="font-semibold">
+                      ${((item.product?.price || 0) * item.quantity).toFixed(2)}
+                    </h6>
                   </div>
+
                 </div>
               </div>
             </CardContent>
