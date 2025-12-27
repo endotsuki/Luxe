@@ -8,7 +8,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge"
 import { createClient } from "@/lib/supabase/server"
 import { format } from "date-fns"
-import { IconArrowLeft, IconAlertCircle } from "@tabler/icons-react"
+import { IconArrowLeft, IconAlertCircle, IconCheck } from "@tabler/icons-react"
 import OrderActions from "../../../components/order-actions"
 import SetRecentOrder from "../../../components/set-recent-order"
 
@@ -100,11 +100,15 @@ export default async function OrderTrackingPage({ params }: { params: Promise<{ 
                   <div key={step} className="flex items-center gap-4">
                     <div
                       className={`h-10 w-10 rounded-full flex items-center justify-center font-semibold ${index <= currentStepIndex
-                          ? "bg-primary text-primary-foreground"
-                          : "bg-muted text-muted-foreground"
+                        ? "bg-green-500 text-white"
+                        : "bg-muted text-muted-foreground"
                         }`}
                     >
-                      {index + 1}
+                      {index <= currentStepIndex ? (
+                        <IconCheck className="h-5 w-5" />
+                      ) : (
+                        <span>{index + 1}</span>
+                      )}
                     </div>
                     <div className="flex-1">
                       <p className="font-medium">{step.charAt(0).toUpperCase() + step.slice(1)}</p>
