@@ -4,8 +4,10 @@ import { useState, useEffect, useRef } from "react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import Image from "next/image"
 import { motion, AnimatePresence } from "framer-motion"
-import { IconSearch, IconShoppingCartOff } from "@tabler/icons-react"
+import { IconArrowUpRight, IconSearch, IconShoppingCartOff } from "@tabler/icons-react"
+import { sizedImage } from "@/lib/utils"
 
 interface Product {
   id: string
@@ -89,7 +91,7 @@ export function SearchBar() {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="absolute z-50 mt-2 w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg rounded-md overflow-hidden"
+            className="absolute z-50 mt-2 w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg rounded-lg overflow-hidden"
           >
             {loading && (
               <div className="p-2 text-gray-500 dark:text-gray-400 text-sm">
@@ -105,19 +107,25 @@ export function SearchBar() {
                   className="flex items-center gap-3 p-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                   onClick={() => setOpen(false)}
                 >
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    className="w-12 h-12 object-cover rounded"
-                  />
-                  <div>
-                    <p className="text-sm font-medium text-gray-800 dark:text-gray-100">
-                      {product.name}
-                    </p>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
-                      ${product.price.toFixed(2)}
-                    </p>
+                  <div className="relative w-12 h-12 rounded overflow-hidden bg-muted">
+                    <Image
+                      src={product.image ? sizedImage(product.image, 48) : "/placeholder.svg"}
+                      alt={product.name}
+                      width={48}
+                      height={48}
+                      className="object-cover"
+                      loading="eager"
+                    />
                   </div>
+                  <div>
+                    <h6 className="text-sm font-medium text-gray-800 dark:text-gray-100">
+                      {product.name}
+                    </h6>
+                    <h6 className="text-sm text-gray-500 dark:text-gray-400">
+                      ${product.price.toFixed(2)}
+                    </h6>
+                  </div>
+                  <IconArrowUpRight className="ml-auto h-5 w-5 text-gray-400" />
                 </Link>
               ))
             )}
