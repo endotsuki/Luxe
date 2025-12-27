@@ -23,6 +23,7 @@ import {
 } from '@/components/animate-ui/primitives/radix/dialog';
 import { cn } from '@/lib/utils';
 import { IconX } from '@tabler/icons-react';
+import { Button } from './button';
 
 type DialogProps = DialogPrimitiveProps;
 
@@ -76,8 +77,10 @@ function DialogContent({
         {children}
         {showCloseButton && (
           <DialogClosePrimitive className="data-[state=open]:bg-accent data-[state=open]:text-muted-foreground absolute top-4 right-4 rounded-xs opacity-70 transition-opacity hover:opacity-100 disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4">
-            <IconX />
-            <span className="sr-only">Close</span>
+            <Button variant="destructive" className="p-0" size="icon">
+              <IconX />
+              <span className="sr-only">Close</span>
+            </Button>
           </DialogClosePrimitive>
         )}
       </DialogContentPrimitive>
