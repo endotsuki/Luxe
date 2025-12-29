@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import type { Product } from "@/lib/types"
 import { IconArrowNarrowRight, IconChevronLeft, IconChevronRight } from "@tabler/icons-react"
+import { sizedImage } from "@/lib/utils"
 
 interface HeroSlideshowProps {
   products: Product[]
@@ -14,6 +15,13 @@ interface HeroSlideshowProps {
 
 export function HeroSlideshow({ products }: HeroSlideshowProps) {
   const [currentSlide, setCurrentSlide] = useState(0)
+
+  // Debug: Log products to verify unique slugs
+  useEffect(() => {
+    if (products.length > 0) {
+      console.log("Hero slideshow products:", products.map((p: any) => ({ name: p.name, slug: p.slug })))
+    }
+  }, [products])
 
   const defaultSlides = [
     {
@@ -95,14 +103,17 @@ export function HeroSlideshow({ products }: HeroSlideshowProps) {
         {displayProducts.map((product: any, index: number) => (
           <div
             key={product.id}
-            className={`absolute inset-0 transition-opacity duration-1000 ${
-              index === currentSlide ? "opacity-100" : "opacity-0"
-            }`}
+            className={`absolute inset-0 transition-opacity duration-1000 ${index === currentSlide ? "opacity-100" : "opacity-0"
+              }`}
           >
             {/* Background Image with Overlay */}
             <div className="absolute inset-0">
               <Image
-                src={product.image_url || "/placeholder.svg?height=700&width=1920"}
+                src={
+                  product.image_url
+                    ? sizedImage(product.image_url, 1080)
+                    : "/placeholder.svg"
+                }
                 alt={product.name}
                 fill
                 style={{ objectFit: "cover" }}
@@ -128,7 +139,10 @@ export function HeroSlideshow({ products }: HeroSlideshowProps) {
                   </div>
                   <div className="flex flex-col sm:flex-row gap-4">
                     <Button size="lg" asChild className="bg-white text-black hover:bg-white/90">
-                      <Link href={`/products/${product.slug}`}>
+                      <Link 
+                        href={`/products/${product.slug}`}
+                        onClick={() => console.log(`Clicked: ${product.name} (${product.slug}) - currentSlide: ${currentSlide}`)}
+                      >
                         View Details <IconArrowNarrowRight className="ml-2 h-4 w-4" />
                       </Link>
                     </Button>
@@ -170,9 +184,8 @@ export function HeroSlideshow({ products }: HeroSlideshowProps) {
           <button
             key={index}
             onClick={() => goToSlide(index)}
-            className={`h-2 rounded-full transition-all ${
-              index === currentSlide ? "w-8 bg-white" : "w-2 bg-white/50 hover:bg-white/75"
-            }`}
+            className={`h-2 rounded-full transition-all ${index === currentSlide ? "w-8 bg-white" : "w-2 bg-white/50 hover:bg-white/75"
+              }`}
             aria-label={`Go to slide ${index + 1}`}
           />
         ))}

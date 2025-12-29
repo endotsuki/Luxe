@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -34,6 +34,7 @@ import type { Product } from "@/lib/types";
 import { useRouter } from "next/navigation";
 import { sizedImage } from "@/lib/utils";
 import { IconArrowUpRight, IconPencil, IconCategoryPlus, IconTrash } from "@tabler/icons-react";
+import { IconPhoto } from "@tabler/icons-react";
 
 interface ProductsTableProps {
   products: Product[];
@@ -48,6 +49,7 @@ export function ProductsTable({ products }: ProductsTableProps) {
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [productToDelete, setProductToDelete] = useState<Product | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [slideshowIds, setSlideshowIds] = useState<Record<string, boolean>>({});
 
   const itemsPerPage = 10;
   const sortedProducts = [...products].sort(
@@ -82,6 +84,75 @@ export function ProductsTable({ products }: ProductsTableProps) {
     if (product) {
       setProductToDelete(product);
       setDeleteConfirmOpen(true);
+    }
+  };
+
+  // Load slideshow membership to show toggle state
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      try {
+        const res = await fetch(`/api/admin/slideshow`);
+        if (!res.ok) {
+          const err = await res.text().catch(() => null);
+          console.error("Failed loading slideshow membership:", res.status, err);
+          return;
+        }
+        const json = await res.json();
+        const ids = (json.products || []).map((p: any) => p.id);
+        if (mounted) {
+          const map: Record<string, boolean> = {};
+          ids.forEach((id: string) => (map[id] = true));
+          setSlideshowIds(map);
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    })();
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  const addToSlideshow = async (productId: string) => {
+    try {
+      const res = await fetch(`/api/admin/slideshow`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ productId }),
+      });
+      if (res.ok) {
+        setSlideshowIds((s) => ({ ...s, [productId]: true }));
+      } else {
+        const body = await res.json().catch(() => null);
+        console.error("Add to slideshow failed:", res.status, body);
+        alert(body?.error || body?.message || "Failed to add to slideshow");
+      }
+    } catch (e) {
+      console.error(e);
+      alert("Failed to add to slideshow");
+    }
+  };
+
+  const removeFromSlideshow = async (productId: string) => {
+    try {
+      const res = await fetch(`/api/admin/slideshow?productId=${encodeURIComponent(productId)}`, {
+        method: "DELETE",
+      });
+      if (res.ok) {
+        setSlideshowIds((s) => {
+          const copy = { ...s };
+          delete copy[productId];
+          return copy;
+        });
+      } else {
+        const body = await res.json().catch(() => null);
+        console.error("Remove from slideshow failed:", res.status, body);
+        alert(body?.error || body?.message || "Failed to remove from slideshow");
+      }
+    } catch (e) {
+      console.error(e);
+      alert("Failed to remove from slideshow");
     }
   };
 
@@ -224,6 +295,18 @@ export function ProductsTable({ products }: ProductsTableProps) {
                           className="w-9 h-9"
                         >
                           <IconPencil stroke={1.5} className="h-5 w-5" />
+                        </Button>
+                        <Button
+                          variant={slideshowIds[product.id] ? "secondary" : "outline"}
+                          size="sm"
+                          onClick={() => {
+                            if (slideshowIds[product.id]) removeFromSlideshow(product.id);
+                            else addToSlideshow(product.id);
+                          }}
+                          className="w-9 h-9"
+                          aria-label={slideshowIds[product.id] ? "Remove from slideshow" : "Add to slideshow"}
+                        >
+                          <IconPhoto stroke={1.5} className="h-5 w-5" />
                         </Button>
                         <Button
                           variant="destructive"
