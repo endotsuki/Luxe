@@ -18,28 +18,23 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     }
   }
 
-  let productImageUrl = `${process.env.NEXT_PUBLIC_SITE_URL || "https://luxe-roan-three.vercel.app"}/icon.png`
+  // let productImageUrl = `${process.env.NEXT_PUBLIC_SITE_URL || "https://luxe-roan-three.vercel.app"}/icon.png`
+  let productImageUrl: string;
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://luxe-roan-three.vercel.app"
 
-  if (product.image_url && !product.image_url.includes("placeholder")) {
-    // Images may be stored externally (full URL) or locally in /public/images
-    if (product.image_url.startsWith("http") || product.image_url.startsWith("https")) {
-      productImageUrl = product.image_url
-    } else {
-      // Prefer the _1080 variant when available, otherwise fall back to the original file
-      const image1080 = product.image_url.replace(/(_1080|_400|_48)?\.webp$/, "_1080.webp")
-      const publicPath1080 = path.join(process.cwd(), "public", "images", image1080)
-      const publicPathOriginal = path.join(process.cwd(), "public", "images", product.image_url)
+  // In your generateMetadata function, simplify the logic:
 
-      if (fs.existsSync(publicPath1080)) {
-        productImageUrl = `${siteUrl}/images/${image1080}`
-      } else if (fs.existsSync(publicPathOriginal)) {
-        productImageUrl = `${siteUrl}/images/${product.image_url}`
-      } else {
-        // last resort: use the original value (it may be served from external storage)
-        productImageUrl = `${siteUrl}/images/${image1080}`
-      }
+  if (product.image_url && !product.image_url.includes("placeholder")) {
+    if (product.image_url.startsWith("http")) {
+      // External URL
+      productImageUrl = product.image_url;
+    } else {
+      // Local image - use the _1080 variant
+      const imageName = product.image_url.replace(/(_1080|_400|_48)?\.webp$/, "_1080.webp");
+      productImageUrl = `${siteUrl}/images/${imageName}`;
     }
+  } else {
+    productImageUrl = `${siteUrl}/icon.png`;
   }
 
   const fallbackImage = `${siteUrl}/icon.png`
@@ -50,29 +45,23 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     openGraph: {
       title: product.name,
       description: product.description || `Shop ${product.name} at LuxeAccessories`,
-      url: `${process.env.NEXT_PUBLIC_SITE_URL || "https://luxe-roan-three.vercel.app"}/products/${slug}`,
+      url: `${siteUrl}/products/${slug}`,
       type: "website",
       images: [
         {
           url: productImageUrl,
           width: 1200,
-          height: 1200,
+          height: 630, // Changed from 1200 - better aspect ratio for OG
           alt: product.name,
-          type: "image/webp",
-        },
-        {
-          url: fallbackImage,
-          width: 1200,
-          height: 630,
-          alt: "LuxeAccessories Logo",
+          // Remove type: "image/webp" - let the platform detect it
         },
       ],
     },
     twitter: {
-      card: "summary",
+      card: "summary_large_image", // Changed from "summary" for better image display
       title: product.name,
       description: product.description || `Shop ${product.name} at LuxeAccessories`,
-      images: [productImageUrl, fallbackImage],
+      images: [productImageUrl],
     },
   }
 }
