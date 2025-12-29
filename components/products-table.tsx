@@ -12,7 +12,7 @@ import { ProductDialog } from "@/components/product-dialog";
 import type { Product } from "@/lib/types";
 import { useRouter } from "next/navigation";
 import { sizedImage } from "@/lib/utils";
-import { IconArrowUpRight, IconPencil, IconCategoryPlus, IconTrash, IconPhoto } from "@tabler/icons-react";
+import { IconArrowUpRight, IconPencil, IconCategoryPlus, IconTrash, IconSlideshow } from "@tabler/icons-react";
 
 interface ProductsTableProps {
   products: Product[];
@@ -174,8 +174,8 @@ export function ProductsTable({ products }: ProductsTableProps) {
                       <Button variant="outline" size="sm" onClick={() => openDialog(p, false)} className="w-9 h-9">
                         <IconPencil stroke={1.5} className="h-5 w-5" />
                       </Button>
-                      <Button variant={slideshow[p.id] ? "secondary" : "outline"} size="sm" onClick={() => toggleSlideshow(p.id, !slideshow[p.id])} className="w-9 h-9" aria-label={slideshow[p.id] ? "Remove from slideshow" : "Add to slideshow"}>
-                        <IconPhoto stroke={1.5} className="h-5 w-5" />
+                      <Button variant={slideshow[p.id] ? "default" : "outline"} size="sm" onClick={() => toggleSlideshow(p.id, !slideshow[p.id])} className="w-9 h-9" aria-label={slideshow[p.id] ? "Remove from slideshow" : "Add to slideshow"}>
+                        <IconSlideshow stroke={1.5} className="h-5 w-5" />
                       </Button>
                       <Button variant="destructive" size="sm" onClick={() => openDelete(p.id)} disabled={deleting === p.id} className="w-9 h-9">
                         <IconTrash stroke={1.5} className="h-5 w-5" />
