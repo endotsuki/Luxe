@@ -40,7 +40,8 @@ export function AdminLoginForm() {
         description: "Logged in successfully",
       })
 
-      router.push("/admin")
+      // Use replace so the login page is not kept in the history stack
+      router.replace("/admin")
       router.refresh()
     } catch (err: any) {
       toast({

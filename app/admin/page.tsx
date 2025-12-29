@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { cookies } from "next/headers"
 import { AdminDashboard } from "@/components/admin-dashboard";
 
 export const metadata: Metadata = {
@@ -9,12 +10,16 @@ export const metadata: Metadata = {
 };
 
 export default async function AdminPage() {
+  const cookieStore = await cookies()
+  const adminAuth = cookieStore.get("admin_auth")?.value
+
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) {
+  // Allow access if either a Supabase session exists or the admin_auth cookie is present
+  if (!user && !adminAuth) {
     redirect("/admin/login");
   }
 

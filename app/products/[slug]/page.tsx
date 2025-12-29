@@ -4,8 +4,6 @@ import { SiteFooter } from "@/components/site-footer"
 import { ProductDetails } from "@/components/product-details"
 import { createClient } from "@/lib/supabase/server"
 import type { Metadata } from "next"
-import fs from "fs"
-import path from "path"
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params

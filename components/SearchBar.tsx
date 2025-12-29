@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import Image from "next/image"
 import { motion, AnimatePresence } from "framer-motion"
-import { IconArrowUpRight, IconSearch, IconShoppingCartOff } from "@tabler/icons-react"
+import { IconSearch, IconShoppingCartOff, IconX, IconLoader2 } from "@tabler/icons-react"
 import { sizedImage } from "@/lib/utils"
 
 interface Product {
@@ -22,120 +22,91 @@ export function SearchBar() {
   const [results, setResults] = useState<Product[]>([])
   const [loading, setLoading] = useState(false)
   const [open, setOpen] = useState(false)
-  const containerRef = useRef<HTMLDivElement>(null)
+  const [focused, setFocused] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
 
-  // Fetch products from Supabase search API
   useEffect(() => {
-    if (!query) {
-      setResults([])
-      setOpen(false)
-      return
-    }
-
+    if (!query) return setResults([]), setOpen(false)
     setLoading(true)
-
-    const timeout = setTimeout(async () => {
+    const t = setTimeout(async () => {
       try {
         const res = await fetch(`/api/products/search?query=${encodeURIComponent(query)}`)
-        if (!res.ok) throw new Error("Failed to fetch products")
-
-        const data: Product[] = await res.json()
+        const data = await res.json()
         setResults(data)
         setOpen(true)
       } catch (err) {
-        console.error("Search error:", err)
         setResults([])
-        setOpen(false)
       } finally {
         setLoading(false)
       }
-    }, 300) // debounce 300ms
-
-    return () => clearTimeout(timeout)
+    }, 300)
+    return () => clearTimeout(t)
   }, [query])
 
-  // Close dropdown if clicked outside
   useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
-        setOpen(false)
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside)
-    return () => document.removeEventListener("mousedown", handleClickOutside)
+    const close = (e: MouseEvent) => !ref.current?.contains(e.target as Node) && (setOpen(false), setFocused(false))
+    document.addEventListener("mousedown", close)
+    return () => document.removeEventListener("mousedown", close)
   }, [])
 
+  const clear = () => (setQuery(""), setResults([]), setOpen(false), inputRef.current?.focus())
+
   return (
-    <div className="relative w-64" ref={containerRef}>
-      {/* Input */}
-      <div className="flex items-center gap-2">
-        <Input
-          placeholder="Search for products..."
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          className="flex-1 rounded-lg border-gray-300 dark:border-gray-500/50 focus:ring-2  transition-all"
-        />
-        <Button
-          variant={"outline"}
-          aria-label="Search"
-        >
-          <IconSearch className="h-5 w-5" />
-        </Button>
+    <div className="relative w-full max-w-md" ref={ref}>
+      <div className={`relative flex items-center transition-all rounded-full bg-muted/50 backdrop-blur-sm border border-border/50 ${focused ? 'ring-2 ring-primary/20' : ''}`}>
+        <div className="absolute left-4">
+          {loading ? <IconLoader2 className="h-5 w-5 text-muted-foreground animate-spin" /> : <IconSearch className="h-5 w-5 text-muted-foreground" />}
+        </div>
+        <Input ref={inputRef} placeholder="Search products..." value={query} onChange={e => setQuery(e.target.value)} onFocus={() => setFocused(true)} className="flex-1 pl-12 pr-12 h-11 bg-transparent border-0 focus-visible:ring-0 focus-visible:ring-offset-0 placeholder:text-muted-foreground/60" />
+        <AnimatePresence>
+          {query && (
+            <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.8 }} className="absolute right-3">
+              <Button variant="ghost" size="icon" onClick={clear} className="h-7 w-7 rounded-full hover:bg-muted">
+                <IconX className="h-4 w-4" />
+              </Button>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
-
-      {/* Results dropdown */}
       <AnimatePresence>
         {open && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            className="absolute z-50 mt-2 w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg rounded-lg overflow-hidden"
-          >
-            {loading && (
-              <div className="p-2 text-gray-500 dark:text-gray-400 text-sm">
-                Loading...
-              </div>
-            )}
-
+          <motion.div initial={{ opacity: 0, y: -8, scale: 0.96 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -8, scale: 0.96 }} transition={{ duration: 0.15 }} className="absolute z-50 mt-2 w-full bg-background/95 backdrop-blur-xl border border-border shadow-2xl rounded-2xl overflow-hidden">
             {!loading && results.length > 0 && (
-              results.map((product) => (
-                <Link
-                  key={product.id}
-                  href={product.href}
-                  className="flex items-center gap-3 p-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                  onClick={() => setOpen(false)}
-                >
-                  <div className="relative w-12 h-12 rounded overflow-hidden bg-muted">
-                    <Image
-                      src={product.image ? sizedImage(product.image, 48) : "/placeholder.svg"}
-                      alt={product.name}
-                      width={48}
-                      height={48}
-                      className="object-cover"
-                      loading="eager"
-                    />
-                  </div>
-                  <div>
-                    <h6 className="text-sm font-medium text-gray-800 dark:text-gray-100">
-                      {product.name}
-                    </h6>
-                    <h6 className="text-sm text-gray-500 dark:text-gray-400">
-                      ${product.price.toFixed(2)}
-                    </h6>
-                  </div>
-                  <IconArrowUpRight className="ml-auto h-5 w-5 text-gray-400" />
-                </Link>
-              ))
-            )}
-
-            {!loading && results.length === 0 && (
-              <div className="flex flex-col items-center justify-center p-2 text-center text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
-                <IconShoppingCartOff className="h-12 w-12 mb-4 text-gray-400 dark:text-gray-500" />
-                <h3 className="text-lg font-semibold mb-1">No products found</h3>
+              <div className="px-4 py-2 border-b border-border/50">
+                <p className="text-xs font-medium text-muted-foreground">{results.length} {results.length === 1 ? 'result' : 'results'}</p>
               </div>
             )}
+            
+            <div className="max-h-100 overflow-y-auto p-2 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-muted-foreground/20 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:border-2 [&::-webkit-scrollbar-thumb]:border-transparent hover:[&::-webkit-scrollbar-thumb]:bg-muted-foreground/30">
+              {!loading && results.length > 0 ? results.map((p, i) => (
+                <motion.div key={p.id} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.03 }}>
+                  <Link href={p.href} className="flex items-center gap-3 p-3 rounded-xl hover:bg-muted/50 transition-all group" onClick={() => (setOpen(false), setFocused(false))}>
+                    <div className="relative w-14 h-14 rounded-lg overflow-hidden bg-muted hrink-0 ring-1 ring-border/50">
+                      <Image src={p.image ? sizedImage(p.image, 400) : "/placeholder.svg"} alt={p.name} width={56} height={56} className="object-cover group-hover:scale-110 transition-transform duration-300" loading="eager" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h6 className="text-sm font-medium truncate group-hover:text-primary transition-colors">{p.name}</h6>
+                      <p className="text-sm font-semibold text-primary mt-0.5">${p.price.toFixed(2)}</p>
+                    </div>
+                    <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                      <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
+                        <svg className="h-4 w-4 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+                      </div>
+                    </div>
+                  </Link>
+                </motion.div>
+              )) : !loading && (
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center justify-center p-8 text-center">
+                  <div className="h-16 w-16 rounded-full bg-muted flex items-center justify-center mb-4">
+                    <IconShoppingCartOff className="h-8 w-8 text-muted-foreground" />
+                  </div>
+                  <h3 className="text-base font-semibold mb-1">No products found</h3>
+                  <p className="text-sm text-muted-foreground">Try different keywords</p>
+                </motion.div>
+              )}
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
