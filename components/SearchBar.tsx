@@ -54,11 +54,11 @@ export function SearchBar() {
 
   return (
     <div className="relative w-full max-w-md" ref={ref}>
-      <div className={`relative flex items-center transition-all rounded-full bg-muted/50 backdrop-blur-sm border border-border/50 ${focused ? 'ring-2 ring-primary/20' : ''}`}>
+      <div className={`relative flex items-center transition-all ${focused ? 'ring-2 ring-primary/20 rounded-2xl' : ''}`}>
         <div className="absolute left-4">
           {loading ? <IconLoader2 className="h-5 w-5 text-muted-foreground animate-spin" /> : <IconSearch className="h-5 w-5 text-muted-foreground" />}
         </div>
-        <Input ref={inputRef} placeholder="Search products..." value={query} onChange={e => setQuery(e.target.value)} onFocus={() => setFocused(true)} className="flex-1 pl-12 pr-12 h-11 bg-transparent border-0 focus-visible:ring-0 focus-visible:ring-offset-0 placeholder:text-muted-foreground/60" />
+        <Input ref={inputRef} placeholder="Search products..." value={query} onChange={e => setQuery(e.target.value)} onFocus={() => setFocused(true)} className="flex-1 rounded-2xl pl-12 pr-12 h-11 bg-transparent border-0 focus-visible:ring-0 focus-visible:ring-offset-0 placeholder:text-muted-foreground/60" />
         <AnimatePresence>
           {query && (
             <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.8 }} className="absolute right-3">
@@ -82,7 +82,7 @@ export function SearchBar() {
             <div className="max-h-100 overflow-y-auto p-2 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-muted-foreground/20 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:border-2 [&::-webkit-scrollbar-thumb]:border-transparent hover:[&::-webkit-scrollbar-thumb]:bg-muted-foreground/30">
               {!loading && results.length > 0 ? results.map((p, i) => (
                 <motion.div key={p.id} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.03 }}>
-                  <Link href={p.href} className="flex items-center gap-3 p-3 rounded-xl hover:bg-muted/50 transition-all group" onClick={() => (setOpen(false), setFocused(false))}>
+                  <Link href={p.href} className="flex items-center gap-3 p-3 rounded-lg hover:bg-muted/50 transition-all group" onClick={() => (setOpen(false), setFocused(false))}>
                     <div className="relative w-14 h-14 rounded-lg overflow-hidden bg-muted hrink-0 ring-1 ring-border/50">
                       <Image src={p.image ? sizedImage(p.image, 400) : "/placeholder.svg"} alt={p.name} width={56} height={56} className="object-cover group-hover:scale-110 transition-transform duration-300" loading="eager" />
                     </div>
