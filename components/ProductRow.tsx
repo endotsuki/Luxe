@@ -72,27 +72,18 @@ export function ProductRow({ title, products }: ProductRowProps) {
                       style={{ objectFit: "cover" }}
                       className="group-hover:scale-105 transition-transform"
                     />
-                    {product.compare_at_price &&
-                      Number(product.compare_at_price) >
-                        Number(product.price) && (
-                        <Badge className="absolute top-3 right-3 bg-primary">
-                          -
-                          {Math.round(
-                            ((Number(product.compare_at_price) -
-                              Number(product.price)) /
-                              Number(product.compare_at_price)) *
-                              100
-                          )}
-                          %
-                        </Badge>
-                      )}
+                    {product.compare_at_price && (
+                      <Badge className="absolute top-3 left-3 bg-black text-white border-0 text-xs px-2 py-1">
+                        {Math.round(((product.compare_at_price - product.price) / product.compare_at_price) * 100)}% OFF
+                      </Badge>
+                    )}
                   </div>
 
                   <div className="p-3">
                     <h3 className="font-medium truncate">{product.name}</h3>
 
                     {product.compare_at_price &&
-                    Number(product.compare_at_price) > Number(product.price) ? (
+                      Number(product.compare_at_price) > Number(product.price) ? (
                       <div className="flex items-center gap-3">
                         <h6 className="text-sm font-semibold text-foreground">
                           ${Number(product.price).toFixed(2)}
