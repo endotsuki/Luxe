@@ -142,7 +142,7 @@ import { QuantitySelector, QuantitySelectorCompact } from "@/components/Quantity
   showStock={false}
 />
 
-// Compact version (no label, no stock text)
+//Compact version (no label, no stock text)
 <QuantitySelectorCompact
   quantity={quantity}
   onQuantityChange={setQuantity}

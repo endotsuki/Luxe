@@ -1,93 +1,87 @@
 import { NextResponse } from "next/server";
-import fs from "fs";
-import path from "path";
-import { randomUUID } from "crypto";
 import { createClient } from "@/lib/supabase/server";
-import sharp from "sharp";
+import { uploadImageToSupabase } from "@/lib/supabase-upload";
 
 export async function POST(request: Request) {
   try {
     const supabase = await createClient();
     const formData = await request.formData();
 
+    // Extract form fields
+    const name = formData.get("name") as string;
+    const slug = formData.get("slug") as string;
+    const description = formData.get("description") as string;
+    const price = Number(formData.get("price"));
+    const compare_at_price = formData.get("compare_at_price")
+      ? Number(formData.get("compare_at_price"))
+      : null;
+    const category_id = (formData.get("category_id") as string) || null;
+    const stock = Number(formData.get("stock"));
+    const is_active = formData.get("is_active") === "true";
+
+    // Validate required fields
+    if (!name || !slug || !price) {
+      return NextResponse.json(
+        { error: "Name, slug, and price are required" },
+        { status: 400 }
+      );
+    }
+
+    // Upload images to Supabase Storage
     const images = formData.getAll("images") as File[];
-    let imageName: string | null = null;
-    const additionalImages: string[] = [];
+    let image_url: string | null = null;
+    const additional_images: string[] = [];
 
-    if (images.length > 0) {
-      const uploadDir = path.join(process.cwd(), "public", "images");
-      if (!fs.existsSync(uploadDir))
-        fs.mkdirSync(uploadDir, { recursive: true });
+    if (images.length === 0) {
+      return NextResponse.json(
+        { error: "At least one image is required" },
+        { status: 400 }
+      );
+    }
 
-      // Process all images and create resized versions
-      for (let i = 0; i < images.length; i++) {
-        const image = images[i];
-        const bytes = await image.arrayBuffer();
-        const buffer = Buffer.from(bytes);
+    for (let i = 0; i < images.length; i++) {
+      const uploadedImage = await uploadImageToSupabase(images[i], supabase);
 
-        const id = randomUUID();
-        const originalName = `${id}.webp`;
-        const name1080 = `${id}_1080.webp`;
-        const name400 = `${id}_400.webp`;
-        const name48 = `${id}_48.webp`;
-
-        // Save original as WebP
-        await sharp(buffer).webp({ quality: 80 }).toFile(path.join(uploadDir, originalName));
-
-        // Create square resized versions (center-crop)
-        await sharp(buffer)
-          .resize(1080, 1080, { fit: "cover", position: "centre", withoutEnlargement: true })
-          .webp({ quality: 80 })
-          .toFile(path.join(uploadDir, name1080));
-
-        await sharp(buffer)
-          .resize(400, 400, { fit: "cover", position: "centre", withoutEnlargement: true })
-          .webp({ quality: 80 })
-          .toFile(path.join(uploadDir, name400));
-
-        await sharp(buffer)
-          .resize(48, 48, { fit: "cover", position: "centre", withoutEnlargement: true })
-          .webp({ quality: 80 })
-          .toFile(path.join(uploadDir, name48));
-
-        // Store the 1080 version filename in DB references (main and additional)
-        if (i === 0) {
-          imageName = name1080;
-        } else {
-          additionalImages.push(name1080);
-        }
+      if (i === 0) {
+        image_url = uploadedImage.url;
+      } else {
+        additional_images.push(uploadedImage.url);
       }
     }
 
-    const product = {
-      name: formData.get("name"),
-      slug: formData.get("slug"),
-      description: formData.get("description"),
-      price: Number(formData.get("price")),
-      compare_at_price: formData.get("compare_at_price")
-        ? Number(formData.get("compare_at_price"))
-        : null,
-      category_id: formData.get("category_id") || null,
-      image_url: imageName,
-      additional_images: additionalImages.length > 0 ? additionalImages : null,
-      stock: Number(formData.get("stock")),
-      is_active: formData.get("is_active") === "true",
-    };
-
+    // Insert product into database
     const { data, error } = await supabase
       .from("products")
-      .insert([product])
+      .insert([
+        {
+          name,
+          slug,
+          description,
+          price,
+          compare_at_price,
+          category_id,
+          stock,
+          is_active,
+          image_url,
+          additional_images: additional_images.length > 0 ? additional_images : null,
+        },
+      ])
       .select()
       .single();
 
-    if (error)
-      return NextResponse.json({ error: error.message }, { status: 400 });
+    if (error) {
+      console.error("Database insert error:", error);
+      return NextResponse.json(
+        { error: error.message || "Failed to create product" },
+        { status: 400 }
+      );
+    }
 
     return NextResponse.json(data);
   } catch (error) {
     console.error(error);
     return NextResponse.json(
-      { error: "Failed to create product" },
+      { error: error instanceof Error ? error.message : "Failed to create product" },
       { status: 500 }
     );
   }

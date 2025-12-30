@@ -1,23 +1,6 @@
 import { NextResponse } from "next/server"
 import { createClient } from "@/lib/supabase/server"
-import fs from "fs"
-import path from "path"
-import { randomUUID } from "crypto"
-import sharp from "sharp"
-
-// Helper to delete image files from public folder
-async function deleteImageFile(filename: string) {
-  try {
-    const uploadDir = path.join(process.cwd(), "public", "images")
-    const filePath = path.join(uploadDir, filename)
-    if (fs.existsSync(filePath)) {
-      fs.unlinkSync(filePath)
-    }
-  } catch (e) {
-    console.error("Failed to delete image file:", e)
-    // Don't throw - continue with product deletion
-  }
-}
+import { uploadImageToSupabase, deleteImageFromSupabase } from "@/lib/supabase-upload"
 
 export async function PUT(
   req: Request,
@@ -55,45 +38,13 @@ export async function PUT(
     const additionalImages: string[] = []
     
     if (images.length > 0) {
-      // User uploaded new images, replace all
-      const uploadDir = path.join(process.cwd(), "public", "images")
-      if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true })
-
-      // Process all images and create resized versions
+      // User uploaded new images to Supabase Storage
       for (let i = 0; i < images.length; i++) {
-        const image = images[i];
-        const buffer = Buffer.from(await image.arrayBuffer())
-
-        const id = randomUUID()
-        const originalName = `${id}.webp`
-        const name1080 = `${id}_1080.webp`
-        const name400 = `${id}_400.webp`
-        const name48 = `${id}_48.webp`
-
-        // Save original as WebP
-        await sharp(buffer).webp({ quality: 80 }).toFile(path.join(uploadDir, originalName))
-
-        // Create resized square versions
-        await sharp(buffer)
-          .resize(1080, 1080, { fit: "cover", position: "centre", withoutEnlargement: true })
-          .webp({ quality: 80 })
-          .toFile(path.join(uploadDir, name1080))
-
-        await sharp(buffer)
-          .resize(400, 400, { fit: "cover", position: "centre", withoutEnlargement: true })
-          .webp({ quality: 80 })
-          .toFile(path.join(uploadDir, name400))
-
-        await sharp(buffer)
-          .resize(48, 48, { fit: "cover", position: "centre", withoutEnlargement: true })
-          .webp({ quality: 80 })
-          .toFile(path.join(uploadDir, name48))
-
-        // Use 1080 version for DB references
+        const uploadedImage = await uploadImageToSupabase(images[i], supabase)
         if (i === 0) {
-          updateData.image_url = name1080
+          updateData.image_url = uploadedImage.url
         } else {
-          additionalImages.push(name1080)
+          additionalImages.push(uploadedImage.url)
         }
       }
 
@@ -161,12 +112,16 @@ export async function DELETE(
     ].filter(Boolean)
 
     for (const filename of imagesToDelete) {
-      // Delete all size variants of the image
-      const base = filename.replace(/_1080\.webp$|_400\.webp$|_48\.webp$|\.webp$/, "")
-      await deleteImageFile(`${base}.webp`)
-      await deleteImageFile(`${base}_1080.webp`)
-      await deleteImageFile(`${base}_400.webp`)
-      await deleteImageFile(`${base}_48.webp`)
+      // Extract filename from URL and delete from Supabase Storage
+      try {
+        const url = new URL(filename)
+        const urlFilename = url.pathname.split("/").pop()
+        if (urlFilename) {
+          await deleteImageFromSupabase(urlFilename, supabase)
+        }
+      } catch {
+        // Ignore parse errors
+      }
     }
 
     // 3. Delete product from database
