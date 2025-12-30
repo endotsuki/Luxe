@@ -85,17 +85,41 @@ export function ProductsTable({ products }: ProductsTableProps) {
     }
   };
 
+  // const confirmDelete = async () => {
+  //   if (!toDelete) return;
+  //   setDeleting(toDelete.id);
+  //   setDeleteOpen(false);
+  //   try {
+  //     const res = await fetch(`/api/products/${toDelete.id}`, { method: "DELETE" });
+  //     if (res.ok) router.refresh();
+  //     else alert("Failed to delete");
+  //   } catch (e) {
+  //     console.error(e);
+  //     alert("Failed to delete");
+  //   } finally {
+  //     setDeleting(null);
+  //     setToDelete(null);
+  //   }
+  // };
   const confirmDelete = async () => {
     if (!toDelete) return;
     setDeleting(toDelete.id);
     setDeleteOpen(false);
     try {
-      const res = await fetch(`/api/products/${toDelete.id}`, { method: "DELETE" });
-      if (res.ok) router.refresh();
-      else alert("Failed to delete");
+      const res = await fetch(`/api/products/${toDelete.id}`, { 
+        method: "DELETE" 
+      });
+      
+      if (res.ok) {
+        router.refresh();
+        // Optional: show success toast
+      } else {
+        const data = await res.json().catch(() => ({}));
+        alert(data.error || "Failed to delete product");
+      }
     } catch (e) {
       console.error(e);
-      alert("Failed to delete");
+      alert("Failed to delete product");
     } finally {
       setDeleting(null);
       setToDelete(null);

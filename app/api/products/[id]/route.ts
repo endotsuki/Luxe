@@ -5,6 +5,20 @@ import path from "path"
 import { randomUUID } from "crypto"
 import sharp from "sharp"
 
+// Helper to delete image files from public folder
+async function deleteImageFile(filename: string) {
+  try {
+    const uploadDir = path.join(process.cwd(), "public", "images")
+    const filePath = path.join(uploadDir, filename)
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath)
+    }
+  } catch (e) {
+    console.error("Failed to delete image file:", e)
+    // Don't throw - continue with product deletion
+  }
+}
+
 export async function PUT(
   req: Request,
   { params }: { params: Promise<{ id: string }> }
@@ -116,32 +130,59 @@ export async function PUT(
   }
 }
 
+// Delete handler - removes product and associated image files
 export async function DELETE(
   req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { id } = await params
-
     if (!id) {
       return NextResponse.json({ error: "Product ID is required" }, { status: 400 })
     }
 
     const supabase = await createClient()
 
-    const { error } = await supabase
+    // 1. Fetch product to get all image filenames
+    const { data: product, error: fetchError } = await supabase
+      .from("products")
+      .select("image_url, additional_images")
+      .eq("id", id)
+      .single()
+
+    if (fetchError || !product) {
+      return NextResponse.json({ error: "Product not found" }, { status: 404 })
+    }
+
+    // 2. Delete all image files from public/images folder
+    const imagesToDelete = [
+      product.image_url,
+      ...(product.additional_images || [])
+    ].filter(Boolean)
+
+    for (const filename of imagesToDelete) {
+      // Delete all size variants of the image
+      const base = filename.replace(/_1080\.webp$|_400\.webp$|_48\.webp$|\.webp$/, "")
+      await deleteImageFile(`${base}.webp`)
+      await deleteImageFile(`${base}_1080.webp`)
+      await deleteImageFile(`${base}_400.webp`)
+      await deleteImageFile(`${base}_48.webp`)
+    }
+
+    // 3. Delete product from database
+    const { error: deleteError } = await supabase
       .from("products")
       .delete()
       .eq("id", id)
 
-    if (error) {
-      console.error("Error deleting product:", error)
-      return NextResponse.json({ error: error.message }, { status: 400 })
+    if (deleteError) {
+      console.error("Delete error:", deleteError)
+      return NextResponse.json({ error: deleteError.message }, { status: 500 })
     }
 
     return NextResponse.json({ success: true })
-  } catch (err) {
-    console.error("Failed to delete product:", err)
+  } catch (error) {
+    console.error("Delete error:", error)
     return NextResponse.json({ error: "Failed to delete product" }, { status: 500 })
   }
 }
