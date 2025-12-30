@@ -54,7 +54,14 @@ export function ProductDetails({ product }: ProductDetailsProps) {
         body: JSON.stringify({ user_id: userId, product_id: product.id, quantity }),
       })
       toast({ title: "Added to cart", description: `${product.name} has been added to your cart.` })
-      router.refresh()
+      // notify other components (header) to refresh cart immediately
+      try {
+        window.dispatchEvent(new CustomEvent("cart-updated"))
+      } catch {
+        // ignore if window not available
+      }
+      // keep the router refresh optional; header will update via event
+      // router.refresh()
     } catch {
       toast({ title: "Error", description: "Failed to add item to cart.", variant: "destructive" })
     }
@@ -139,7 +146,7 @@ export function ProductDetails({ product }: ProductDetailsProps) {
         </div>
 
         {/* Details */}
-        <div className="space-y-4 md:space-y-6 lg:space-y-8 lg:sticky lg:top-24">
+        <div className="space-y-4 md:space-y-6 lg:space-y-8">
           <div>
             <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2">{product.name}</h1>
 

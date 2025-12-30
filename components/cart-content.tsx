@@ -9,7 +9,8 @@ import { Separator } from "@/components/ui/separator"
 import { useToast } from "@/hooks/use-toast"
 import type { CartItem } from "@/lib/types"
 import { sizedImage } from "@/lib/utils"
-import { IconArrowNarrowRight, IconMinus, IconPlus, IconTrash } from "@tabler/icons-react"
+import { IconArrowRight, IconArrowUpRight, IconTrash } from "@tabler/icons-react"
+import { QuantitySelector } from "./QuantitySelector"
 
 export function CartContent() {
   const [cartItems, setCartItems] = useState<CartItem[]>([])
@@ -61,6 +62,11 @@ export function CartContent() {
         body: JSON.stringify({ id, quantity }),
       });
       if (!response.ok) throw new Error("Failed to update quantity");
+      // notify other listeners (header, other tabs) that cart changed
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new Event("cart-updated"));
+        try { localStorage.setItem("cart-last-updated", String(Date.now())); } catch {}
+      }
     } catch (error) {
       console.error(error);
       // optionally revert or show toast
@@ -77,6 +83,11 @@ export function CartContent() {
       if (!response.ok) throw new Error("Failed to remove item")
 
       fetchCart()
+      // notify other listeners (header, other tabs) that cart changed
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new Event("cart-updated"));
+        try { localStorage.setItem("cart-last-updated", String(Date.now())); } catch {}
+      }
       toast({
         title: "Item removed",
         description: "Item has been removed from your cart",
@@ -139,54 +150,24 @@ export function CartContent() {
                       <IconTrash className="h-5 w-5" />
                     </Button>
                   </div>
-                  <div className="flex items-center gap-4 mt-4">
-                    <div className="flex items-center border border-border rounded-lg px-0.5">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => {
-                          // Optimistically update quantity
-                          setCartItems((prev) =>
-                            prev.map((i) =>
-                              i.id === item.id
-                                ? { ...i, quantity: Math.max(1, i.quantity - 1) }
-                                : i
-                            )
-                          );
-                          // Then update server in background
-                          updateQuantity(item.id, Math.max(1, item.quantity - 1));
-                        }}
-                        disabled={item.quantity <= 1}
-                      >
-                        <IconMinus className="h-4 w-4" />
-                      </Button>
-
-                      <span className="px-4 py-2 min-w-12 text-center">{item.quantity}</span>
-
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => {
-                          // Optimistically update quantity
-                          setCartItems((prev) =>
-                            prev.map((i) =>
-                              i.id === item.id
-                                ? { ...i, quantity: i.quantity + 1 }
-                                : i
-                            )
-                          );
-                          // Then update server in background
-                          updateQuantity(item.id, item.quantity + 1);
-                        }}
-                        disabled={item.quantity >= (item.product?.stock || 0)}
-                      >
-                        <IconPlus className="h-4 w-4" />
-                      </Button>
+                  <div className="mt-4 flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <QuantitySelector
+                        quantity={item.quantity}
+                        onQuantityChange={(newQuantity) => updateQuantity(item.id, newQuantity)}
+                        stock={item.product?.stock || 0}
+                        showLabel={false}
+                        showStock={false}
+                      />
+                      <h6 className="font-semibold">
+                        ${((item.product?.price || 0) * item.quantity).toFixed(2)}
+                      </h6>
                     </div>
-
-                    <h6 className="font-semibold">
-                      ${((item.product?.price || 0) * item.quantity).toFixed(2)}
-                    </h6>
+                    <Button variant="outline" size="icon" asChild>
+                      <Link href={`/products/${item.product?.slug}`}>
+                        <IconArrowUpRight className="h-5 w-5" />
+                      </Link>
+                    </Button>
                   </div>
 
                 </div>
@@ -197,7 +178,7 @@ export function CartContent() {
       </div>
 
       <div>
-        <Card className="sticky top-20">
+        <Card className="sticky top-28">
           <CardContent className="p-6">
             <h2 className="text-xl font-bold mb-4">Order Summary</h2>
 
@@ -215,7 +196,7 @@ export function CartContent() {
             <div className="flex gap-3">
               <Button className="flex-1" size="lg" asChild>
                 <Link href="/contact" className="flex items-center justify-center">
-                  Place Order <IconArrowNarrowRight className="ml-2 h-4 w-4" />
+                  Place Order <IconArrowRight className="h-5 w-5" />
                 </Link>
               </Button>
 

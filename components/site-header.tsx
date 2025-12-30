@@ -12,6 +12,7 @@ import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
 import { IconShoppingCart, IconHome, IconCategory2, IconMessage, IconMenuDeep, IconPackage } from "@tabler/icons-react"
 import { useRouter } from "next/navigation"
 import { AnimatedThemeToggler } from "./animated-theme-toggler"
+import { useCartData } from "@/hooks/useCartData"
 
 interface SiteHeaderProps {
   cartCount?: number
@@ -23,6 +24,10 @@ export function SiteHeader({ cartCount = 0 }: SiteHeaderProps) {
   const pathname = usePathname()
   const router = useRouter()
   const [recentOrderId, setRecentOrderId] = useState<string | null>(null)
+
+  // If parent doesn't provide cartCount, read from client cart hook
+  const { cartItems } = useCartData()
+  const displayCartCount = typeof cartCount === "number" && cartCount > 0 ? cartCount : (cartItems?.length || 0)
 
   useEffect(() => {
     setMounted(true)
@@ -70,8 +75,8 @@ export function SiteHeader({ cartCount = 0 }: SiteHeaderProps) {
                 className="relative text-sm font-medium text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors group"
               >
                 <span className="flex items-center gap-1.5">
-                  <item.icon className="h-4 w-4" />
-                  {item.name}
+                  <item.icon className="h-5 w-5" />
+                  <h6 className="font-semibold">{item.name}</h6>
                 </span>
                 {pathname === item.href && (
                   <motion.div
@@ -113,9 +118,9 @@ export function SiteHeader({ cartCount = 0 }: SiteHeaderProps) {
             <Link href="/cart">
               <Button variant="ghost" size="icon" className="relative rounded-full h-9 w-9">
                 <IconShoppingCart className="h-5 w-5" />
-                {cartCount > 0 && (
+                {displayCartCount > 0 && (
                   <Badge className="absolute -right-1 -top-1 h-5 w-5 rounded-full bg-red-500 p-0 flex items-center justify-center text-xs">
-                    {cartCount > 9 ? "9+" : cartCount}
+                    {displayCartCount > 9 ? "9+" : displayCartCount}
                   </Badge>
                 )}
               </Button>

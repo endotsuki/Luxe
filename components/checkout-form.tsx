@@ -12,7 +12,7 @@ import { Separator } from "@/components/ui/separator"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
 import type { CartItem } from "@/lib/types"
-import { IconArrowNarrowRight, IconCreditCard, IconTruckDelivery } from "@tabler/icons-react"
+import { IconArrowRight, IconCreditCard, IconTruckDelivery } from "@tabler/icons-react"
 
 export function CheckoutForm() {
   const [cartItems, setCartItems] = useState<CartItem[]>([])
@@ -277,7 +277,7 @@ export function CheckoutForm() {
 
               <Button type="submit" className="w-full" size="lg" disabled={submitting}>
                 {submitting ? "Processing..." : "Place Order"}
-                <IconArrowNarrowRight className="ml-2 h-4 w-4" />
+                <IconArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </CardContent>
           </Card>

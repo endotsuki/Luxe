@@ -6,7 +6,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import type { Product } from "@/lib/types"
-import { IconArrowNarrowRight, IconChevronLeft, IconChevronRight } from "@tabler/icons-react"
+import { IconArrowRight, IconChevronLeft, IconChevronRight } from "@tabler/icons-react"
 import { sizedImage } from "@/lib/utils"
 
 interface HeroSlideshowProps {
@@ -85,7 +85,7 @@ export function HeroSlideshow({ products }: HeroSlideshowProps) {
             </p>
             <Button size="lg" asChild>
               <Link href="/shop">
-                Shop Now <IconArrowNarrowRight className="ml-2 h-4 w-4" />
+                Shop Now <IconArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>
           </div>
@@ -143,7 +143,7 @@ export function HeroSlideshow({ products }: HeroSlideshowProps) {
                         href={`/products/${product.slug}`}
                         onClick={() => console.log(`Clicked: ${product.name} (${product.slug}) - currentSlide: ${currentSlide}`)}
                       >
-                        View Details <IconArrowNarrowRight className="ml-2 h-4 w-4" />
+                        View Details <IconArrowRight className="ml-2 h-4 w-4" />
                       </Link>
                     </Button>
                     <Button

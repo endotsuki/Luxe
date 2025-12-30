@@ -37,6 +37,27 @@ export function useCartData() {
 
   useEffect(() => {
     fetchCart()
+
+    // Listen for custom events so other components can notify when cart changes
+    const onCartUpdated = () => {
+      fetchCart()
+    }
+    try {
+      window.addEventListener("cart-updated", onCartUpdated as EventListener)
+      // also listen to storage events (other tabs) for safety
+      const onStorage = (e: StorageEvent) => {
+        if (e.key === "cart_user_id") fetchCart()
+      }
+      window.addEventListener("storage", onStorage)
+
+      return () => {
+        window.removeEventListener("cart-updated", onCartUpdated as EventListener)
+        window.removeEventListener("storage", onStorage)
+      }
+    } catch {
+      // If window is not available (SSR), ignore
+      return
+    }
   }, [])
 
   return {
