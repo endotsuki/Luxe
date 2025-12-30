@@ -14,6 +14,7 @@ import { IconHeart, IconMinus, IconPlus, IconShare, IconShoppingCart, IconChevro
 import { ShareModal } from "./ShareModal"
 import { ProductRow } from "@/components/ProductRow"
 import { sizedImage } from "@/lib/utils"
+import { QuantitySelector } from "./QuantitySelector"
 
 interface ProductDetailsProps {
   product: Product & { category?: { name: string; id: string; slug: string } }
@@ -90,12 +91,12 @@ export function ProductDetails({ product }: ProductDetailsProps) {
                   fill
                   priority
                   className="object-cover rounded-xl"
-                />
-                {product.compare_at_price && (
-                  <Badge className="absolute top-3 left-3 bg-black text-white border-0 text-xs px-2 py-1">
-                    {Math.round(((product.compare_at_price - product.price) / product.compare_at_price) * 100)}% OFF
-                  </Badge>
-                )}
+                  />
+                  {product.compare_at_price && (
+                    <Badge className="absolute top-3 left-3 bg-black text-white border-0 text-xs px-2 py-1">
+                      {Math.round(((product.compare_at_price - product.price) / product.compare_at_price) * 100)}% OFF
+                    </Badge>
+                  )}
               </div>
             </CardContent>
           </Card>
@@ -104,7 +105,7 @@ export function ProductDetails({ product }: ProductDetailsProps) {
             <div className="relative">
               <button
                 onClick={() => scroll(-1)}
-                className="absolute left-0 top-1/2 -translate-y-1/2 z-20 p-1.5 md:p-2 bg-background/80 hover:bg-background rounded-full shadow hidden sm:block"
+                className="absolute left-1 top-1/2 -translate-y-1/2 z-20 p-1.5 md:p-2 bg-background/80 hover:bg-background rounded-full shadow hidden sm:block"
                 aria-label="Scroll left"
               >
                 <IconChevronLeft className="h-3 w-3 md:h-4 md:w-4" />
@@ -112,14 +113,14 @@ export function ProductDetails({ product }: ProductDetailsProps) {
 
               <div
                 ref={thumbsRef}
-                className="flex gap-2 md:gap-4 overflow-x-auto py-2 px-2 scrollbar-hide"
+                className="flex gap-2 md:gap-4 overflow-x-auto py-2 scrollbar-hide"
                 style={{ WebkitOverflowScrolling: 'touch' }}
               >
                 {images.map((img, i) => (
                   <button
                     key={i}
                     onClick={() => setSelectedImage(i)}
-                    className={`relative min-w-28 w-16 aspect-square rounded-3xl overflow-hidden border-2 transition-colors ${selectedImage === i ? 'border-primary' : 'border-transparent hover:border-border'}`}
+                    className={`relative min-w-28 w-16 aspect-square rounded-3xl overflow-hidden border-3 transition-colors ${selectedImage === i ? 'border-primary/60' : 'border-transparent hover:border-border'}`}
                   >
                     <Image src={img ? sizedImage(img, 400) : "/placeholder.svg"} alt={product.name} fill className="object-cover" />
                   </button>
@@ -146,7 +147,7 @@ export function ProductDetails({ product }: ProductDetailsProps) {
             <div className="flex items-center gap-2 text-sm mb-3">
               <div className="flex">
                 {[...Array(5)].map((_, i) => (
-                  <IconStar key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+                  <IconStar key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
                 ))}
               </div>
               <span className="text-muted-foreground">4.8 (127)</span>
@@ -163,23 +164,11 @@ export function ProductDetails({ product }: ProductDetailsProps) {
           <Separator />
 
           {/* Quantity & Actions */}
-          <div className="space-y-4">
-            <div>
-              <label className="text-sm font-medium mb-2 block">Quantity</label>
-              <div className="flex flex-wrap items-center gap-3 md:gap-4">
-                <div className="flex items-center border border-border rounded-lg px-0.5">
-                  <Button variant="ghost" size="icon" className="h-8 w-8 md:h-10 md:w-10" onClick={() => setQuantity(Math.max(1, quantity - 1))} disabled={quantity <= 1}>
-                    <IconMinus className="h-3 w-3 md:h-4 md:w-4" />
-                  </Button>
-                  <span className="px-3 md:px-4 py-2 min-w-10 md:min-w-12 text-center text-sm md:text-base">{quantity}</span>
-                  <Button variant="ghost" size="icon" className="h-8 w-8 md:h-10 md:w-10" onClick={() => setQuantity(Math.min(product.stock, quantity + 1))} disabled={quantity >= product.stock}>
-                    <IconPlus className="h-3 w-3 md:h-4 md:w-4" />
-                  </Button>
-                </div>
-                <span className="text-xs sm:text-sm text-muted-foreground">{product.stock > 0 ? `${product.stock} available` : "Out of stock"}</span>
-              </div>
-            </div>
-          </div>
+          <QuantitySelector
+            quantity={quantity}
+            onQuantityChange={setQuantity}
+            stock={product.stock}
+          />
 
           <div className="flex flex-wrap gap-3 md:gap-4">
             <Button size="lg" className="h-10 md:h-11 flex-1 sm:flex-none sm:w-auto text-sm md:text-base" onClick={handleAddToCart} disabled={product.stock === 0}>

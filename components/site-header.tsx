@@ -48,8 +48,8 @@ export function SiteHeader({ cartCount = 0 }: SiteHeaderProps) {
   return (
     <header
       className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${scrolled
-          ? "bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl shadow-lg shadow-black/5"
-          : "bg-white/60 dark:bg-transparent backdrop-blur-md"
+          ? "bg-white/50 dark:bg-gray-900/50 backdrop-blur-md shadow-lg shadow-black/5"
+          : "bg-white/60 dark:bg-transparent"
         } md:top-4 md:inset-x-4 lg:inset-x-20 xl:inset-x-40 md:rounded-2xl`}
     >
       <div className="container mx-auto px-4 sm:px-6">
