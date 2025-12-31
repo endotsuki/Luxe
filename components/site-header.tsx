@@ -54,7 +54,7 @@ export function SiteHeader({ cartCount = 0 }: SiteHeaderProps) {
     <header
       className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${scrolled
           ? "bg-white/50 dark:bg-gray-900/50 backdrop-blur-md shadow-lg shadow-black/5"
-          : "bg-white/60 dark:bg-transparent"
+          : "bg-white/80 dark:bg-transparent"
         } md:top-4 md:inset-x-4 lg:inset-x-20 xl:inset-x-40 md:rounded-2xl`}
     >
       <div className="container mx-auto px-4 sm:px-6">
@@ -72,7 +72,7 @@ export function SiteHeader({ cartCount = 0 }: SiteHeaderProps) {
               <Link
                 key={item.name}
                 href={item.href}
-                className="relative text-sm font-medium text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors group"
+                className="relative text-sm font-medium text-foreground/70 hover:text-foreground dark:text-gray-300 dark:hover:text-white transition-colors group"
               >
                 <span className="flex items-center gap-1.5">
                   <item.icon className="h-5 w-5" />
@@ -150,7 +150,7 @@ export function SiteHeader({ cartCount = 0 }: SiteHeaderProps) {
                       href={item.href}
                       className={`flex items-center gap-3 text-base font-medium py-2 transition-colors ${pathname === item.href
                           ? "text-primary"
-                          : "text-gray-700 dark:text-gray-200 hover:text-primary"
+                          : "text-foreground/70 dark:text-gray-200 hover:text-primary"
                         }`}
                     >
                       <item.icon className="h-5 w-5" />
@@ -162,7 +162,7 @@ export function SiteHeader({ cartCount = 0 }: SiteHeaderProps) {
                   {recentOrderId && (
                     <Link
                       href={`/orders/${recentOrderId}`}
-                      className="flex items-center gap-3 text-base font-medium py-2 text-gray-700 dark:text-gray-200 hover:text-primary transition-colors sm:hidden"
+                      className="flex items-center gap-3 text-base font-medium py-2 text-foreground/70 dark:text-gray-200 hover:text-primary transition-colors sm:hidden"
                     >
                       <IconPackage className="h-5 w-5" />
                       Recent Order

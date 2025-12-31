@@ -64,12 +64,12 @@ export function OrdersTable({ orders }: OrdersTableProps) {
   }
 
   const statusBg: Record<string, string> = {
-    requested: "bg-gray-100 dark:bg-linear-to-tl from-gray-500/10 to-gray-500/50",
-    approved: "bg-green-100 dark:bg-linear-to-tl from-green-500/10 to-green-500/50",
-    preparing: "bg-yellow-100 dark:bg-linear-to-tl from-yellow-500/10 to-yellow-500/50",
-    delivery: "bg-blue-100 dark:bg-linear-to-tl from-blue-500/10 to-blue-500/50",
-    completed: "bg-emerald-100 dark:bg-linear-to-tl from-emerald-500/10 to-emerald-500/50",
-    cancelled: "bg-red-100 dark:bg-linear-to-tl from-red-500/10 to-red-500/50",
+    requested: "bg-gray-200 dark:bg-linear-to-tl from-gray-500/10 to-gray-500/50",
+    approved: "bg-green-200 dark:bg-linear-to-tl from-green-500/10 to-green-500/50",
+    preparing: "bg-yellow-200 dark:bg-linear-to-tl from-yellow-500/10 to-yellow-500/50",
+    delivery: "bg-blue-200 dark:bg-linear-to-tl from-blue-500/10 to-blue-500/50",
+    completed: "bg-emerald-200 dark:bg-linear-to-tl from-emerald-500/10 to-emerald-500/50",
+    cancelled: "bg-red-200 dark:bg-linear-to-tl from-red-500/10 to-red-500/50",
   }
   if (orders.length === 0) {
     return <div className="text-center py-8 text-muted-foreground">No orders yet</div>
