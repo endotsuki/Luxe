@@ -129,8 +129,8 @@ importers:
         specifier: ^12.23.26
         version: 12.23.26(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       iconza:
-        specifier: ^1.0.39
-        version: 1.0.39
+        specifier: ^2.0.0
+        version: 2.0.0(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       input-otp:
         specifier: 1.4.1
         version: 1.4.1(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
@@ -2138,8 +2138,11 @@ packages:
     resolution: {integrity: sha512-1dhVQZXhcHje7798IVM+xoo/1ZdVfzOMIc8/rgVSijRK38EDqOJoGula9N/8ZI5RD8QTxNQtK/Gozpr+qUqRRA==}
     engines: {node: '>=20.0.0'}
 
-  iconza@1.0.39:
-    resolution: {integrity: sha512-syB+zwT5VQXmOSjlIz6PbA3WGfBMG4YVTU4bFT4oUWl/gxuFjptM4xCpCM/c7Z/n01nz6O8Jeyny/FikRFbueA==}
+  iconza@2.0.0:
+    resolution: {integrity: sha512-8G6HT+Lq81EwnMxF8K/s5On4eIjTuOLXT+RsPSpEYLYTdWRBw8ICPJakWTFeTXj4ThtGLVU9PnLku0ATvDqpCQ==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
 
   input-otp@1.4.1:
     resolution: {integrity: sha512-+yvpmKYKHi9jIGngxagY9oWiiblPB7+nEO75F2l2o4vs+6vpPZZmUl4tBNYuTCvQjhvEIbdNeJu70bhfYP2nbw==}
@@ -4470,7 +4473,10 @@ snapshots:
 
   iceberg-js@0.8.1: {}
 
-  iconza@1.0.39: {}
+  iconza@2.0.0(react-dom@19.2.0(react@19.2.0))(react@19.2.0):
+    dependencies:
+      react: 19.2.0
+      react-dom: 19.2.0(react@19.2.0)
 
   input-otp@1.4.1(react-dom@19.2.0(react@19.2.0))(react@19.2.0):
     dependencies:

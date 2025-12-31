@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogClose } from "@/components/ui/dialog"
 import { IconCopy, IconBrandTelegram, IconBrandX } from "@tabler/icons-react"
 import { useToast } from "@/hooks/use-toast"
-import { Icon } from "iconza"
 interface ShareModalProps {
     url: string
     open: boolean

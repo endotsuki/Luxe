@@ -2,6 +2,7 @@
 
 import { IconBrandFacebook, IconBrandInstagram, IconBrandX } from "@tabler/icons-react"
 import Link from "next/link"
+import { Icon } from "iconza"
 
 export function SiteFooter() {
   return (
@@ -88,15 +89,15 @@ export function SiteFooter() {
             <h3 className="font-semibold mb-4">Connect</h3>
             <div className="flex gap-4">
               <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors">
-                <IconBrandFacebook className="h-5 w-5" />
+                <Icon name="FacebookRound" size={23} />
                 <span className="sr-only">Facebook</span>
               </Link>
               <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors">
-                <IconBrandInstagram className="h-5 w-5" />
-                <span className="sr-only">Instagram</span>
+                <Icon name="Telegram" size={23} />
+                <span className="sr-only">Telegram</span>
               </Link>
               <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors">
-                <IconBrandX className="h-5 w-5" />
+                <Icon name="X Dark" size={23} />
                 <span className="sr-only">Twitter</span>
               </Link>
             </div>
