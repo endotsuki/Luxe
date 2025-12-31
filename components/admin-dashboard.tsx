@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { OrdersTable } from "@/components/orders-table"
 import { ProductsTable } from "@/components/products-table"
+import { AdminSearch } from "@/components/admin-search"
 import type { Order, Product } from "@/lib/types"
 import { IconShoppingCart, IconLogout, IconPackage, IconShoppingBag, IconTrendingUp, IconUsers } from "@tabler/icons-react"
 import { AnimatedThemeToggler } from "@/components/animated-theme-toggler"
@@ -35,6 +36,7 @@ export function AdminDashboard({ orders, products, totalOrders, totalProducts }:
   }
 
   const [activeTab, setActiveTab] = useState<"orders" | "products">("orders")
+  const [query, setQuery] = useState("")
   useEffect(() => {
     const savedTab = localStorage.getItem("admin-active-tab")
     if (savedTab === "orders" || savedTab === "products") {
@@ -51,6 +53,19 @@ export function AdminDashboard({ orders, products, totalOrders, totalProducts }:
 
   const totalRevenue = orders.reduce((sum, order) => sum + Number(order.total), 0)
   const pendingOrders = orders.filter((order) => order.status === "pending").length
+
+  const q = query.trim().toLowerCase()
+  const filteredOrders = q
+    ? orders.filter((o) =>
+        [o.order_number, o.customer_name, o.customer_email, o.customer_phone].some((f) =>
+          String(f || "").toLowerCase().includes(q)
+        )
+      )
+    : orders
+
+  const filteredProducts = q
+    ? products.filter((p) => [p.name, p.slug].some((f) => String(f || "").toLowerCase().includes(q)))
+    : products
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -137,6 +152,11 @@ export function AdminDashboard({ orders, products, totalOrders, totalProducts }:
           </Card>
         </div>
 
+        {/* Search */}
+        <div className="mb-6">
+          <AdminSearch onSearch={(val) => setQuery(val)} placeholder="Search by order number, customer, product..." />
+        </div>
+
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
           <TabsList className="bg-muted/50">
@@ -164,7 +184,7 @@ export function AdminDashboard({ orders, products, totalOrders, totalProducts }:
                 <CardTitle>Recent Orders</CardTitle>
               </CardHeader>
               <CardContent>
-                <OrdersTable orders={orders} />
+                <OrdersTable orders={filteredOrders} />
               </CardContent>
             </Card>
           </TabsContent>
@@ -175,7 +195,7 @@ export function AdminDashboard({ orders, products, totalOrders, totalProducts }:
                 <CardTitle>Products</CardTitle>
               </CardHeader>
               <CardContent>
-                <ProductsTable products={products} />
+                <ProductsTable products={filteredProducts} />
               </CardContent>
             </Card>
           </TabsContent>
