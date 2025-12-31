@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 import { createClient } from "@/lib/supabase/server"
-import { uploadImageToSupabase, deleteImageFromSupabase } from "@/lib/supabase-upload"
+import crypto from "crypto"
 
 export async function PUT(
   req: Request,
@@ -15,59 +15,42 @@ export async function PUT(
 
     const supabase = await createClient()
 
-    // Parse incoming form data
-    const formData = await req.formData()
+    // Parse JSON payload (Cloudinary URLs are already uploaded)
+    const body = await req.json()
 
     // Build update object
     const updateData: any = {
-      name: formData.get("name"),
-      slug: formData.get("slug"),
-      description: formData.get("description"),
-      price: Number(formData.get("price")),
-      compare_at_price: formData.get("compare_at_price")
-        ? Number(formData.get("compare_at_price"))
+      name: body.name,
+      slug: body.slug,
+      description: body.description,
+      price: Number(body.price),
+      compare_at_price: body.compare_at_price
+        ? Number(body.compare_at_price)
         : null,
-      category_id: formData.get("category_id") || null,
-      stock: Number(formData.get("stock")),
-      is_active: formData.get("is_active") === "true",
+      category_id: body.category_id || null,
+      stock: Number(body.stock),
+      is_active: body.is_active === true || body.is_active === "true",
     }
 
-    // Handle multiple image uploads or preserve existing images
-    const images = formData.getAll("images") as File[]
-    const existingImagesJson = formData.get("existingImages") as string | null
-    const additionalImages: string[] = []
+    // Handle image URLs from Cloudinary
+    const image_urls = (body.image_urls || []) as string[]
     
-    if (images.length > 0) {
-      // User uploaded new images to Supabase Storage
-      for (let i = 0; i < images.length; i++) {
-        const uploadedImage = await uploadImageToSupabase(images[i], supabase)
-        if (i === 0) {
-          updateData.image_url = uploadedImage.url
-        } else {
-          additionalImages.push(uploadedImage.url)
-        }
-      }
-
-      // Only update additional_images if we have them
-      if (additionalImages.length > 0) {
-        updateData.additional_images = additionalImages
-      }
-    } else if (existingImagesJson) {
-      // No new images, preserve existing ones
-      const existingImages = JSON.parse(existingImagesJson) as string[]
-      if (existingImages.length > 0) {
-        updateData.image_url = existingImages[0]
-        if (existingImages.length > 1) {
-          updateData.additional_images = existingImages.slice(1)
-        }
+    if (image_urls.length > 0) {
+      // User uploaded new images to Cloudinary
+      updateData.image_url = image_urls[0]
+      if (image_urls.length > 1) {
+        updateData.additional_images = image_urls.slice(1)
+      } else {
+        updateData.additional_images = null
       }
     }
+    // If no image_urls provided, keep existing images (no update to image fields)
 
     // Update product in Supabase
     const { error } = await supabase
       .from("products")
       .update(updateData)
-      .eq("id", id) // Use awaited id
+      .eq("id", id)
 
     if (error) {
       console.error("Error updating product:", error)
@@ -78,6 +61,81 @@ export async function PUT(
   } catch (err) {
     console.error("Failed to update product:", err)
     return NextResponse.json({ error: "Failed to update product" }, { status: 500 })
+  }
+}
+
+/**
+ * Extract public_id from Cloudinary URL
+ * @param cloudinaryUrl - The secure URL from Cloudinary
+ * @returns The public_id extracted from the URL
+ */
+function extractCloudinaryPublicId(cloudinaryUrl: string): string | null {
+  try {
+    // Cloudinary URL format: https://res.cloudinary.com/{cloud_name}/image/upload/{version}/{public_id}.{format}
+    const urlParts = cloudinaryUrl.split("/")
+    const lastPart = urlParts[urlParts.length - 1] // e.g., "abc123.webp"
+    const publicId = lastPart.split(".")[0] // Remove extension
+    return publicId
+  } catch {
+    return null
+  }
+}
+
+/**
+ * Delete image from Cloudinary using Admin API with signature
+ */
+async function deleteFromCloudinary(publicId: string): Promise<boolean> {
+  const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
+  const apiKey = process.env.CLOUDINARY_API_KEY
+  const apiSecret = process.env.CLOUDINARY_API_SECRET
+
+  if (!cloudName || !apiKey || !apiSecret) {
+    console.error("Missing Cloudinary environment variables (CLOUD_NAME, API_KEY, API_SECRET)")
+    return false
+  }
+
+  try {
+    const timestamp = Math.floor(Date.now() / 1000)
+    const params = `public_id=${publicId}&timestamp=${timestamp}`
+    
+    // Generate signature for secure API call
+    const signature = crypto
+      .createHash("sha256")
+      .update(params + apiSecret)
+      .digest("hex")
+
+    const url = `https://api.cloudinary.com/v1_1/${cloudName}/image/destroy`
+    
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: new URLSearchParams({
+        public_id: publicId,
+        api_key: apiKey,
+        timestamp: timestamp.toString(),
+        signature: signature,
+      }).toString(),
+    })
+
+    const responseData = await response.json()
+
+    if (!response.ok) {
+      console.error(`Cloudinary delete error for ${publicId}:`, responseData)
+      return false
+    }
+
+    if (responseData.result === "ok") {
+      console.log(`Successfully deleted image from Cloudinary: ${publicId}`)
+      return true
+    } else {
+      console.error(`Cloudinary delete result not ok for ${publicId}:`, responseData)
+      return false
+    }
+  } catch (err) {
+    console.error(`Failed to delete image from Cloudinary (${publicId}):`, err)
+    return false
   }
 }
 
@@ -94,7 +152,7 @@ export async function DELETE(
 
     const supabase = await createClient()
 
-    // 1. Fetch product to get all image filenames
+    // 1. Fetch product to get all image URLs from Cloudinary
     const { data: product, error: fetchError } = await supabase
       .from("products")
       .select("image_url, additional_images")
@@ -105,22 +163,24 @@ export async function DELETE(
       return NextResponse.json({ error: "Product not found" }, { status: 404 })
     }
 
-    // 2. Delete all image files from public/images folder
+    // 2. Delete all images from Cloudinary
     const imagesToDelete = [
       product.image_url,
       ...(product.additional_images || [])
     ].filter(Boolean)
 
-    for (const filename of imagesToDelete) {
-      // Extract filename from URL and delete from Supabase Storage
+    console.log(`Deleting ${imagesToDelete.length} images from Cloudinary for product ${id}`)
+
+    for (const imageUrl of imagesToDelete) {
       try {
-        const url = new URL(filename)
-        const urlFilename = url.pathname.split("/").pop()
-        if (urlFilename) {
-          await deleteImageFromSupabase(urlFilename, supabase)
+        const publicId = extractCloudinaryPublicId(imageUrl)
+        if (publicId) {
+          await deleteFromCloudinary(publicId)
+        } else {
+          console.warn(`Could not extract public_id from URL: ${imageUrl}`)
         }
-      } catch {
-        // Ignore parse errors
+      } catch (err) {
+        console.error("Error processing image deletion:", err)
       }
     }
 

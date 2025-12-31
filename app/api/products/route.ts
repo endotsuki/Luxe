@@ -1,23 +1,25 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-import { uploadImageToSupabase } from "@/lib/supabase-upload";
 
 export async function POST(request: Request) {
   try {
     const supabase = await createClient();
-    const formData = await request.formData();
+    
+    // Parse JSON payload (Cloudinary URLs are already uploaded)
+    const body = await request.json();
 
     // Extract form fields
-    const name = formData.get("name") as string;
-    const slug = formData.get("slug") as string;
-    const description = formData.get("description") as string;
-    const price = Number(formData.get("price"));
-    const compare_at_price = formData.get("compare_at_price")
-      ? Number(formData.get("compare_at_price"))
+    const name = body.name as string;
+    const slug = body.slug as string;
+    const description = body.description as string;
+    const price = Number(body.price);
+    const compare_at_price = body.compare_at_price
+      ? Number(body.compare_at_price)
       : null;
-    const category_id = (formData.get("category_id") as string) || null;
-    const stock = Number(formData.get("stock"));
-    const is_active = formData.get("is_active") === "true";
+    const category_id = body.category_id || null;
+    const stock = Number(body.stock);
+    const is_active = body.is_active === true || body.is_active === "true";
+    const image_urls = (body.image_urls || []) as string[];
 
     // Validate required fields
     if (!name || !slug || !price) {
@@ -27,27 +29,17 @@ export async function POST(request: Request) {
       );
     }
 
-    // Upload images to Supabase Storage
-    const images = formData.getAll("images") as File[];
-    let image_url: string | null = null;
-    const additional_images: string[] = [];
-
-    if (images.length === 0) {
+    // Validate at least one image URL from Cloudinary
+    if (image_urls.length === 0) {
       return NextResponse.json(
         { error: "At least one image is required" },
         { status: 400 }
       );
     }
 
-    for (let i = 0; i < images.length; i++) {
-      const uploadedImage = await uploadImageToSupabase(images[i], supabase);
-
-      if (i === 0) {
-        image_url = uploadedImage.url;
-      } else {
-        additional_images.push(uploadedImage.url);
-      }
-    }
+    // Store image URLs directly (already uploaded to Cloudinary)
+    const image_url = image_urls[0];
+    const additional_images = image_urls.slice(1);
 
     // Insert product into database
     const { data, error } = await supabase
