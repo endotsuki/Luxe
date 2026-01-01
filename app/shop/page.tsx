@@ -29,7 +29,7 @@ export default async function ShopPage({
           </div>
 
           <div className="flex flex-col md:flex-row gap-8">
-            <aside className="w-full md:w-64 shrink-0">
+            <aside className="w-full md:w-64 md:sticky md:top-28 self-start">
               <ProductFilters />
             </aside>
 
