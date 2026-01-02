@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { IconMinus, IconPlus } from "@tabler/icons-react"
+import { Input } from "./ui/input"
 
 interface QuantitySelectorProps {
     quantity: number
@@ -32,6 +33,18 @@ export function QuantitySelector({
         }
     }
 
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value
+        if (value === '') {
+            onQuantityChange(1)
+        } else {
+            const num = parseInt(value, 10)
+            if (!isNaN(num) && num >= 1 && num <= stock) {
+                onQuantityChange(num)
+            }
+        }
+    }
+
     return (
         <div className={`space-y-2 ${className}`}>
             {showLabel && (
@@ -39,7 +52,7 @@ export function QuantitySelector({
             )}
 
             <div className="flex flex-wrap items-center gap-3 md:gap-4">
-                <div className="flex items-center border border-border rounded-lg p-0.5">
+                <div className="flex items-center border border-border rounded-lg p-0.5 gap-1">
                     <Button
                         variant="ghost"
                         size="icon"
@@ -51,9 +64,14 @@ export function QuantitySelector({
                         <IconMinus className="h-3 w-3 md:h-4 md:w-4" />
                     </Button>
 
-                    <span className="px-3 md:px-4 select-none py-2 min-w-10 md:min-w-12 text-center text-sm md:text-base">
-                        {quantity}
-                    </span>
+                    <Input
+                        type="number"
+                        className="w-12 md:w-16 px-3 md:px-4 py-2 text-center text-sm md:text-base outline-none border-0 focus:ring-0 focus-visible:ring-0"
+                        value={quantity}
+                        onChange={handleInputChange}
+                        min="1"
+                        max={stock}
+                    />
 
                     <Button
                         variant="ghost"
@@ -84,8 +102,20 @@ export function QuantitySelectorCompact({
     stock,
     className = "",
 }: Omit<QuantitySelectorProps, 'showLabel' | 'showStock'>) {
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value
+        if (value === '') {
+            onQuantityChange(1)
+        } else {
+            const num = parseInt(value, 10)
+            if (!isNaN(num) && num >= 1 && num <= stock) {
+                onQuantityChange(num)
+            }
+        }
+    }
+
     return (
-        <div className={`flex items-center border border-border rounded-lg p-0.5 ${className}`}>
+        <div className={`flex items-center border border-border rounded-lg p-0.5 gap-1 ${className}`}>
             <Button
                 variant="ghost"
                 size="icon"
@@ -97,9 +127,14 @@ export function QuantitySelectorCompact({
                 <IconMinus className="h-3 w-3" />
             </Button>
 
-            <span className="px-3 py-2 min-w-10 text-center text-sm">
-                {quantity}
-            </span>
+            <Input
+                type="number"
+                className="w-12 md:w-16 px-3 md:px-4 py-2 text-center text-sm md:text-base outline-none border-0 focus:ring-0 focus-visible:ring-0"
+                value={quantity}
+                onChange={handleInputChange}
+                min="1"
+                max={stock}
+            />
 
             <Button
                 variant="ghost"
