@@ -9,7 +9,7 @@ import { Separator } from "@/components/ui/separator"
 import { useToast } from "@/hooks/use-toast"
 import type { CartItem } from "@/lib/types"
 import { sizedImage } from "@/lib/utils"
-import { IconArrowRight, IconArrowUpRight, IconTrash } from "@tabler/icons-react"
+import { IconArrowRight, IconTrash } from "@tabler/icons-react"
 import { QuantitySelector } from "./QuantitySelector"
 
 export function CartContent() {
@@ -142,7 +142,7 @@ export function CartContent() {
                   <div className="flex justify-between">
                     <div>
                       <Link href={`/products/${item.product?.slug}`}>
-                        <h3 className="font-semibold hover:text-primary transition-colors">{item.product?.name}</h3>
+                        <h3 className="font-semibold hover:text-primary hover:underline transition-colors">{item.product?.name}</h3>
                       </Link>
                       <h6 className="text-sm text-muted-foreground mt-1">${item.product?.price}</h6>
                     </div>
@@ -163,11 +163,6 @@ export function CartContent() {
                         ${((item.product?.price || 0) * item.quantity).toFixed(2)}
                       </h6>
                     </div>
-                    <Button variant="outline" size="icon" asChild>
-                      <Link href={`/products/${item.product?.slug}`}>
-                        <IconArrowUpRight className="h-5 w-5" />
-                      </Link>
-                    </Button>
                   </div>
 
                 </div>

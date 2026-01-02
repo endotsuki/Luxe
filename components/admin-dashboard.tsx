@@ -57,10 +57,10 @@ export function AdminDashboard({ orders, products, totalOrders, totalProducts }:
   const q = query.trim().toLowerCase()
   const filteredOrders = q
     ? orders.filter((o) =>
-        [o.order_number, o.customer_name, o.customer_email, o.customer_phone].some((f) =>
-          String(f || "").toLowerCase().includes(q)
-        )
+      [o.order_number, o.customer_name, o.customer_email, o.customer_phone].some((f) =>
+        String(f || "").toLowerCase().includes(q)
       )
+    )
     : orders
 
   const filteredProducts = q
@@ -152,14 +152,10 @@ export function AdminDashboard({ orders, products, totalOrders, totalProducts }:
           </Card>
         </div>
 
-        {/* Search */}
-        <div className="mb-6">
-          <AdminSearch onSearch={(val) => setQuery(val)} placeholder="Search by order number, customer, product..." />
-        </div>
 
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
-          <TabsList className="bg-muted/50">
+          <TabsList className="bg-muted/50 mb-6">
             <TabsTrigger
               value="orders"
               id="tab-orders"
@@ -177,6 +173,9 @@ export function AdminDashboard({ orders, products, totalOrders, totalProducts }:
               Products
             </TabsTrigger>
           </TabsList>
+
+          {/* Search */}
+          <AdminSearch onSearch={(val) => setQuery(val)} placeholder="Search by order number, customer, product..." />
 
           <TabsContent value="orders" className="mt-6">
             <Card className="py-5">

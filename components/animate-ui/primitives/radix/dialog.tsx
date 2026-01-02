@@ -149,7 +149,18 @@ function DialogContent({
 type DialogCloseProps = React.ComponentProps<typeof DialogPrimitive.Close>;
 
 function DialogClose(props: DialogCloseProps) {
-  return <DialogPrimitive.Close data-slot="dialog-close" {...props} />;
+  const { children, ...rest } = props;
+  const useAsChild = React.isValidElement(children);
+
+  if (useAsChild) {
+    return (
+      <DialogPrimitive.Close data-slot="dialog-close" asChild {...rest}>
+        {children}
+      </DialogPrimitive.Close>
+    );
+  }
+
+  return <DialogPrimitive.Close data-slot="dialog-close" {...rest} />;
 }
 
 type DialogHeaderProps = React.ComponentProps<'div'>;
