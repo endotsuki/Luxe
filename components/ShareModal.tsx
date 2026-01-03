@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogClose } from "@/components/ui/dialog"
 import { IconCopy, IconBrandTelegram, IconBrandX } from "@tabler/icons-react"
 import { useToast } from "@/hooks/use-toast"
+import { Icon } from "iconza"
 interface ShareModalProps {
     url: string
     open: boolean
@@ -28,6 +29,14 @@ export function ShareModal({ url, open, onOpenChange }: ShareModalProps) {
 
     const encodedUrl = encodeURIComponent(url)
 
+    const shareButtons = [
+        { name: "Telegram", url: `https://t.me/share/url?url=${encodedUrl}`, label: "Share on Telegram", icon: "Telegram" },
+        { name: "X", url: `https://twitter.com/intent/tweet?url=${encodedUrl}`, label: "Share on X", icon: "X Light" },
+        { name: "Facebook", url: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`, label: "Share on Facebook", icon: "FacebookRound" },
+        { name: "Messenger", url: `https://www.messenger.com/t/?link=${encodedUrl}`, label: "Share on Messenger", icon: "MessengerColor" },
+        { name: "WhatsApp", url: `https://api.whatsapp.com/send?text=${encodedUrl}`, label: "Share on WhatsApp", icon: "WhatsApp" }
+    ]
+
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="max-w-sm">
@@ -37,30 +46,22 @@ export function ShareModal({ url, open, onOpenChange }: ShareModalProps) {
 
                 <div className="space-y-4">
                     {/* Share buttons */}
-                    <div className="flex space-x-4">
-                        <a
-                            href={`https://t.me/share/url?url=${encodedUrl}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center gap-2 px-3 py-2 rounded-xl border hover:bg-blue-100/20"
-                        >
-                            <IconBrandTelegram className="w-5 h-5 text-blue-500" />
-                            Telegram
-                        </a>
-
-                        <a
-                            href={`https://twitter.com/intent/tweet?url=${encodedUrl}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center gap-2 px-3 py-2 rounded-xl border hover:bg-blue-100/20"
-                        >
-                            <IconBrandX className="w-5 h-5 text-blue-600" />
-                            X
-                        </a>
-
+                    <div className="flex space-x-6">
+                        {shareButtons.map((button) => (
+                            <a
+                                key={button.name}
+                                href={button.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                aria-label={button.label}
+                                className="inline-flex items-center justify-center transition-transform duration-200 hover:scale-90"
+                            >
+                                <Icon name={button.icon} size={30} />
+                            </a>
+                        ))}
                     </div>
                     {/* URL + Copy */}
-                    <div className="flex items-center space-x-2 border-b px-3 py-2">
+                    <div className="flex items-center space-x-2 border-b px-3 py-1">
                         <input
                             readOnly
                             className="flex-1 bg-transparent outline-none truncate"

@@ -33,6 +33,16 @@ export function ProductCard({ product }: ProductCardProps) {
                 {Math.round(((product.compare_at_price - product.price) / product.compare_at_price) * 100)}% OFF
               </Badge>
             )}
+            {product.stock < 10 && product.stock > 0 && (
+              <Badge className="absolute top-3 right-3 bg-amber-500 text-white border-0 text-xs px-2 py-1">
+                Only {product.stock} left!
+              </Badge>
+            )}
+            {product.stock === 0 && (
+              <Badge className="absolute top-3 right-3 bg-destructive text-white border-0 text-xs px-2 py-1">
+                Out of stock
+              </Badge>
+            )}
           </div>
           <div className="p-6">
             <h3 className="font-semibold text-lg mb-2 group-hover:text-primary transition-colors">
@@ -54,11 +64,7 @@ export function ProductCard({ product }: ProductCardProps) {
                 </span>
               )}
             </div>
-            {product.stock < 10 && product.stock > 0 && (
-              <p className="text-sm text-destructive mt-2">
-                Only {product.stock} left!
-              </p>
-            )}
+
             {product.stock === 0 && (
               <p className="text-sm text-muted-foreground mt-2">Out of stock</p>
             )}

@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge"
 import { motion } from "framer-motion"
 import { SearchBar } from "./SearchBar"
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
-import { IconShoppingCart, IconHome, IconCategory2, IconMessage, IconMenuDeep, IconPackage } from "@tabler/icons-react"
+import { IconShoppingCart, IconSmartHome, IconCategory2, IconMessage, IconMenuDeep, IconPackage } from "@tabler/icons-react"
 import { useRouter } from "next/navigation"
 import { AnimatedThemeToggler } from "./animated-theme-toggler"
 import { useCartData } from "@/hooks/useCartData"
@@ -44,7 +44,7 @@ export function SiteHeader({ cartCount = 0 }: SiteHeaderProps) {
   }, [])
 
   const navigation = [
-    { name: "Home", href: "/", icon: IconHome },
+    { name: "Home", href: "/", icon: IconSmartHome },
     { name: "Shop", href: "/shop", icon: IconShoppingCart },
     { name: "Categories", href: "/categories", icon: IconCategory2 },
     { name: "Contact", href: "/contact", icon: IconMessage },
@@ -74,10 +74,10 @@ export function SiteHeader({ cartCount = 0 }: SiteHeaderProps) {
                 href={item.href}
                 className="relative text-sm font-medium text-foreground/70 hover:text-foreground dark:text-gray-300 dark:hover:text-white transition-colors group"
               >
-                <span className="flex items-center gap-1.5">
+                <p className="flex items-center text-base gap-1.5">
                   <item.icon className="h-5 w-5" />
-                  <h6 className="font-semibold">{item.name}</h6>
-                </span>
+                  {item.name}
+                </p>
                 {pathname === item.href && (
                   <motion.div
                     layoutId="active-nav"
