@@ -16,13 +16,6 @@ interface HeroSlideshowProps {
 export function HeroSlideshow({ products }: HeroSlideshowProps) {
   const [currentSlide, setCurrentSlide] = useState(0)
 
-  // Debug: Log products to verify unique slugs
-  useEffect(() => {
-    if (products.length > 0) {
-      console.log("Hero slideshow products:", products.map((p: any) => ({ name: p.name, slug: p.slug })))
-    }
-  }, [products])
-
   const displayProducts = products.length > 0 ? products : []
 
   useEffect(() => {
@@ -114,7 +107,6 @@ export function HeroSlideshow({ products }: HeroSlideshowProps) {
                     <Button size="lg" asChild className="bg-white text-black hover:bg-white/90">
                       <Link 
                         href={`/products/${product.slug}`}
-                        onClick={() => console.log(`Clicked: ${product.name} (${product.slug}) - currentSlide: ${currentSlide}`)}
                       >
                         View Details <IconArrowRight className="ml-2 h-4 w-4" />
                       </Link>
