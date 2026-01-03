@@ -23,34 +23,7 @@ export function HeroSlideshow({ products }: HeroSlideshowProps) {
     }
   }, [products])
 
-  const defaultSlides = [
-    {
-      id: "slide-1",
-      name: "Luxury Watches Collection",
-      description: "Timeless elegance meets modern craftsmanship in our curated watch collection",
-      price: "299",
-      image_url: "/luxury-watch-elegant.jpg",
-      slug: "shop",
-    },
-    {
-      id: "slide-2",
-      name: "Designer Jewelry",
-      description: "Stunning pieces that add sparkle to every occasion",
-      price: "199",
-      image_url: "/elegant-jewelry-necklace.jpg",
-      slug: "shop",
-    },
-    {
-      id: "slide-3",
-      name: "Premium Bags",
-      description: "Carry your style with our exclusive bag collection",
-      price: "349",
-      image_url: "/leather-designer-bag.jpg",
-      slug: "shop",
-    },
-  ]
-
-  const displayProducts = products.length > 0 ? products : (defaultSlides as any)
+  const displayProducts = products.length > 0 ? products : []
 
   useEffect(() => {
     if (displayProducts.length === 0) return
