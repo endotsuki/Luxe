@@ -56,9 +56,9 @@ export default async function OrderTrackingPage({ params }: { params: Promise<{ 
   const currentStepIndex = statusSteps.indexOf(order.status)
 
   return (
-    <div className="min-h-screen flex flex-col py-16">
+    <>
       <SiteHeader />
-      <main className="flex-1 container mx-auto px-4 py-8">
+      <main className="flex-1 container mx-auto px-4 py-24">
         <div className="mb-6">
           <Button variant="outline" asChild className="mb-4">
             <Link href="/shop">
@@ -216,6 +216,6 @@ export default async function OrderTrackingPage({ params }: { params: Promise<{ 
         </div>
       </main>
       <SiteFooter />
-    </div>
+    </>
   )
 }
