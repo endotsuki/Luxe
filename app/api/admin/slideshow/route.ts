@@ -12,7 +12,6 @@ export async function GET() {
       .order("position", { ascending: true });
 
     if (error) {
-      // If table doesn't exist yet, return empty list instead of 500 to avoid breaking clients
       const msg = String(error.message || "").toLowerCase();
       if (msg.includes("does not exist") || msg.includes("could not find the table")) {
         return NextResponse.json({ products: [] });
@@ -46,18 +45,15 @@ export async function POST(req: Request) {
     const { productId } = body;
     if (!productId) return NextResponse.json({ error: "productId required" }, { status: 400 });
 
-    // prefer using a server-side service role key for write operations to bypass RLS
     const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
     const admin = serviceKey && process.env.NEXT_PUBLIC_SUPABASE_URL
       ? createSupabase(process.env.NEXT_PUBLIC_SUPABASE_URL, serviceKey)
       : null;
     const supabase = admin ?? (await createClient());
 
-    // avoid duplicates: check whether already present
     const { data: exists } = await supabase.from("slideshow").select("id").eq("product_id", productId).limit(1);
     if (exists && exists.length > 0) return NextResponse.json({ success: true });
 
-    // compute next position
     const { data: maxRow } = await supabase
       .from("slideshow")
       .select("position")
@@ -87,7 +83,6 @@ export async function DELETE(req: Request) {
     const productId = url.searchParams.get("productId");
     if (!productId) return NextResponse.json({ error: "productId required" }, { status: 400 });
 
-    // use service role client when possible for delete
     const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
     const admin = serviceKey && process.env.NEXT_PUBLIC_SUPABASE_URL
       ? createSupabase(process.env.NEXT_PUBLIC_SUPABASE_URL, serviceKey)
