@@ -166,10 +166,10 @@ export function ProductsTable({ products }: ProductsTableProps) {
                     </div>
                   </TableCell>
                   <TableCell>
-                    <Badge variant={p.stock > 10 ? "outline" : p.stock > 0 ? "secondary" : "destructive"}>{p.stock} units</Badge>
+                    <Badge variant={p.stock > 10 ? "outline" : p.stock > 0 ? "accent" : "destructive"}>{p.stock} units</Badge>
                   </TableCell>
                   <TableCell>
-                    <Badge variant={p.is_active ? "outline" : "secondary"}>{p.is_active ? "Active" : "Inactive"}</Badge>
+                    <Badge variant={p.is_active ? "outline" : "accent"}>{p.is_active ? "Active" : "Inactive"}</Badge>
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center justify-end gap-2">

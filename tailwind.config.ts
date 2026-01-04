@@ -4,7 +4,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["Google Sans", "sans-serif"],
+        sans: ["Inter", "sans-serif"],
         heading: ["Montserrat", "sans-serif"],
       },
     },

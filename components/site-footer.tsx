@@ -1,6 +1,5 @@
 "use client"
 
-import { IconBrandFacebook, IconBrandInstagram, IconBrandX } from "@tabler/icons-react"
 import Link from "next/link"
 import { Icon } from "iconza"
 
