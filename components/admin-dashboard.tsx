@@ -1,23 +1,17 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { OrdersTable } from "@/components/orders-table";
-import { ProductsTable } from "@/components/products-table";
-import { AdminSearch } from "@/components/admin-search";
-import type { Order, Product } from "@/lib/types";
-import {
-  IconShoppingCart,
-  IconLogout,
-  IconPackage,
-  IconShoppingBag,
-  IconTrendingUp,
-  IconUsers,
-} from "@tabler/icons-react";
-import { AnimatedThemeToggler } from "@/components/animated-theme-toggler";
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { OrdersTable } from '@/components/orders-table';
+import { ProductsTable } from '@/components/products-table';
+import { AdminSearch } from '@/components/admin-search';
+import type { Order, Product } from '@/lib/types';
+import { IconShoppingCart, IconLogout, IconPackage, IconShoppingBag, IconTrendingUp, IconUsers } from '@tabler/icons-react';
+import { AnimatedThemeToggler } from '@/components/animated-theme-toggler';
+import Lottie from 'lottie-react';
 
 interface AdminDashboardProps {
   orders: Order[];
@@ -26,12 +20,7 @@ interface AdminDashboardProps {
   totalProducts: number;
 }
 
-export function AdminDashboard({
-  orders,
-  products,
-  totalOrders,
-  totalProducts,
-}: AdminDashboardProps) {
+export function AdminDashboard({ orders, products, totalOrders, totalProducts }: AdminDashboardProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -42,45 +31,35 @@ export function AdminDashboard({
 
   const handleLogout = async () => {
     setLoading(true);
-    await fetch("/api/admin/logout", { method: "POST" });
-    router.push("/admin/login");
+    await fetch('/api/admin/logout', { method: 'POST' });
+    router.push('/admin/login');
     router.refresh();
   };
 
-  const [activeTab, setActiveTab] = useState<"orders" | "products">("orders");
-  const [query, setQuery] = useState("");
+  const [activeTab, setActiveTab] = useState<'orders' | 'products'>('orders');
+  const [query, setQuery] = useState('');
   useEffect(() => {
-    const savedTab = localStorage.getItem("admin-active-tab");
-    if (savedTab === "orders" || savedTab === "products") {
+    const savedTab = localStorage.getItem('admin-active-tab');
+    if (savedTab === 'orders' || savedTab === 'products') {
       setActiveTab(savedTab);
     }
   }, []);
 
   const handleTabChange = (value: string) => {
-    if (value === "orders" || value === "products") {
+    if (value === 'orders' || value === 'products') {
       setActiveTab(value);
-      localStorage.setItem("admin-active-tab", value);
+      localStorage.setItem('admin-active-tab', value);
     }
   };
 
-  const totalRevenue = orders.reduce(
-    (sum, order) => sum + Number(order.total),
-    0
-  );
-  const pendingOrders = orders.filter(
-    (order) => order.status === "pending"
-  ).length;
+  const totalRevenue = orders.reduce((sum, order) => sum + Number(order.total), 0);
+  const pendingOrders = orders.filter((order) => order.status === 'pending').length;
 
   const q = query.trim().toLowerCase();
   const filteredOrders = q
     ? orders.filter((o) =>
-        [
-          o.order_number,
-          o.customer_name,
-          o.customer_email,
-          o.customer_phone,
-        ].some((f) =>
-          String(f || "")
+        [o.order_number, o.customer_name, o.customer_email, o.customer_phone].some((f) =>
+          String(f || '')
             .toLowerCase()
             .includes(q)
         )
@@ -90,7 +69,7 @@ export function AdminDashboard({
   const filteredProducts = q
     ? products.filter((p) =>
         [p.name, p.slug].some((f) =>
-          String(f || "")
+          String(f || '')
             .toLowerCase()
             .includes(q)
         )
@@ -98,140 +77,104 @@ export function AdminDashboard({
     : products;
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className='flex min-h-screen flex-col'>
       {/* Header */}
-      <header className="sticky top-0 z-50 py-2 w-full border-b border-border bg-background/70 backdrop-blur-sm">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground font-bold text-sm">
-              <img src="/icon.png" alt="CCD Jewelry" />
-            </div>
-            <h1 className="font-bold text-lg">Admin Dashboard</h1>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => router.push("/")}
-              disabled={loading}
-            >
-              <IconShoppingCart className="h-4 w-4 sm:mr-1" />
-              <span className="hidden sm:inline">Store</span>
+      <header className='border-border bg-background/70 sticky top-0 z-50 w-full border-b py-2 backdrop-blur-sm'>
+        <div className='container mx-auto flex items-center justify-between px-4 py-4'>
+          <div className='flex items-center gap-2'>
+            <img src='/icon.png' className='h-12 w-12' alt='CCD Jewelry' />
+            <h1 className='text-lg font-bold'>Admin Dashboard</h1>
+            <Button variant='outline' size='sm' onClick={() => router.push('/')} disabled={loading}>
+              <IconShoppingCart className='h-4 w-4 sm:mr-1' />
+              <span className='hidden sm:inline'>Store</span>
             </Button>
           </div>
-          <div className="flex items-center gap-2 flex-wrap">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleLogout}
-              disabled={loading}
-            >
-              <IconLogout className="h-4 w-4 sm:mr-1" />
-              <span className="hidden sm:inline">Logout</span>
+          <div className='flex flex-wrap items-center gap-2'>
+            <Button variant='on-hold' onClick={handleLogout} disabled={loading}>
+              <IconLogout className='h-4 w-4 sm:mr-1' />
+              <span className='hidden sm:inline'>Logout</span>
             </Button>
             {mounted && <AnimatedThemeToggler />}
           </div>
         </div>
       </header>
 
-      <main className="flex-1 container mx-auto px-4 py-8">
+      <main className='container mx-auto flex-1 px-4 py-8'>
         {/* Stats */}
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 mb-8">
-          <Card className="py-4">
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium">
-                Total Revenue
-              </CardTitle>
-              <IconTrendingUp className="h-6 w-6 text-muted-foreground" />
+        <div className='mb-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4'>
+          <Card className='py-4'>
+            <CardHeader className='flex flex-row items-center justify-between pb-2'>
+              <CardTitle className='text-sm font-medium'>Total Revenue</CardTitle>
+              <IconTrendingUp className='text-muted-foreground h-6 w-6' />
             </CardHeader>
             <CardContent>
-              <h6 className="text-2xl font-bold">${totalRevenue.toFixed(2)}</h6>
-              <p className="text-xs text-muted-foreground">
-                From {totalOrders} orders
-              </p>
+              <h6 className='text-2xl font-bold'>${totalRevenue.toFixed(2)}</h6>
+              <p className='text-muted-foreground text-xs'>From {totalOrders} orders</p>
             </CardContent>
           </Card>
 
-          <Card className="py-4">
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium">
-                Total Orders
-              </CardTitle>
-              <IconShoppingBag className="h-6 w-6 text-muted-foreground" />
+          <Card className='py-4'>
+            <CardHeader className='flex flex-row items-center justify-between pb-2'>
+              <CardTitle className='text-sm font-medium'>Total Orders</CardTitle>
+              <IconShoppingBag className='text-muted-foreground h-6 w-6' />
             </CardHeader>
             <CardContent>
-              <h6 className="text-2xl font-bold">{totalOrders}</h6>
-              <p className="text-xs text-muted-foreground">
-                {pendingOrders} pending
-              </p>
+              <h6 className='text-2xl font-bold'>{totalOrders}</h6>
+              <p className='text-muted-foreground text-xs'>{pendingOrders} pending</p>
             </CardContent>
           </Card>
 
-          <Card className="py-4">
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium">Products</CardTitle>
-              {/* <IconPackage className="h-6 w-6 text-muted-foreground" /> */}
-              <Lottie
-                animationData={product}
-                loop={true}
-                className="h-9 w-9 sm:mr-1"
-              />
+          <Card className='py-4'>
+            <CardHeader className='flex flex-row items-center justify-between pb-2'>
+              <CardTitle className='text-sm font-medium'>Products</CardTitle>
+              <IconPackage className='text-muted-foreground h-6 w-6' />
             </CardHeader>
             <CardContent>
-              <h6 className="text-2xl font-bold">{totalProducts}</h6>
-              <p className="text-xs text-muted-foreground">Active listings</p>
+              <h6 className='text-2xl font-bold'>{totalProducts}</h6>
+              <p className='text-muted-foreground text-xs'>Active listings</p>
             </CardContent>
           </Card>
 
-          <Card className="py-4">
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium">Customers</CardTitle>
-              <Lottie
-                animationData={team}
-                loop={true}
-                className="h-9 w-9 sm:mr-1"
-              />
+          <Card className='py-4'>
+            <CardHeader className='flex flex-row items-center justify-between pb-2'>
+              <CardTitle className='text-sm font-medium'>Customers</CardTitle>
+              <IconUsers className='text-muted-foreground h-6 w-6' />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">
+              <div className='text-2xl font-bold'>
                 <h6>{new Set(orders.map((o) => o.customer_email)).size}</h6>
               </div>
-              <p className="text-xs text-muted-foreground">Unique customers</p>
+              <p className='text-muted-foreground text-xs'>Unique customers</p>
             </CardContent>
           </Card>
         </div>
 
         {/* Tabs */}
-        <Tabs
-          value={activeTab}
-          onValueChange={handleTabChange}
-          className="w-full"
-        >
-          <TabsList className="bg-muted/50 mb-6">
+        <Tabs value={activeTab} onValueChange={handleTabChange} className='w-full'>
+          <TabsList className='bg-muted/50 mb-6'>
             <TabsTrigger
-              value="orders"
-              id="tab-orders"
-              aria-controls="tab-orders-content"
-              className="data-[state=active]:bg-background data-[state=active]:shadow-sm"
+              value='orders'
+              id='tab-orders'
+              aria-controls='tab-orders-content'
+              className='data-[state=active]:bg-background data-[state=active]:shadow-sm'
             >
               Orders
             </TabsTrigger>
             <TabsTrigger
-              value="products"
-              id="tab-products"
-              aria-controls="tab-products-content"
-              className="data-[state=active]:bg-background data-[state=active]:shadow-sm"
+              value='products'
+              id='tab-products'
+              aria-controls='tab-products-content'
+              className='data-[state=active]:bg-background data-[state=active]:shadow-sm'
             >
               Products
             </TabsTrigger>
           </TabsList>
 
           {/* Search */}
-          <AdminSearch
-            onSearch={(val) => setQuery(val)}
-            placeholder="Search by order number, customer, product..."
-          />
+          <AdminSearch onSearch={(val) => setQuery(val)} placeholder='Search by order number, customer, product...' />
 
-          <TabsContent value="orders" className="mt-6">
-            <Card className="py-5">
+          <TabsContent value='orders' className='mt-6'>
+            <Card className='py-5'>
               <CardHeader>
                 <CardTitle>Recent Orders</CardTitle>
               </CardHeader>
@@ -241,8 +184,8 @@ export function AdminDashboard({
             </Card>
           </TabsContent>
 
-          <TabsContent value="products" className="mt-6">
-            <Card className="py-5">
+          <TabsContent value='products' className='mt-6'>
+            <Card className='py-5'>
               <CardHeader>
                 <CardTitle>Products</CardTitle>
               </CardHeader>

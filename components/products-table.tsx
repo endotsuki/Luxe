@@ -1,18 +1,25 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import Image from "next/image";
-import Link from "next/link";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
-import { ProductDialog } from "@/components/product-dialog";
-import type { Product } from "@/lib/types";
-import { useRouter } from "next/navigation";
-import { sizedImage } from "@/lib/utils";
-import { IconArrowUpRight, IconPencil, IconCategoryPlus, IconTrash, IconSlideshow } from "@tabler/icons-react";
+import { useState, useEffect } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from '@/components/ui/pagination';
+import { ProductDialog } from '@/components/product-dialog';
+import type { Product } from '@/lib/types';
+import { useRouter } from 'next/navigation';
+import { sizedImage } from '@/lib/utils';
+import { IconArrowUpRight, IconPencil, IconCategoryPlus, IconTrash, IconSlideshow } from '@tabler/icons-react';
 
 interface ProductsTableProps {
   products: Product[];
@@ -41,7 +48,7 @@ export function ProductsTable({ products }: ProductsTableProps) {
   };
 
   const openDelete = (id: string) => {
-    const prod = products.find(p => p.id === id);
+    const prod = products.find((p) => p.id === id);
     if (prod) {
       setToDelete(prod);
       setDeleteOpen(true);
@@ -64,24 +71,26 @@ export function ProductsTable({ products }: ProductsTableProps) {
         console.error(e);
       }
     })();
-    return () => { mounted = false; };
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   const toggleSlideshow = async (id: string, add: boolean) => {
     try {
       const res = await fetch(add ? `/api/admin/slideshow` : `/api/admin/slideshow?productId=${encodeURIComponent(id)}`, {
-        method: add ? "POST" : "DELETE",
-        ...(add && { headers: { "Content-Type": "application/json" }, body: JSON.stringify({ productId: id }) }),
+        method: add ? 'POST' : 'DELETE',
+        ...(add && { headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ productId: id }) }),
       });
       if (res.ok) {
-        setSlideshow(s => add ? { ...s, [id]: true } : Object.fromEntries(Object.entries(s).filter(([k]) => k !== id)));
+        setSlideshow((s) => (add ? { ...s, [id]: true } : Object.fromEntries(Object.entries(s).filter(([k]) => k !== id))));
       } else {
         const body = await res.json().catch(() => null);
-        alert(body?.error || body?.message || "Failed");
+        alert(body?.error || body?.message || 'Failed');
       }
     } catch (e) {
       console.error(e);
-      alert("Failed");
+      alert('Failed');
     }
   };
   const confirmDelete = async () => {
@@ -89,20 +98,20 @@ export function ProductsTable({ products }: ProductsTableProps) {
     setDeleting(toDelete.id);
     setDeleteOpen(false);
     try {
-      const res = await fetch(`/api/products/${toDelete.id}`, { 
-        method: "DELETE" 
+      const res = await fetch(`/api/products/${toDelete.id}`, {
+        method: 'DELETE',
       });
-      
+
       if (res.ok) {
         router.refresh();
         // Optional: show success toast
       } else {
         const data = await res.json().catch(() => ({}));
-        alert(data.error || "Failed to delete product");
+        alert(data.error || 'Failed to delete product');
       }
     } catch (e) {
       console.error(e);
-      alert("Failed to delete product");
+      alert('Failed to delete product');
     } finally {
       setDeleting(null);
       setToDelete(null);
@@ -118,74 +127,105 @@ export function ProductsTable({ products }: ProductsTableProps) {
   };
 
   return (
-    <div className="space-y-4">
-      <div className="flex justify-end">
-        <Button onClick={() => openDialog(null, false)}>
-          <IconCategoryPlus className="h-4 w-4" />
+    <div className='space-y-4'>
+      <div className='flex justify-end'>
+        <Button variant={'on-hold'} onClick={() => openDialog(null, false)}>
+          <IconCategoryPlus className='h-4 w-4' />
           Add Product
         </Button>
       </div>
 
       {products.length === 0 ? (
-        <div className="text-center py-8 text-muted-foreground">
-          No products yet. Click "Add Product" to create your first product.
-        </div>
+        <div className='text-muted-foreground py-8 text-center'>No products yet. Click "Add Product" to create your first product.</div>
       ) : (
-        <div className="rounded-md border p-5">
+        <div className='rounded-md border p-5'>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead><h6>Product</h6></TableHead>
-                <TableHead><h6>Price</h6></TableHead>
-                <TableHead><h6>Stock</h6></TableHead>
-                <TableHead><h6>Status</h6></TableHead>
-                <TableHead className="text-right"><h6>Actions</h6></TableHead>
+                <TableHead>
+                  <h6>Product</h6>
+                </TableHead>
+                <TableHead>
+                  <h6>Price</h6>
+                </TableHead>
+                <TableHead>
+                  <h6>Stock</h6>
+                </TableHead>
+                <TableHead>
+                  <h6>Status</h6>
+                </TableHead>
+                <TableHead className='text-right'>
+                  <h6>Actions</h6>
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {paginated.map((p) => (
                 <TableRow key={p.id}>
                   <TableCell>
-                    <div className="flex items-center gap-3 cursor-pointer hover:opacity-75 transition-opacity" onClick={() => openDialog(p, true)}>
-                      <div className="relative h-12 w-12 rounded-md overflow-hidden bg-muted">
-                        <Image src={p.image_url ? sizedImage(p.image_url, 48) : "/placeholder.svg"} alt={p.name} fill sizes="32" style={{ objectFit: "cover" }} />
+                    <div
+                      className='flex cursor-pointer items-center gap-3 transition-opacity hover:opacity-75'
+                      onClick={() => openDialog(p, true)}
+                    >
+                      <div className='bg-muted relative h-12 w-12 overflow-hidden rounded-md'>
+                        <Image
+                          src={p.image_url ? sizedImage(p.image_url, 48) : '/placeholder.svg'}
+                          alt={p.name}
+                          fill
+                          sizes='32'
+                          style={{ objectFit: 'cover' }}
+                        />
                       </div>
-                      <div className="flex-1">
-                        <h6 className="font-medium">{p.name}</h6>
-                        <div className="text-xs text-muted-foreground">{p.slug}</div>
+                      <div className='flex-1'>
+                        <h6 className='font-medium'>{p.name}</h6>
+                        <div className='text-muted-foreground text-xs'>{p.slug}</div>
                         {p.additional_images?.length > 0 && (
-                          <div className="text-xs text-muted-foreground mt-1">+{p.additional_images.length} more image{p.additional_images.length > 1 ? 's' : ''}</div>
+                          <div className='text-muted-foreground mt-1 text-xs'>
+                            +{p.additional_images.length} more image{p.additional_images.length > 1 ? 's' : ''}
+                          </div>
                         )}
                       </div>
                     </div>
                   </TableCell>
                   <TableCell>
                     <div>
-                      <h6 className="font-medium">${p.price}</h6>
-                      {p.compare_at_price && <h6 className="text-sm text-muted-foreground line-through">${p.compare_at_price}</h6>}
+                      <h6 className='font-medium'>${p.price}</h6>
+                      {p.compare_at_price && <h6 className='text-muted-foreground text-sm line-through'>${p.compare_at_price}</h6>}
                     </div>
                   </TableCell>
                   <TableCell>
-                    <Badge variant={p.stock > 10 ? "outline" : p.stock > 0 ? "accent" : "destructive"}>{p.stock} units</Badge>
+                    <Badge variant={p.stock > 10 ? 'outline' : p.stock > 0 ? 'in-active' : 'destructive'}>{p.stock} units</Badge>
                   </TableCell>
                   <TableCell>
-                    <Badge variant={p.is_active ? "outline" : "accent"}>{p.is_active ? "Active" : "Inactive"}</Badge>
+                    <Badge variant={p.is_active ? 'outline' : 'in-active'}>{p.is_active ? 'Active' : 'Inactive'}</Badge>
                   </TableCell>
                   <TableCell>
-                    <div className="flex items-center justify-end gap-2">
-                      <Button variant="outline" size="sm" className="w-9 h-9">
-                        <Link href={`/products/${p.slug}`} target="_blank">
-                          <IconArrowUpRight stroke={1.5} className="h-5 w-5" />
+                    <div className='flex items-center justify-end gap-2'>
+                      <Button variant='outline' size='icon' className='h-9 w-9'>
+                        <Link href={`/products/${p.slug}`} target='_blank'>
+                          <IconArrowUpRight stroke={1.5} className='h-5 w-5' />
                         </Link>
                       </Button>
-                      <Button variant="outline" size="sm" onClick={() => openDialog(p, false)} className="w-9 h-9">
-                        <IconPencil stroke={1.5} className="h-5 w-5" />
+                      <Button variant='outline' size='icon' onClick={() => openDialog(p, false)} className='h-9 w-9'>
+                        <IconPencil stroke={1.5} className='h-5 w-5' />
                       </Button>
-                      <Button variant={slideshow[p.id] ? "default" : "outline"} size="sm" onClick={() => toggleSlideshow(p.id, !slideshow[p.id])} className="w-9 h-9" aria-label={slideshow[p.id] ? "Remove from slideshow" : "Add to slideshow"}>
-                        <IconSlideshow stroke={1.5} className="h-5 w-5" />
+                      <Button
+                        variant={slideshow[p.id] ? 'default' : 'outline'}
+                        size='icon'
+                        onClick={() => toggleSlideshow(p.id, !slideshow[p.id])}
+                        className='h-9 w-9'
+                        aria-label={slideshow[p.id] ? 'Remove from slideshow' : 'Add to slideshow'}
+                      >
+                        <IconSlideshow stroke={1.5} className='h-5 w-5' />
                       </Button>
-                      <Button variant="destructive" size="sm" onClick={() => openDelete(p.id)} disabled={deleting === p.id} className="w-9 h-9">
-                        <IconTrash stroke={1.5} className="h-5 w-5" />
+                      <Button
+                        variant='destructive'
+                        size='icon'
+                        onClick={() => openDelete(p.id)}
+                        disabled={deleting === p.id}
+                        className='h-9 w-9'
+                      >
+                        <IconTrash stroke={1.5} className='h-5 w-5' />
                       </Button>
                     </div>
                   </TableCell>
@@ -193,23 +233,39 @@ export function ProductsTable({ products }: ProductsTableProps) {
               ))}
             </TableBody>
           </Table>
-          <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <p className="text-sm text-muted-foreground">
+          <div className='mt-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between'>
+            <p className='text-muted-foreground text-sm'>
               Showing {(page - 1) * perPage + 1} to {Math.min(page * perPage, sorted.length)} of {sorted.length} products
             </p>
             {total > 1 && (
               <Pagination>
                 <PaginationContent>
                   <PaginationItem>
-                    <PaginationPrevious href="#" onClick={(e) => (e.preventDefault(), page > 1 && setPage(page - 1))} className={page === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"} />
+                    <PaginationPrevious
+                      href='#'
+                      onClick={(e) => (e.preventDefault(), page > 1 && setPage(page - 1))}
+                      className={page === 1 ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+                    />
                   </PaginationItem>
                   {Array.from({ length: total }, (_, i) => i + 1).map((pg) => (
                     <PaginationItem key={pg}>
-                      <PaginationLink href="#" isActive={pg === page} onClick={(e) => (e.preventDefault(), setPage(pg))} className="cursor-pointer">{pg}</PaginationLink>
+                      <PaginationLink
+                        href='#'
+                        size='default'
+                        isActive={pg === page}
+                        onClick={(e) => (e.preventDefault(), setPage(pg))}
+                        className='cursor-pointer'
+                      >
+                        {pg}
+                      </PaginationLink>
                     </PaginationItem>
                   ))}
                   <PaginationItem>
-                    <PaginationNext href="#" onClick={(e) => (e.preventDefault(), page < total && setPage(page + 1))} className={page === total ? "pointer-events-none opacity-50" : "cursor-pointer"} />
+                    <PaginationNext
+                      href='#'
+                      onClick={(e) => (e.preventDefault(), page < total && setPage(page + 1))}
+                      className={page === total ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+                    />
                   </PaginationItem>
                 </PaginationContent>
               </Pagination>
@@ -229,9 +285,11 @@ export function ProductsTable({ products }: ProductsTableProps) {
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={() => setDeleteOpen(false)}>Cancel</Button>
-            <Button type="button" variant="destructive" onClick={confirmDelete} disabled={deleting === toDelete?.id}>
-              {deleting === toDelete?.id ? "Deleting..." : "Delete"}
+            <Button type='button' variant='outline' onClick={() => setDeleteOpen(false)}>
+              Cancel
+            </Button>
+            <Button type='button' variant='destructive' onClick={confirmDelete} disabled={deleting === toDelete?.id}>
+              {deleting === toDelete?.id ? 'Deleting...' : 'Delete'}
             </Button>
           </DialogFooter>
         </DialogContent>

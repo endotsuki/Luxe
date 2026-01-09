@@ -59,21 +59,12 @@ function Slide({ product, isActive }: { product: any; isActive: boolean }) {
             )}
           </div>
           <div className="flex flex-col sm:flex-row gap-4">
-            <Button
-              size="lg"
-              asChild
-              className="bg-white text-black hover:bg-white/90"
-            >
+            <Button variant="on-hold" asChild size="lg">
               <Link href={`/products/${product.slug}`}>
                 View Details <IconArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              asChild
-              className="border-white text-white hover:bg-white/10 bg-transparent"
-            >
+            <Button size="lg" variant="secondary" asChild>
               <Link href="/shop">Browse Collection</Link>
             </Button>
           </div>
