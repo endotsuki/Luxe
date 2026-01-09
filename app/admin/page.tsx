@@ -1,17 +1,17 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { cookies } from "next/headers"
+import { cookies } from "next/headers";
 import { AdminDashboard } from "@/components/admin-dashboard";
 
 export const metadata: Metadata = {
-  title: "Admin Dashboard | LuxeAccessories",
+  title: "Admin Dashboard | CCD Jewelry",
   description: "Manage your e-commerce store",
 };
 
 export default async function AdminPage() {
-  const cookieStore = await cookies()
-  const adminAuth = cookieStore.get("admin_auth")?.value
+  const cookieStore = await cookies();
+  const adminAuth = cookieStore.get("admin_auth")?.value;
 
   const supabase = await createClient();
   const {

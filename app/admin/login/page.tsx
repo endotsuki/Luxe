@@ -3,7 +3,7 @@ import { BackgroundRippleEffect } from "@/components/ui/background-ripple-effect
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Admin Login | LuxeAccessories",
+  title: "Admin Login | CCD Jewelry",
   description: "Sign in to the admin dashboard",
 };
 
@@ -15,5 +15,5 @@ export default function AdminLoginPage() {
         <AdminLoginForm />
       </div>
     </div>
-  )
+  );
 }

@@ -1,5 +1,5 @@
-import { Card, CardContent } from "@/components/ui/card"
-import { IconMail, IconMessage2, IconPhone } from "@tabler/icons-react"
+import { Card, CardContent } from "@/components/ui/card";
+import { IconMail, IconMessage2, IconPhone } from "@tabler/icons-react";
 
 export function ContactInfoCards() {
   return (
@@ -8,7 +8,7 @@ export function ContactInfoCards() {
         <CardContent className="p-6 text-center">
           <IconMail className="w-8 h-8 mx-auto mb-3 text-primary" />
           <h3 className="font-semibold mb-2">Email</h3>
-          <p className="text-sm text-muted-foreground">contact@luxe.com</p>
+          <p className="text-sm text-muted-foreground">ccdjewelry@gmail.com</p>
         </CardContent>
       </Card>
       <Card>
@@ -22,9 +22,9 @@ export function ContactInfoCards() {
         <CardContent className="p-6 text-center">
           <IconMessage2 className="w-8 h-8 mx-auto mb-3 text-primary" />
           <h3 className="font-semibold mb-2">Telegram</h3>
-          <p className="text-sm text-muted-foreground">@LuxeAccessories</p>
+          <p className="text-sm text-muted-foreground">@CCDJewelry</p>
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

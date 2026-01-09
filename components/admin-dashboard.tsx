@@ -12,13 +12,12 @@ import type { Order, Product } from "@/lib/types";
 import {
   IconShoppingCart,
   IconLogout,
+  IconPackage,
+  IconShoppingBag,
+  IconTrendingUp,
+  IconUsers,
 } from "@tabler/icons-react";
 import { AnimatedThemeToggler } from "@/components/animated-theme-toggler";
-import Lottie from "lottie-react";
-import advantage from "@/public/icons/Advantage.json";
-import shopping from "@/public/icons/Shopping.json";
-import product from "@/public/icons/Product.json";
-import team from "@/public/icons/Team.json";
 
 interface AdminDashboardProps {
   orders: Order[];
@@ -105,7 +104,7 @@ export function AdminDashboard({
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground font-bold text-sm">
-              <img src="/icon.svg" alt="" />
+              <img src="/icon.png" alt="CCD Jewelry" />
             </div>
             <h1 className="font-bold text-lg">Admin Dashboard</h1>
             <Button
@@ -141,11 +140,7 @@ export function AdminDashboard({
               <CardTitle className="text-sm font-medium">
                 Total Revenue
               </CardTitle>
-              <Lottie
-                animationData={advantage}
-                loop={true}
-                className="h-9 w-9 sm:mr-1"
-              />
+              <IconTrendingUp className="h-6 w-6 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <h6 className="text-2xl font-bold">${totalRevenue.toFixed(2)}</h6>
@@ -160,11 +155,7 @@ export function AdminDashboard({
               <CardTitle className="text-sm font-medium">
                 Total Orders
               </CardTitle>
-              <Lottie
-                animationData={shopping}
-                loop={true}
-                className="h-9 w-9 sm:mr-1"
-              />
+              <IconShoppingBag className="h-6 w-6 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <h6 className="text-2xl font-bold">{totalOrders}</h6>

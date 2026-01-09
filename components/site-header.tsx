@@ -1,69 +1,83 @@
-"use client"
+"use client";
 
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import { useState, useEffect } from "react"
-import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet"
-import { Badge } from "@/components/ui/badge"
-import { motion } from "framer-motion"
-import { SearchBar } from "./SearchBar"
-import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
-import { IconShoppingCart, IconSmartHome, IconCategory2, IconMessage, IconMenuDeep, IconPackage } from "@tabler/icons-react"
-import { useRouter } from "next/navigation"
-import { AnimatedThemeToggler } from "./animated-theme-toggler"
-import { useCartData } from "@/hooks/useCartData"
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { useState, useEffect } from "react";
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+  SheetTitle,
+} from "@/components/ui/sheet";
+import { Badge } from "@/components/ui/badge";
+import { motion } from "framer-motion";
+import { SearchBar } from "./SearchBar";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+import {
+  IconShoppingCart,
+  IconSmartHome,
+  IconCategory2,
+  IconMessage,
+  IconMenuDeep,
+  IconPackage,
+} from "@tabler/icons-react";
+import { useRouter } from "next/navigation";
+import { AnimatedThemeToggler } from "./animated-theme-toggler";
+import { useCartData } from "@/hooks/useCartData";
 
 interface SiteHeaderProps {
-  cartCount?: number
+  cartCount?: number;
 }
 
 export function SiteHeader({ cartCount = 0 }: SiteHeaderProps) {
-  const [mounted, setMounted] = useState(false)
-  const [scrolled, setScrolled] = useState(false)
-  const pathname = usePathname()
-  const router = useRouter()
-  const [recentOrderId, setRecentOrderId] = useState<string | null>(null)
+  const [mounted, setMounted] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const pathname = usePathname();
+  const router = useRouter();
+  const [recentOrderId, setRecentOrderId] = useState<string | null>(null);
 
   // If parent doesn't provide cartCount, read from client cart hook
-  const { cartItems } = useCartData()
-  const displayCartCount = typeof cartCount === "number" && cartCount > 0 ? cartCount : (cartItems?.length || 0)
+  const { cartItems } = useCartData();
+  const displayCartCount =
+    typeof cartCount === "number" && cartCount > 0
+      ? cartCount
+      : cartItems?.length || 0;
 
   useEffect(() => {
-    setMounted(true)
-    const handleScroll = () => setScrolled(window.scrollY > 10)
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
+    setMounted(true);
+    const handleScroll = () => setScrolled(window.scrollY > 10);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   useEffect(() => {
     try {
-      const rid = localStorage.getItem("recent_order_id")
-      if (rid) setRecentOrderId(rid)
-    } catch { }
-  }, [])
+      const rid = localStorage.getItem("recent_order_id");
+      if (rid) setRecentOrderId(rid);
+    } catch {}
+  }, []);
 
   const navigation = [
     { name: "Home", href: "/", icon: IconSmartHome },
     { name: "Shop", href: "/shop", icon: IconShoppingCart },
     { name: "Categories", href: "/categories", icon: IconCategory2 },
     { name: "Contact", href: "/contact", icon: IconMessage },
-  ]
+  ];
 
   return (
     <header
-      className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${scrolled
+      className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
+        scrolled
           ? "bg-white/50 dark:bg-gray-900/50 backdrop-blur-md shadow-lg shadow-black/5"
           : "bg-white/80 dark:bg-transparent"
-        } md:top-4 md:inset-x-4 lg:inset-x-20 xl:inset-x-40 md:rounded-2xl`}
+      } md:top-4 md:inset-x-4 lg:inset-x-20 xl:inset-x-40 md:rounded-2xl`}
     >
       <div className="container mx-auto px-4 sm:px-6">
         <div className="flex h-16 md:h-20 items-center justify-between gap-4">
-
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2">
-            <img src="/icon.svg" alt="Luxe Logo" className="h-8 w-8" />
-            <span className="hidden sm:block font-bold text-xl lg:text-2xl">Luxe</span>
+            <img src="/icon.png" alt="CCD Logo" className="h-14 w-14" />
           </Link>
 
           {/* Desktop Nav */}
@@ -97,9 +111,7 @@ export function SiteHeader({ cartCount = 0 }: SiteHeaderProps) {
             </div>
 
             {/* Theme Toggle */}
-            {mounted && (
-              <AnimatedThemeToggler />
-            )}
+            {mounted && <AnimatedThemeToggler />}
 
             {/* Recent Order */}
             {mounted && recentOrderId && (
@@ -116,7 +128,11 @@ export function SiteHeader({ cartCount = 0 }: SiteHeaderProps) {
 
             {/* Cart */}
             <Link href="/cart">
-              <Button variant="ghost" size="icon" className="relative rounded-full h-9 w-9">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="relative rounded-full h-9 w-9"
+              >
                 <IconShoppingCart className="h-5 w-5" />
                 {displayCartCount > 0 && (
                   <Badge className="absolute -right-1 -top-1 h-5 w-5 rounded-full bg-red-500 p-0 flex items-center justify-center text-xs">
@@ -129,7 +145,11 @@ export function SiteHeader({ cartCount = 0 }: SiteHeaderProps) {
             {/* Mobile Menu */}
             <Sheet>
               <SheetTrigger asChild className="lg:hidden">
-                <Button variant="ghost" size="icon" className="rounded-full h-9 w-9">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="rounded-full h-9 w-9"
+                >
                   <IconMenuDeep className="h-5 w-5" />
                 </Button>
               </SheetTrigger>
@@ -148,10 +168,11 @@ export function SiteHeader({ cartCount = 0 }: SiteHeaderProps) {
                     <Link
                       key={item.name}
                       href={item.href}
-                      className={`flex items-center gap-3 text-base font-medium py-2 transition-colors ${pathname === item.href
+                      className={`flex items-center gap-3 text-base font-medium py-2 transition-colors ${
+                        pathname === item.href
                           ? "text-primary"
                           : "text-foreground/70 dark:text-gray-200 hover:text-primary"
-                        }`}
+                      }`}
                     >
                       <item.icon className="h-5 w-5" />
                       {item.name}
@@ -175,5 +196,5 @@ export function SiteHeader({ cartCount = 0 }: SiteHeaderProps) {
         </div>
       </div>
     </header>
-  )
+  );
 }

@@ -1,23 +1,22 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-/* Montserrat - Headings */
+/* PlusJakartaSans - All text */
 @font-face {
-  font-family: 'Montserrat';
-  src: url('/fonts/Montserrat.woff2') format('woff2');
+  font-family: 'PlusJakartaSans';
+  src: url('/fonts/PlusJakartaSans.woff2') format('woff2');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Montserrat';
-  src: url('/fonts/Montserrat-Italic.woff2') format('woff2');
+  font-family: 'PlusJakartaSans';
+  src: url('/fonts/PlusJakartaSans-Italic.woff2') format('woff2');
   font-weight: 400;
   font-style: italic;
   font-display: swap;
 }
-
 
 
 @theme {
@@ -104,6 +103,7 @@
 @layer base {
   * {
     @apply border-border outline-ring/50;
+    font-family: 'PlusJakartaSans', sans-serif;
   }
 
   body {
@@ -128,25 +128,6 @@
     }
   }
 
-
-  p,
-  span,
-  div,
-  a,
-  li {
-    font-family: 'Inter', sans-serif;
-  }
-
-
-  /* Headings use Montserrat */
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    font-family: 'Montserrat', sans-serif;
-  }
 }
 
 ::view-transition-old(root),

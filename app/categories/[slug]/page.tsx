@@ -1,37 +1,53 @@
-import { notFound } from "next/navigation"
-import { Suspense } from "react"
-import { SiteHeader } from "@/components/site-header"
-import { SiteFooter } from "@/components/site-footer"
-import { ProductGrid } from "@/components/product-grid"
-import { Skeleton } from "@/components/ui/skeleton"
-import { createClient } from "@/lib/supabase/server"
-import type { Metadata } from "next"
+import { notFound } from "next/navigation";
+import { Suspense } from "react";
+import { SiteHeader } from "@/components/site-header";
+import { SiteFooter } from "@/components/site-footer";
+import { ProductGrid } from "@/components/product-grid";
+import { Skeleton } from "@/components/ui/skeleton";
+import { createClient } from "@/lib/supabase/server";
+import type { Metadata } from "next";
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
-  const { slug } = await params
-  const supabase = await createClient()
-  const { data: category } = await supabase.from("categories").select("*").eq("slug", slug).single()
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const supabase = await createClient();
+  const { data: category } = await supabase
+    .from("categories")
+    .select("*")
+    .eq("slug", slug)
+    .single();
 
   if (!category) {
     return {
       title: "Category Not Found",
-    }
+    };
   }
 
   return {
-    title: `${category.name} | LuxeAccessories`,
-    description: category.description || `Shop ${category.name} at LuxeAccessories`,
-  }
+    title: `${category.name} | CCD Jewelry`,
+    description: category.description || `Shop ${category.name} at CCD Jewelry`,
+  };
 }
 
-export default async function CategoryPage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params
-  const supabase = await createClient()
+export default async function CategoryPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  const supabase = await createClient();
 
-  const { data: category } = await supabase.from("categories").select("*").eq("slug", slug).single()
+  const { data: category } = await supabase
+    .from("categories")
+    .select("*")
+    .eq("slug", slug)
+    .single();
 
   if (!category) {
-    notFound()
+    notFound();
   }
 
   return (
@@ -40,7 +56,9 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
       <main className="flex-1 pt-16">
         <div className="container mx-auto px-4 py-8">
           <div className="mb-8">
-            <h1 className="text-3xl md:text-4xl font-bold mb-2">{category.name}</h1>
+            <h1 className="text-3xl md:text-4xl font-bold mb-2">
+              {category.name}
+            </h1>
             <p className="text-muted-foreground">{category.description}</p>
           </div>
 
@@ -51,7 +69,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
       </main>
       <SiteFooter />
     </>
-  )
+  );
 }
 
 function ProductGridSkeleton() {
@@ -65,5 +83,5 @@ function ProductGridSkeleton() {
         </div>
       ))}
     </div>
-  )
+  );
 }

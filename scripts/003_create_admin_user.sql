@@ -3,7 +3,7 @@
 
 INSERT INTO admin_users (email, password_hash, name, role)
 VALUES (
-  'admin@luxe.com',
+  'admin@gmail.com',
   '$2a$10$X8qKZvN3J8h7qKt.OQqRxeF1zMVm4VhZRmhL1WQE5UmPKkJ3zHG7K',
   'Admin User',
   'admin'

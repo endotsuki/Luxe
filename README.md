@@ -1,10 +1,11 @@
-# LuxeAccessories - Modern E-Commerce Platform
+# CCD Jewelry
 
 A premium accessory e-commerce website built with Next.js 16, featuring real-time order notifications via Telegram, a beautiful glassmorphism UI, and a complete admin dashboard.
 
 ## Features
 
 ### Customer Features
+
 - 🛍️ Browse products by category (Watches, Jewelry, Bags, Sunglasses)
 - 🔍 Product search and filtering
 - 🛒 Shopping cart with persistent storage
@@ -15,6 +16,7 @@ A premium accessory e-commerce website built with Next.js 16, featuring real-tim
 - ⭐ Product ratings and reviews display
 
 ### Admin Features
+
 - 📊 Dashboard with key metrics (revenue, orders, products)
 - 📦 Order management with status updates
 - 👥 Customer insights
@@ -22,6 +24,7 @@ A premium accessory e-commerce website built with Next.js 16, featuring real-tim
 - 📱 Real-time order notifications via Telegram
 
 ### Technical Features
+
 - ⚡ Built with Next.js 16 App Router
 - 🗄️ Supabase database with Row Level Security
 - 🎨 Tailwind CSS v4 with custom design system
@@ -54,12 +57,13 @@ A premium accessory e-commerce website built with Next.js 16, featuring real-tim
 1. Clone or download the project
 
 2. Install dependencies:
+
 ```bash
 npm install
 ```
 
 3. Set up environment variables:
-Create a `.env.local` file in the root directory with the following variables:
+   Create a `.env.local` file in the root directory with the following variables:
 
 ```env
 # Supabase (Already configured in v0)
@@ -92,7 +96,8 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 ## Admin Access
 
 **Default Admin Credentials:**
-- Email: `admin@luxe.com`
+
+- Email: `admin@gmail.com`
 - Password: `admin123`
 
 Access the admin dashboard at `/admin`
@@ -104,16 +109,19 @@ Access the admin dashboard at `/admin`
 To receive order notifications via Telegram:
 
 1. Create a Telegram bot:
+
    - Message [@BotFather](https://t.me/botfather) on Telegram
    - Send `/newbot` and follow the instructions
    - Save the bot token
 
 2. Get your chat ID:
+
    - Message your bot
    - Visit `https://api.telegram.org/bot<YOUR_BOT_TOKEN>/getUpdates`
    - Find your `chat_id` in the response
 
 3. Add to environment variables:
+
 ```env
 TELEGRAM_BOT_TOKEN=your_bot_token_here
 TELEGRAM_CHAT_ID=your_chat_id_here
@@ -148,6 +156,7 @@ TELEGRAM_CHAT_ID=your_chat_id_here
 ## Database Schema
 
 ### Main Tables
+
 - **categories** - Product categories
 - **products** - Product catalog
 - **cart_items** - Shopping cart items
@@ -160,18 +169,24 @@ All tables have Row Level Security (RLS) enabled for data protection.
 ## Customization
 
 ### Colors
+
 Edit the color scheme in `app/globals.css`:
+
 - Light mode colors in `:root`
 - Dark mode colors in `.dark`
 
 ### Products
+
 Add products via:
+
 1. SQL scripts in the `scripts` folder
 2. Direct database insertion via Supabase dashboard
 3. (Future) Admin product management interface
 
 ### Email Notifications
+
 Currently using Telegram for notifications. To add email:
+
 1. Set up a service like Resend or SendGrid
 2. Add email sending logic in `app/api/checkout/route.ts`
 
@@ -217,6 +232,7 @@ This project is created with v0 by Vercel.
 ## Support
 
 For issues and questions:
+
 - Check the documentation
 - Review the code comments
 - Open an issue on GitHub

@@ -1,12 +1,12 @@
-import { SiteHeader } from "@/components/site-header"
-import { SiteFooter } from "@/components/site-footer"
-import { CheckoutForm } from "@/components/checkout-form"
-import { Metadata } from "next"
+import { SiteHeader } from "@/components/site-header";
+import { SiteFooter } from "@/components/site-footer";
+import { CheckoutForm } from "@/components/checkout-form";
+import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Checkout | LuxeAccessories",
+  title: "Checkout | CCD Jewelry",
   description: "Complete your order",
-}
+};
 
 export default function CheckoutPage() {
   return (
@@ -20,5 +20,5 @@ export default function CheckoutPage() {
       </main>
       <SiteFooter />
     </>
-  )
+  );
 }

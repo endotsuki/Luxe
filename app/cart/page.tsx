@@ -1,12 +1,12 @@
-import { SiteHeader } from "@/components/site-header"
-import { SiteFooter } from "@/components/site-footer"
-import { CartContent } from "@/components/cart-content"
-import { Metadata } from "next"
+import { SiteHeader } from "@/components/site-header";
+import { SiteFooter } from "@/components/site-footer";
+import { CartContent } from "@/components/cart-content";
+import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Shopping Cart | LuxeAccessories",
+  title: "Shopping Cart | CCD Jewelry",
   description: "View your shopping cart",
-}
+};
 
 export default function CartPage() {
   return (
@@ -22,5 +22,5 @@ export default function CartPage() {
         <SiteFooter />
       </div>
     </>
-  )
+  );
 }

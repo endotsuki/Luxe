@@ -1,18 +1,27 @@
-import type React from "react"
-import type { Metadata, Viewport } from "next"
-import { Analytics } from "@vercel/analytics/next"
-import { ThemeProvider } from "@/components/theme-provider"
-import { Toaster } from "@/components/ui/toaster"
-import "./globals.css"
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://luxe-roan-three.vercel.app"
+import type React from "react";
+import type { Metadata, Viewport } from "next";
+import { Analytics } from "@vercel/analytics/next";
+import { ThemeProvider } from "@/components/theme-provider";
+import { Toaster } from "@/components/ui/toaster";
+import "./globals.css";
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL || "https://ccdjewelry.vercel.app/";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: "LuxeAccessories - Premium Watches, Jewelry & More",
+  title: "CCD Jewelry - Exquisite Jewelry for Every Occasion",
   description:
-    "Discover our curated collection of premium accessories including watches, jewelry, bags, and sunglasses. Shop the finest quality products with style.",
+    "Discover exquisite jewelry pieces at CCD Jewelry. Shop our curated collection of rings, necklaces, bracelets, and earrings to find the perfect accessory for any occasion.",
   generator: "v0.app",
-  keywords: ["accessories", "watches", "jewelry", "bags", "sunglasses", "luxury", "fashion"],
+  keywords: [
+    "accessories",
+    "watches",
+    "jewelry",
+    "bags",
+    "sunglasses",
+    "luxury",
+    "fashion",
+  ],
   icons: {
     icon: [
       {
@@ -20,34 +29,36 @@ export const metadata: Metadata = {
         type: "image/png",
       },
       {
-        url: "/icon.svg",
-        type: "image/svg+xml",
+        url: "/icon.png",
+        type: "image/png",
       },
     ],
     apple: "/apple-icon.png",
   },
   openGraph: {
-    title: "LuxeAccessories - Premium Watches, Jewelry & More",
-    description: "Discover our curated collection of premium accessories including watches, jewelry, bags, and sunglasses.",
+    title: "CCD Jewelry - Exquisite Jewelry for Every Occasion",
+    description:
+      "Discover exquisite jewelry pieces at CCD Jewelry. Shop our curated collection of rings, necklaces, bracelets, and earrings to find the perfect accessory for any occasion.",
     url: siteUrl,
-    siteName: "LuxeAccessories",
+    siteName: "CCD Jewelry",
     type: "website",
     images: [
       {
         url: `${siteUrl}/og-image.png`, // Your new OG image
         width: 1200,
         height: 630,
-        alt: "LuxeAccessories Logo",
+        alt: "CCD Jewelry Logo",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "LuxeAccessories - Premium Watches, Jewelry & More",
-    description: "Discover our curated collection of premium accessories including watches, jewelry, bags, and sunglasses.",
+    title: "CCD Jewelry - Exquisite Jewelry for Every Occasion",
+    description:
+      "Discover exquisite jewelry pieces at CCD Jewelry. Shop our curated collection of rings, necklaces, bracelets, and earrings to find the perfect accessory for any occasion.",
     images: [`${siteUrl}/og-image.png`],
   },
-}
+};
 
 export const viewport: Viewport = {
   themeColor: [
@@ -58,22 +69,27 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 5,
   userScalable: true,
-}
+};
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode
+  children: React.ReactNode;
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body className="antialiased">
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
           {children}
           <Toaster />
           <Analytics />
         </ThemeProvider>
       </body>
     </html>
-  )
+  );
 }

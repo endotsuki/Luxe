@@ -1,22 +1,22 @@
-import { Metadata } from "next"
-import { Suspense } from "react"
-import { SiteHeader } from "@/components/site-header"
-import { SiteFooter } from "@/components/site-footer"
-import { ProductGrid } from "@/components/product-grid"
-import { ProductFilters } from "@/components/product-filters"
-import { Skeleton } from "@/components/ui/skeleton"
+import { Metadata } from "next";
+import { Suspense } from "react";
+import { SiteHeader } from "@/components/site-header";
+import { SiteFooter } from "@/components/site-footer";
+import { ProductGrid } from "@/components/product-grid";
+import { ProductFilters } from "@/components/product-filters";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export const metadata: Metadata = {
-  title: "Shop All Products | LuxeAccessories",
+  title: "Shop All Products | CCD Jewelry",
   description: "Browse our complete collection of premium accessories",
-}
+};
 
 export default async function ShopPage({
   searchParams,
 }: {
-  searchParams: Promise<{ category?: string; sort?: string }>
+  searchParams: Promise<{ category?: string; sort?: string }>;
 }) {
-  const params = await searchParams
+  const params = await searchParams;
 
   return (
     <>
@@ -24,8 +24,12 @@ export default async function ShopPage({
       <main className="flex-1 pt-16">
         <div className="container mx-auto px-4 py-8">
           <div className="mb-8">
-            <h1 className="text-3xl md:text-4xl font-bold mb-2">Shop All Products</h1>
-            <p className="text-muted-foreground">Discover our complete collection</p>
+            <h1 className="text-3xl md:text-4xl font-bold mb-2">
+              Shop All Products
+            </h1>
+            <p className="text-muted-foreground">
+              Discover our complete collection
+            </p>
           </div>
 
           <div className="flex flex-col md:flex-row gap-8">
@@ -43,7 +47,7 @@ export default async function ShopPage({
       </main>
       <SiteFooter />
     </>
-  )
+  );
 }
 
 function ProductGridSkeleton() {
@@ -57,5 +61,5 @@ function ProductGridSkeleton() {
         </div>
       ))}
     </div>
-  )
+  );
 }
